@@ -12,7 +12,6 @@
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js">
     </script>
-    <!-- QR Scanner Library -->
     <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js">
     </script>
     <style>
@@ -687,7 +686,6 @@
             color: #ec4899;
             margin-bottom: 4px;
         }
-        /* Scanner status text */
         .scanner-status {
             color: #a78bbf;
             font-size: 11px;
@@ -701,6 +699,12 @@
         }
         .scanner-status .info {
             color: #60a5fa;
+        }
+        .btn-animate {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .btn-animate:active {
+            transform: scale(0.95);
         }
     </style>
 </head>
@@ -765,9 +769,7 @@
 
                 <!-- SLIDER -->
                 <div class="slider-container">
-                    <div class="slider-track" id="sliderTrack">
-                        <!-- Slides injected by JS -->
-                    </div>
+                    <div class="slider-track" id="sliderTrack"></div>
                     <div class="slider-dots" id="sliderDots"></div>
                 </div>
 
@@ -783,13 +785,6 @@
                         <span class="text-xl font-extrabold text-red-400">₹1</span>
                         <span class="text-[9px] text-pink-300/40 block">= 1 CX</span>
                     </div>
-                </div>
-
-                <!-- NEW: USDT BEP20 Price Card -->
-                <div class="glass-pink p-3 rounded-xl border-pink-500/20 text-center card-3d">
-                    <span class="text-[9px] text-pink-300/60 block">💵 USDT BEP20</span>
-                    <span class="text-xl font-extrabold text-blue-400">$1 = 100 CX</span>
-                    <span class="text-[9px] text-pink-300/40 block">स्मार्ट कॉन्ट्रैक्ट के माध्यम से</span>
                 </div>
 
                 <!-- Smart Contract Address + QR -->
@@ -825,7 +820,7 @@
                     </div>
                 </div>
 
-                <!-- Buy / Sell Section with QR modal -->
+                <!-- Buy / Sell Section -->
                 <div class="grid grid-cols-2 gap-3">
                     <div class="glass-pink p-4 rounded-2xl border-pink-500/20">
                         <h4 class="text-xs font-bold text-green-400"><i class="fa-solid fa-arrow-down mr-1"></i> खरीदें (Buy)</h4>
@@ -845,7 +840,7 @@
                     </div>
                 </div>
 
-                <!-- Quick Actions - Only two: भेजें and हिस्ट्री -->
+                <!-- Quick Actions -->
                 <div class="grid grid-cols-2 gap-2">
                     <button onclick="switchNav('transfer')" class="glass-pink p-2.5 rounded-xl border-pink-500/20 text-center hover:border-pink-400 transition-all">
                         <i class="fa-solid fa-paper-plane text-pink-400 text-lg block mb-0.5"></i>
@@ -865,7 +860,7 @@
                     <p class="text-[11px] text-pink-300/50">Trade Wallet से कॉइन भेजें</p>
                 </div>
 
-                <!-- 1. Send to any user via Smart Contract / CoinX ID / Email (No fee) -->
+                <!-- Send to any user via Smart Contract / CoinX ID / Email -->
                 <div class="glass-pink p-5 rounded-2xl border-pink-500/20 space-y-4">
                     <h4 class="text-xs font-bold text-pink-400"><i class="fa-solid fa-arrow-right mr-1"></i> स्मार्ट कॉन्ट्रैक्ट से भेजें</h4>
                     <p class="text-[9px] text-pink-300/40">किसी भी यूजर को SC, CoinX ID या Email से भेजें (कोई शुल्क नहीं)</p>
@@ -880,7 +875,7 @@
                     </div>
                 </div>
 
-                <!-- 2. Send to CoinX Network (Main Wallet) with 10% fee -->
+                <!-- Send to CoinX Network (Main Wallet) with 10% fee -->
                 <div class="glass-pink p-5 rounded-2xl border-pink-500/20 space-y-4">
                     <h4 class="text-xs font-bold text-blue-400"><i class="fa-solid fa-arrow-right mr-1"></i> CoinX Network (मुख्य वॉलेट) में भेजें</h4>
                     <p class="text-[9px] text-pink-300/40">Trade Wallet से मुख्य वॉलेट में ट्रांसफर (10% शुल्क)</p>
@@ -896,9 +891,6 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- 3. Main to Trade - REMOVED as requested -->
-
             </section>
 
             <!-- ======================== HISTORY ======================== -->
@@ -979,12 +971,12 @@
             </div>
         </div>
 
-        <!-- QR Action Modal for Buy/Sell - UPDATED with new QR -->
+        <!-- QR Action Modal for Buy/Sell -->
         <div id="qrActionModal" class="qr-action-modal hidden">
             <div class="modal-box">
                 <div class="modal-title" id="qrActionTitle">💰 खरीदें</div>
                 <div class="qr-container">
-                    <img src="https://i.postimg.cc/DZ2z3Nfy/IMG-20260717-WA0005.jpg" alt="QR Code" />
+                    <img src="https://i.postimg.cc/yN8tVVdb/IMG-20260717-WA0003.jpg" alt="QR Code" />
                 </div>
                 <div class="instruction-text">
                     <span class="highlight">📌 इस QR को Google Chrome द्वारा स्कैन करें</span><br>
@@ -1002,7 +994,7 @@
     </div>
 
     <!-- ============================================================ -->
-    <!-- JAVASCRIPT – Appwrite + Wallet Functions                    -->
+    <!-- JAVASCRIPT -->
     <!-- ============================================================ -->
     <script>
         // ============================================================
@@ -1142,7 +1134,7 @@
         }
 
         // ============================================================
-        // QR SCANNER - FIXED
+        // QR SCANNER
         // ============================================================
         function openQrScanner() {
             const overlay = document.getElementById('qrScannerOverlay');
@@ -1151,7 +1143,6 @@
             document.getElementById('scannerAmount').value = '';
             document.getElementById('scannerStatus').innerHTML = '⏳ कैमरा शुरू हो रहा है...';
             document.getElementById('scannerStatus').className = 'scanner-status info';
-            // Auto-start scanner after a short delay
             setTimeout(function() {
                 startScanner();
             }, 600);
@@ -1173,7 +1164,6 @@
                 return;
             }
 
-            // Clear previous scanner instance
             if (html5QrCode) {
                 try {
                     html5QrCode.clear();
@@ -1181,7 +1171,6 @@
                 html5QrCode = null;
             }
 
-            // Check if Html5Qrcode is available
             if (typeof Html5Qrcode === 'undefined') {
                 document.getElementById('scannerStatus').innerHTML = '❌ QR लाइब्रेरी लोड नहीं हुई। पेज रिफ्रेश करें।';
                 document.getElementById('scannerStatus').className = 'scanner-status error';
@@ -1200,18 +1189,13 @@
                 html5QrCode.start({ facingMode: "environment" },
                     config,
                     function(decodedText) {
-                        // Success callback
                         document.getElementById('scannerInput').value = decodedText;
                         document.getElementById('scannerStatus').innerHTML = '✅ एड्रेस स्कैन हो गया!';
                         document.getElementById('scannerStatus').className = 'scanner-status success';
                         showToast('✅ एड्रेस स्कैन हो गया! अब राशि डालें और भेजें।', 'success');
-                        // Auto stop after successful scan
                         stopScanner();
                     },
-                    function(error) {
-                        // Error callback - ignore, keep scanning
-                        // console.debug('Scan error:', error);
-                    }
+                    function(error) {}
                 ).then(() => {
                     isScanning = true;
                     document.getElementById('scannerStatus').innerHTML = '📷 कैमरा चालू है, QR कोड दिखाएँ';
@@ -1811,9 +1795,6 @@
             }
         }
 
-        // ============================================================
-        // CONFETTI
-        // ============================================================
         function launchConfetti() {
             const container = document.getElementById('confettiContainer');
             if (!container) return;
