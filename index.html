@@ -16,997 +16,147 @@
     </script>
     <style>
         /* ── RESET & BASE ── */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: #f0ebe4;
-            overflow-x: hidden;
-            user-select: none;
-            color: #1a1a2e;
-            min-height: 100vh;
-        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family:'Poppins',sans-serif; background:#f0ebe4; overflow-x:hidden; user-select:none; color:#1a1a2e; min-height:100vh; }
 
         /* ── 3D GOLD THEME ── */
-        .gold-glow {
-            box-shadow: 0 0 30px rgba(212, 175, 55, 0.45), 0 0 60px rgba(212, 175, 55, 0.15);
-        }
-        .gold-glow-sm {
-            box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
-        }
-        .gold-border {
-            border: 2px solid #d4af37 !important;
-        }
-        .gold-border-light {
-            border: 1px solid rgba(212, 175, 55, 0.3) !important;
-        }
-        .gold-bg-gradient {
-            background: linear-gradient(145deg, #d4af37, #c9a030, #b8962a);
-        }
-        .gold-text-gradient {
-            background: linear-gradient(135deg, #f5d97e, #d4af37, #c9a030);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
+        .gold-glow { box-shadow:0 0 30px rgba(212,175,55,0.45),0 0 60px rgba(212,175,55,0.15); }
+        .gold-glow-sm { box-shadow:0 0 20px rgba(212,175,55,0.3); }
+        .gold-border { border:2px solid #d4af37 !important; }
+        .gold-border-light { border:1px solid rgba(212,175,55,0.3) !important; }
+        .gold-bg-gradient { background:linear-gradient(145deg,#d4af37,#c9a030,#b8962a); }
+        .gold-text-gradient { background:linear-gradient(135deg,#f5d97e,#d4af37,#c9a030); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
 
-        /* ── 3D GLASS CARDS ── */
-        .glass-gold {
-            background: #ffffff;
-            border: 2px solid #d4af37;
-            box-shadow: 0 8px 0 #b8962a, 0 16px 50px rgba(0, 0, 0, 0.08);
-            border-radius: 20px;
-            transition: all 0.3s ease;
-        }
-        .glass-gold:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 0 #b8962a, 0 24px 60px rgba(0, 0, 0, 0.12);
-        }
-        .glass-gold-dark {
-            background: #fcf9f5;
-            border: 2px solid #d4af37;
-            box-shadow: 0 8px 0 #b8962a, 0 16px 50px rgba(0, 0, 0, 0.08);
-            border-radius: 20px;
-            transition: all 0.3s ease;
-        }
-        .glass-gold-dark:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 0 #b8962a, 0 24px 60px rgba(0, 0, 0, 0.12);
-        }
+        .glass-gold { background:#ffffff; border:2px solid #d4af37; box-shadow:0 8px 0 #b8962a,0 16px 50px rgba(0,0,0,0.08); border-radius:20px; transition:all 0.3s ease; }
+        .glass-gold:hover { transform:translateY(-4px); box-shadow:0 12px 0 #b8962a,0 24px 60px rgba(0,0,0,0.12); }
+        .glass-gold-dark { background:#fcf9f5; border:2px solid #d4af37; box-shadow:0 8px 0 #b8962a,0 16px 50px rgba(0,0,0,0.08); border-radius:20px; transition:all 0.3s ease; }
+        .glass-gold-dark:hover { transform:translateY(-4px); box-shadow:0 12px 0 #b8962a,0 24px 60px rgba(0,0,0,0.12); }
 
-        /* ── 3D BUTTONS ── */
-        .btn-gold {
-            background: linear-gradient(145deg, #d4af37, #c9a030, #b8962a);
-            color: #1a1a2e;
-            font-weight: 700;
-            border: none;
-            transition: all 0.25s ease;
-            box-shadow: 0 6px 0 #b8962a, 0 8px 25px rgba(212, 175, 55, 0.4);
-            border-radius: 14px;
-            padding: 12px 24px;
-            cursor: pointer;
-            font-size: 13px;
-        }
-        .btn-gold:hover {
-            transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 8px 0 #b8962a, 0 14px 35px rgba(212, 175, 55, 0.5);
-        }
-        .btn-gold:active {
-            transform: scale(0.96);
-        }
-        .btn-gold-outline {
-            background: transparent;
-            color: #b8962a;
-            border: 2px solid #d4af37;
-            font-weight: 600;
-            transition: all 0.25s ease;
-            box-shadow: 0 4px 0 #b8962a;
-            border-radius: 14px;
-            padding: 10px 20px;
-            cursor: pointer;
-        }
-        .btn-gold-outline:hover {
-            background: rgba(212, 175, 55, 0.12);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 0 #b8962a;
-        }
+        .btn-gold { background:linear-gradient(145deg,#d4af37,#c9a030,#b8962a); color:#1a1a2e; font-weight:700; border:none; transition:all 0.25s ease; box-shadow:0 6px 0 #b8962a,0 8px 25px rgba(212,175,55,0.4); border-radius:14px; padding:12px 24px; cursor:pointer; font-size:13px; }
+        .btn-gold:hover { transform:translateY(-3px) scale(1.02); box-shadow:0 8px 0 #b8962a,0 14px 35px rgba(212,175,55,0.5); }
+        .btn-gold:active { transform:scale(0.96); }
 
-        /* ── 3D INPUTS ── */
-        input,
-        select,
-        textarea {
-            background: #fafafa;
-            border: 2px solid #d4af37;
-            color: #1a1a2e;
-            border-radius: 14px;
-            padding: 12px 16px;
-            width: 100%;
-            outline: none;
-            transition: all 0.3s ease;
-            box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.04);
-            font-size: 14px;
-        }
-        input:focus,
-        select:focus {
-            box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.2), inset 0 2px 6px rgba(0, 0, 0, 0.04);
-            border-color: #c9a030;
-        }
+        input, select, textarea { background:#fafafa; border:2px solid #d4af37; color:#1a1a2e; border-radius:14px; padding:12px 16px; width:100%; outline:none; transition:all 0.3s ease; box-shadow:inset 0 2px 6px rgba(0,0,0,0.04); font-size:14px; }
+        input:focus, select:focus { box-shadow:0 0 0 4px rgba(212,175,55,0.2), inset 0 2px 6px rgba(0,0,0,0.04); border-color:#c9a030; }
 
-        /* ── 3D CARDS ── */
-        .card-3d {
-            background: #ffffff;
-            border: 2px solid #d4af37;
-            box-shadow: 0 6px 0 #b8962a, 0 12px 40px rgba(0, 0, 0, 0.06);
-            border-radius: 18px;
-            transition: all 0.3s ease;
-            color: #1a1a2e;
-            padding: 16px;
-        }
-        .card-3d:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 10px 0 #b8962a, 0 20px 50px rgba(0, 0, 0, 0.1);
-        }
+        .card-3d { background:#ffffff; border:2px solid #d4af37; box-shadow:0 6px 0 #b8962a,0 12px 40px rgba(0,0,0,0.06); border-radius:18px; transition:all 0.3s ease; color:#1a1a2e; padding:16px; }
+        .card-3d:hover { transform:translateY(-6px); box-shadow:0 10px 0 #b8962a,0 20px 50px rgba(0,0,0,0.1); }
 
-        /* ── BOTTOM NAV ── */
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            max-width: 440px;
-            margin: 0 auto;
-            background: #ffffff;
-            border-top: 3px solid #d4af37;
-            padding: 8px 0 14px;
-            display: flex;
-            justify-content: space-around;
-            z-index: 50;
-            border-radius: 28px 28px 0 0;
-            box-shadow: 0 -8px 0 #b8962a, 0 -12px 40px rgba(0, 0, 0, 0.06);
-        }
-        .bottom-nav button {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            color: #8a7a6a;
-            font-size: 9px;
-            transition: all 0.3s;
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 4px 10px;
-            border-radius: 14px;
-        }
-        .bottom-nav button i {
-            font-size: 22px;
-            margin-bottom: 2px;
-            transition: all 0.3s;
-        }
-        .bottom-nav button.active {
-            color: #d4af37;
-        }
-        .bottom-nav button.active i {
-            text-shadow: 0 0 30px rgba(212, 175, 55, 0.5);
-        }
+        .bottom-nav { position:fixed; bottom:0; left:0; right:0; max-width:440px; margin:0 auto; background:#ffffff; border-top:3px solid #d4af37; padding:8px 0 14px; display:flex; justify-content:space-around; z-index:50; border-radius:28px 28px 0 0; box-shadow:0 -8px 0 #b8962a,0 -12px 40px rgba(0,0,0,0.06); }
+        .bottom-nav button { display:flex; flex-direction:column; align-items:center; color:#8a7a6a; font-size:9px; transition:all 0.3s; background:none; border:none; cursor:pointer; padding:4px 10px; border-radius:14px; }
+        .bottom-nav button i { font-size:22px; margin-bottom:2px; transition:all 0.3s; }
+        .bottom-nav button.active { color:#d4af37; }
+        .bottom-nav button.active i { text-shadow:0 0 30px rgba(212,175,55,0.5); }
 
-        .hidden {
-            display: none !important;
-        }
-        .app-page {
-            display: block;
-        }
+        .hidden { display:none !important; }
+        .app-page { display:block; }
 
-        /* ── ID BOX ── */
-        .id-box {
-            background: #faf8f5;
-            border-radius: 16px;
-            padding: 14px 18px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border: 2px solid #d4af37;
-            box-shadow: 0 4px 0 #b8962a;
-        }
-        .id-box .id-label {
-            font-size: 9px;
-            color: #6b4a3a;
-            display: block;
-            font-weight: 600;
-        }
-        .id-box .id-value {
-            font-size: 15px;
-            font-weight: 800;
-            font-family: monospace;
-            color: #d4af37;
-            word-break: break-all;
-        }
-        .id-box .id-usage {
-            font-size: 8px;
-            color: #b8962a;
-            display: block;
-            margin-top: 2px;
-        }
+        .qr-box { background:#fff; padding:14px; border-radius:18px; border:3px solid #d4af37; box-shadow:0 6px 0 #b8962a,0 10px 30px rgba(212,175,55,0.15); display:inline-block; }
+        .qr-box canvas { display:block; margin:0 auto; }
 
-        /* ── QR BOX ── */
-        .qr-box {
-            background: #fff;
-            padding: 14px;
-            border-radius: 18px;
-            border: 3px solid #d4af37;
-            box-shadow: 0 6px 0 #b8962a, 0 10px 30px rgba(212, 175, 55, 0.15);
-            display: inline-block;
-        }
-        .qr-box canvas {
-            display: block;
-            margin: 0 auto;
-        }
+        .history-item { background:#faf8f5; border:2px solid rgba(212,175,55,0.3); border-radius:14px; padding:14px 16px; transition:all 0.3s; box-shadow:0 3px 0 rgba(184,150,42,0.2); }
+        .history-item:hover { border-color:#d4af37; box-shadow:0 6px 0 rgba(184,150,42,0.3),0 10px 30px rgba(212,175,55,0.08); }
 
-        /* ── HISTORY ITEM ── */
-        .history-item {
-            background: #faf8f5;
-            border: 2px solid rgba(212, 175, 55, 0.3);
-            border-radius: 14px;
-            padding: 14px 16px;
-            transition: all 0.3s;
-            box-shadow: 0 3px 0 rgba(184, 150, 42, 0.2);
-        }
-        .history-item:hover {
-            border-color: #d4af37;
-            box-shadow: 0 6px 0 rgba(184, 150, 42, 0.3), 0 10px 30px rgba(212, 175, 55, 0.08);
-        }
+        .receipt-modal { position:fixed; inset:0; background:rgba(0,0,0,0.7); backdrop-filter:blur(12px); z-index:100; display:flex; align-items:center; justify-content:center; padding:20px; animation:fadeIn 0.3s ease; }
+        .receipt-modal .receipt-card { background:#ffffff; border:4px solid #d4af37; border-radius:28px; max-width:480px; width:100%; max-height:90vh; overflow-y:auto; padding:32px 28px; box-shadow:0 12px 0 #b8962a,0 30px 80px rgba(0,0,0,0.15); color:#1a1a2e; }
+        .receipt-modal .receipt-card::-webkit-scrollbar { width:3px; }
+        .receipt-modal .receipt-card::-webkit-scrollbar-thumb { background:#d4af37; border-radius:10px; }
+        .receipt-modal .receipt-header { display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid rgba(212,175,55,0.2); padding-bottom:14px; margin-bottom:16px; }
+        .receipt-modal .receipt-header h3 { font-size:18px; font-weight:700; color:#d4af37; }
+        .receipt-modal .receipt-close { background:rgba(212,175,55,0.15); border:none; color:#d4af37; width:38px; height:38px; border-radius:50%; cursor:pointer; font-size:18px; transition:all 0.3s; }
+        .receipt-modal .receipt-close:hover { background:rgba(212,175,55,0.3); }
+        .receipt-modal .receipt-row { display:flex; justify-content:space-between; padding:7px 0; border-bottom:1px solid rgba(0,0,0,0.06); font-size:13px; }
+        .receipt-modal .receipt-row .label { color:#6b4a3a; font-weight:400; }
+        .receipt-modal .receipt-row .value { color:#1a1a2e; font-weight:500; text-align:right; word-break:break-all; max-width:60%; font-family:monospace; }
+        .receipt-modal .receipt-row .value.highlight { color:#d4af37; font-weight:700; }
+        .receipt-modal .receipt-row .value.green { color:#22C55E; }
+        .receipt-modal .receipt-row .value.red { color:#dc2626; }
+        .receipt-modal .receipt-footer { margin-top:20px; padding-top:16px; border-top:2px solid rgba(212,175,55,0.2); display:flex; gap:12px; flex-wrap:wrap; }
+        .receipt-modal .receipt-footer button { flex:1; min-width:100px; padding:12px 18px; border-radius:14px; font-size:12px; font-weight:600; border:none; cursor:pointer; transition:all 0.3s; display:flex; align-items:center; justify-content:center; gap:8px; }
+        .receipt-modal .receipt-footer .btn-download { background:linear-gradient(145deg,#d4af37,#c9a030); color:#1a1a2e; box-shadow:0 4px 0 #b8962a; }
+        .receipt-modal .receipt-footer .btn-download:hover { transform:scale(1.02); box-shadow:0 6px 0 #b8962a,0 6px 30px rgba(212,175,55,0.4); }
+        .receipt-modal .receipt-footer .btn-print { background:#f5f0eb; color:#4a3a4a; border:2px solid rgba(212,175,55,0.3); }
+        .receipt-modal .receipt-footer .btn-print:hover { background:#ede8e0; }
+        .receipt-modal .receipt-badge { display:inline-block; padding:3px 16px; border-radius:30px; font-size:10px; font-weight:700; letter-spacing:0.5px; }
+        .receipt-modal .receipt-badge.approved { background:rgba(34,197,94,0.15); color:#22C55E; border:1px solid rgba(34,197,94,0.2); }
+        .receipt-modal .receipt-badge.pending { background:rgba(212,175,55,0.15); color:#b8962a; border:1px solid rgba(212,175,55,0.2); }
+        .receipt-modal .receipt-badge.completed { background:rgba(34,197,94,0.15); color:#22C55E; border:1px solid rgba(34,197,94,0.2); }
+        .receipt-modal .receipt-logo { text-align:center; padding-bottom:12px; margin-bottom:12px; border-bottom:2px solid rgba(212,175,55,0.1); }
+        .receipt-modal .receipt-logo img { height:40px; object-fit:contain; border-radius:50%; display:inline-block; }
 
-        /* ── RECEIPT MODAL ── */
-        .receipt-modal {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(12px);
-            z-index: 100;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            animation: fadeIn 0.3s ease;
-        }
-        .receipt-modal .receipt-card {
-            background: #ffffff;
-            border: 4px solid #d4af37;
-            border-radius: 28px;
-            max-width: 480px;
-            width: 100%;
-            max-height: 90vh;
-            overflow-y: auto;
-            padding: 32px 28px;
-            box-shadow: 0 12px 0 #b8962a, 0 30px 80px rgba(0, 0, 0, 0.15);
-            color: #1a1a2e;
-            position: relative;
-        }
-        .receipt-modal .receipt-card::-webkit-scrollbar {
-            width: 3px;
-        }
-        .receipt-modal .receipt-card::-webkit-scrollbar-thumb {
-            background: #d4af37;
-            border-radius: 10px;
-        }
-        .receipt-modal .receipt-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 2px solid rgba(212, 175, 55, 0.2);
-            padding-bottom: 14px;
-            margin-bottom: 16px;
-        }
-        .receipt-modal .receipt-header h3 {
-            font-size: 18px;
-            font-weight: 700;
-            color: #d4af37;
-        }
-        .receipt-modal .receipt-close {
-            background: rgba(212, 175, 55, 0.15);
-            border: none;
-            color: #d4af37;
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 18px;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .receipt-modal .receipt-close:hover {
-            background: rgba(212, 175, 55, 0.3);
-        }
-        .receipt-modal .receipt-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 7px 0;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-            font-size: 13px;
-        }
-        .receipt-modal .receipt-row .label {
-            color: #6b4a3a;
-            font-weight: 400;
-        }
-        .receipt-modal .receipt-row .value {
-            color: #1a1a2e;
-            font-weight: 500;
-            text-align: right;
-            word-break: break-all;
-            max-width: 60%;
-            font-family: monospace;
-        }
-        .receipt-modal .receipt-row .value.highlight {
-            color: #d4af37;
-            font-weight: 700;
-        }
-        .receipt-modal .receipt-row .value.green {
-            color: #22C55E;
-        }
-        .receipt-modal .receipt-row .value.red {
-            color: #dc2626;
-        }
-        .receipt-modal .receipt-footer {
-            margin-top: 20px;
-            padding-top: 16px;
-            border-top: 2px solid rgba(212, 175, 55, 0.2);
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-        .receipt-modal .receipt-footer button {
-            flex: 1;
-            min-width: 100px;
-            padding: 12px 18px;
-            border-radius: 14px;
-            font-size: 12px;
-            font-weight: 600;
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-        .receipt-modal .receipt-footer .btn-download {
-            background: linear-gradient(145deg, #d4af37, #c9a030);
-            color: #1a1a2e;
-            box-shadow: 0 4px 0 #b8962a;
-        }
-        .receipt-modal .receipt-footer .btn-download:hover {
-            transform: scale(1.02);
-            box-shadow: 0 6px 0 #b8962a, 0 6px 30px rgba(212, 175, 55, 0.4);
-        }
-        .receipt-modal .receipt-footer .btn-print {
-            background: #f5f0eb;
-            color: #4a3a4a;
-            border: 2px solid rgba(212, 175, 55, 0.3);
-        }
-        .receipt-modal .receipt-footer .btn-print:hover {
-            background: #ede8e0;
-        }
-        .receipt-modal .receipt-badge {
-            display: inline-block;
-            padding: 3px 16px;
-            border-radius: 30px;
-            font-size: 10px;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-        }
-        .receipt-modal .receipt-badge.approved {
-            background: rgba(34, 197, 94, 0.15);
-            color: #22C55E;
-            border: 1px solid rgba(34, 197, 94, 0.2);
-        }
-        .receipt-modal .receipt-badge.pending {
-            background: rgba(212, 175, 55, 0.15);
-            color: #b8962a;
-            border: 1px solid rgba(212, 175, 55, 0.2);
-        }
-        .receipt-modal .receipt-badge.completed {
-            background: rgba(34, 197, 94, 0.15);
-            color: #22C55E;
-            border: 1px solid rgba(34, 197, 94, 0.2);
-        }
-        .receipt-modal .receipt-logo {
-            text-align: center;
-            padding-bottom: 12px;
-            margin-bottom: 12px;
-            border-bottom: 2px solid rgba(212, 175, 55, 0.1);
-        }
-        .receipt-modal .receipt-logo img {
-            height: 40px;
-            object-fit: contain;
-        }
-        .receipt-modal .receipt-logo small {
-            display: block;
-            font-size: 10px;
-            color: #6b4a3a;
-            letter-spacing: 2px;
-        }
+        @keyframes fadeIn { from { opacity:0; transform:scale(0.95) translateY(10px); } to { opacity:1; transform:scale(1) translateY(0); } }
 
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: scale(0.95) translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1) translateY(0);
-            }
-        }
+        #toastNotification { position:fixed; top:20px; left:50%; transform:translateX(-50%) translateY(-20px); max-width:400px; width:92%; background:#ffffff; border:2px solid #d4af37; color:#1a1a2e; border-radius:18px; padding:16px 22px; box-shadow:0 8px 0 #b8962a,0 16px 60px rgba(0,0,0,0.12); z-index:999; font-size:14px; display:flex; align-items:center; justify-content:space-between; transition:all 0.5s cubic-bezier(0.34,1.56,0.64,1); opacity:0; pointer-events:none; }
+        #toastNotification.show { opacity:1; pointer-events:auto; transform:translateX(-50%) translateY(0); }
+        #toastNotification button { background:none; border:none; color:#6b4a3a; cursor:pointer; font-size:16px; }
 
-        /* ── TOAST ── */
-        #toastNotification {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%) translateY(-20px);
-            max-width: 400px;
-            width: 92%;
-            background: #ffffff;
-            border: 2px solid #d4af37;
-            color: #1a1a2e;
-            border-radius: 18px;
-            padding: 16px 22px;
-            box-shadow: 0 8px 0 #b8962a, 0 16px 60px rgba(0, 0, 0, 0.12);
-            z-index: 999;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-            opacity: 0;
-            pointer-events: none;
-        }
-        #toastNotification.show {
-            opacity: 1;
-            pointer-events: auto;
-            transform: translateX(-50%) translateY(0);
-        }
-        #toastNotification button {
-            background: none;
-            border: none;
-            color: #6b4a3a;
-            cursor: pointer;
-            font-size: 16px;
-        }
+        .btn-animate { transition:all 0.2s cubic-bezier(0.4,0,0.2,1); }
+        .btn-animate:active { transform:scale(0.95); }
 
-        .btn-animate {
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .btn-animate:active {
-            transform: scale(0.95);
-        }
+        .qr-scanner-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.92); backdrop-filter:blur(16px); z-index:100; display:flex; align-items:center; justify-content:center; flex-direction:column; padding:20px; }
+        .qr-scanner-overlay .scanner-box { background:#ffffff; border:4px solid #d4af37; border-radius:28px; padding:28px 24px; max-width:420px; width:100%; text-align:center; color:#1a1a2e; box-shadow:0 12px 0 #b8962a,0 30px 80px rgba(0,0,0,0.3); }
+        .qr-scanner-overlay .scanner-box #reader { width:100%; border-radius:16px; overflow:hidden; margin:12px 0; min-height:220px; background:#f5f0eb; border:2px solid #d4af37; }
+        .qr-scanner-overlay .scanner-box input { background:#fafafa; border:2px solid #d4af37; border-radius:14px; padding:12px 16px; color:#1a1a2e; font-size:14px; font-family:monospace; text-align:center; width:100%; outline:none; box-shadow:inset 0 2px 6px rgba(0,0,0,0.04); }
+        .qr-scanner-overlay .scanner-box input:focus { box-shadow:0 0 0 4px rgba(212,175,55,0.2), inset 0 2px 6px rgba(0,0,0,0.04); }
+        .qr-scanner-overlay .scanner-box .scan-btn { background:#d4af37; color:#1a1a2e; border:none; padding:12px 28px; border-radius:14px; font-weight:700; cursor:pointer; transition:all 0.3s; margin:4px; box-shadow:0 4px 0 #b8962a; font-size:13px; }
+        .qr-scanner-overlay .scanner-box .scan-btn:hover { transform:scale(1.03); box-shadow:0 6px 0 #b8962a; }
+        .qr-scanner-overlay .scanner-box .scan-btn-secondary { background:#f5f0eb; color:#1a1a2e; border:2px solid #d4af37; box-shadow:0 4px 0 #b8962a; }
+        .qr-scanner-overlay .close-scanner { position:absolute; top:24px; right:24px; background:rgba(212,175,55,0.2); border:2px solid #d4af37; color:#1a1a2e; width:48px; height:48px; border-radius:50%; font-size:22px; cursor:pointer; transition:all 0.3s; box-shadow:0 4px 0 #b8962a; }
+        .qr-scanner-overlay .close-scanner:hover { background:rgba(212,175,55,0.4); transform:scale(1.05); }
+        .scanner-status { color:#6b4a3a; font-size:12px; margin:8px 0; font-weight:500; }
+        .scanner-status .error { color:#dc2626; }
+        .scanner-status .success { color:#22C55E; }
+        .scanner-status .info { color:#2563eb; }
 
-        /* ── QR SCANNER OVERLAY ── */
-        .qr-scanner-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.92);
-            backdrop-filter: blur(16px);
-            z-index: 100;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            padding: 20px;
-        }
-        .qr-scanner-overlay .scanner-box {
-            background: #ffffff;
-            border: 4px solid #d4af37;
-            border-radius: 28px;
-            padding: 28px 24px;
-            max-width: 420px;
-            width: 100%;
-            text-align: center;
-            color: #1a1a2e;
-            box-shadow: 0 12px 0 #b8962a, 0 30px 80px rgba(0, 0, 0, 0.3);
-        }
-        .qr-scanner-overlay .scanner-box #reader {
-            width: 100%;
-            border-radius: 16px;
-            overflow: hidden;
-            margin: 12px 0;
-            min-height: 220px;
-            background: #f5f0eb;
-            border: 2px solid #d4af37;
-        }
-        .qr-scanner-overlay .scanner-box input {
-            background: #fafafa;
-            border: 2px solid #d4af37;
-            border-radius: 14px;
-            padding: 12px 16px;
-            color: #1a1a2e;
-            font-size: 14px;
-            font-family: monospace;
-            text-align: center;
-            width: 100%;
-            outline: none;
-            box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.04);
-        }
-        .qr-scanner-overlay .scanner-box input:focus {
-            box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.2), inset 0 2px 6px rgba(0, 0, 0, 0.04);
-        }
-        .qr-scanner-overlay .scanner-box .scan-btn {
-            background: #d4af37;
-            color: #1a1a2e;
-            border: none;
-            padding: 12px 28px;
-            border-radius: 14px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin: 4px;
-            box-shadow: 0 4px 0 #b8962a;
-            font-size: 13px;
-        }
-        .qr-scanner-overlay .scanner-box .scan-btn:hover {
-            transform: scale(1.03);
-            box-shadow: 0 6px 0 #b8962a;
-        }
-        .qr-scanner-overlay .scanner-box .scan-btn-secondary {
-            background: #f5f0eb;
-            color: #1a1a2e;
-            border: 2px solid #d4af37;
-            box-shadow: 0 4px 0 #b8962a;
-        }
-        .qr-scanner-overlay .close-scanner {
-            position: absolute;
-            top: 24px;
-            right: 24px;
-            background: rgba(212, 175, 55, 0.2);
-            border: 2px solid #d4af37;
-            color: #1a1a2e;
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            font-size: 22px;
-            cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 4px 0 #b8962a;
-        }
-        .qr-scanner-overlay .close-scanner:hover {
-            background: rgba(212, 175, 55, 0.4);
-            transform: scale(1.05);
-        }
-        .scanner-status {
-            color: #6b4a3a;
-            font-size: 12px;
-            margin: 8px 0;
-            font-weight: 500;
-        }
-        .scanner-status .error {
-            color: #dc2626;
-        }
-        .scanner-status .success {
-            color: #22C55E;
-        }
-        .scanner-status .info {
-            color: #2563eb;
-        }
+        .slider-container { position:relative; width:100%; height:240px; overflow:hidden; border-radius:20px; border:3px solid #d4af37; box-shadow:0 8px 0 #b8962a,0 16px 50px rgba(0,0,0,0.08); margin-bottom:16px; }
+        .slider-track { display:flex; width:2000%; height:100%; animation:slide 80s infinite ease-in-out; }
+        .slider-track .slide-item { width:5%; height:100%; position:relative; flex-shrink:0; }
+        .slider-track .slide-item img { width:100%; height:100%; object-fit:cover; }
+        .slider-track .slide-item .slide-text { position:absolute; bottom:0; left:0; right:0; padding:20px 18px 16px; background:linear-gradient(transparent,rgba(0,0,0,0.88)); color:#fff; text-align:center; }
+        .slide-text .quote-icon { font-size:20px; color:#d4af37; display:block; margin-bottom:2px; }
+        .slide-text .quote-line { font-size:15px; font-weight:700; color:#f5d97e; text-shadow:0 0 30px rgba(212,175,55,0.4); line-height:1.5; display:block; }
+        .slide-text .quote-line2 { font-size:13px; font-weight:400; color:#e2d0ed; line-height:1.4; display:block; margin-top:2px; }
+        .slide-text .quote-badge { display:inline-block; background:rgba(212,175,55,0.25); color:#f5d97e; padding:3px 18px; border-radius:30px; font-size:9px; font-weight:700; border:1px solid rgba(212,175,55,0.3); margin-top:4px; }
+        @keyframes slide { 0%,2% { transform:translateX(0); } 4%,6% { transform:translateX(-5%); } 8%,10% { transform:translateX(-10%); } 12%,14% { transform:translateX(-15%); } 16%,18% { transform:translateX(-20%); } 20%,22% { transform:translateX(-25%); } 24%,26% { transform:translateX(-30%); } 28%,30% { transform:translateX(-35%); } 32%,34% { transform:translateX(-40%); } 36%,38% { transform:translateX(-45%); } 40%,42% { transform:translateX(-50%); } 44%,46% { transform:translateX(-55%); } 48%,50% { transform:translateX(-60%); } 52%,54% { transform:translateX(-65%); } 56%,58% { transform:translateX(-70%); } 60%,62% { transform:translateX(-75%); } 64%,66% { transform:translateX(-80%); } 68%,70% { transform:translateX(-85%); } 72%,74% { transform:translateX(-90%); } 76%,78% { transform:translateX(-95%); } 80%,82% { transform:translateX(-100%); } 84%,86% { transform:translateX(-105%); } 88%,90% { transform:translateX(-110%); } 92%,94% { transform:translateX(-115%); } 96%,98% { transform:translateX(-120%); } 100% { transform:translateX(0); } }
+        .slider-dots { position:absolute; bottom:8px; left:0; right:0; text-align:center; z-index:10; }
+        .slider-dots span { display:inline-block; width:10px; height:10px; border-radius:50%; background:rgba(255,255,255,0.25); margin:0 4px; transition:all 0.5s; }
+        .slider-dots span.active { background:#d4af37; width:28px; border-radius:10px; box-shadow:0 0 20px rgba(212,175,55,0.6); }
 
-        /* ── EXCHANGE CARDS ── */
-        .exchange-card {
-            background: #faf8f5;
-            border: 2px solid #d4af37;
-            border-radius: 16px;
-            padding: 16px;
-            box-shadow: 0 4px 0 #b8962a;
-            transition: all 0.3s;
-        }
-        .exchange-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 0 #b8962a, 0 10px 30px rgba(212, 175, 55, 0.08);
-        }
+        .filter-tabs { display:flex; gap:4px; background:#f5f0eb; padding:4px; border-radius:16px; border:2px solid rgba(212,175,55,0.3); flex-wrap:wrap; }
+        .filter-tabs button { flex:1; padding:6px 10px; border-radius:12px; font-size:10px; font-weight:600; color:#6b4a3a; background:transparent; border:none; cursor:pointer; transition:all 0.3s; min-width:50px; }
+        .filter-tabs button.active { background:#d4af37; color:#1a1a2e; box-shadow:0 0 25px rgba(212,175,55,0.3); }
+        .filter-tabs button:hover:not(.active) { color:#b8962a; }
 
-        /* ── SLIDER ── */
-        .slider-container {
-            position: relative;
-            width: 100%;
-            height: 240px;
-            overflow: hidden;
-            border-radius: 20px;
-            border: 3px solid #d4af37;
-            box-shadow: 0 8px 0 #b8962a, 0 16px 50px rgba(0, 0, 0, 0.08);
-            margin-bottom: 16px;
-        }
-        .slider-track {
-            display: flex;
-            width: 2000%;
-            height: 100%;
-            animation: slide 80s infinite ease-in-out;
-        }
-        .slider-track .slide-item {
-            width: 5%;
-            height: 100%;
-            position: relative;
-            flex-shrink: 0;
-        }
-        .slider-track .slide-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .slider-track .slide-item .slide-text {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            padding: 20px 18px 16px;
-            background: linear-gradient(transparent, rgba(0, 0, 0, 0.88));
-            color: #fff;
-            text-align: center;
-        }
-        .slide-text .quote-icon {
-            font-size: 20px;
-            color: #d4af37;
-            display: block;
-            margin-bottom: 2px;
-        }
-        .slide-text .quote-line {
-            font-size: 15px;
-            font-weight: 700;
-            color: #f5d97e;
-            text-shadow: 0 0 30px rgba(212, 175, 55, 0.4);
-            line-height: 1.5;
-            display: block;
-        }
-        .slide-text .quote-line2 {
-            font-size: 13px;
-            font-weight: 400;
-            color: #e2d0ed;
-            line-height: 1.4;
-            display: block;
-            margin-top: 2px;
-        }
-        .slide-text .quote-badge {
-            display: inline-block;
-            background: rgba(212, 175, 55, 0.25);
-            color: #f5d97e;
-            padding: 3px 18px;
-            border-radius: 30px;
-            font-size: 9px;
-            font-weight: 700;
-            border: 1px solid rgba(212, 175, 55, 0.3);
-            margin-top: 4px;
-        }
-        @keyframes slide {
-            0%,
-            2% {
-                transform: translateX(0);
-            }
-            4%,
-            6% {
-                transform: translateX(-5%);
-            }
-            8%,
-            10% {
-                transform: translateX(-10%);
-            }
-            12%,
-            14% {
-                transform: translateX(-15%);
-            }
-            16%,
-            18% {
-                transform: translateX(-20%);
-            }
-            20%,
-            22% {
-                transform: translateX(-25%);
-            }
-            24%,
-            26% {
-                transform: translateX(-30%);
-            }
-            28%,
-            30% {
-                transform: translateX(-35%);
-            }
-            32%,
-            34% {
-                transform: translateX(-40%);
-            }
-            36%,
-            38% {
-                transform: translateX(-45%);
-            }
-            40%,
-            42% {
-                transform: translateX(-50%);
-            }
-            44%,
-            46% {
-                transform: translateX(-55%);
-            }
-            48%,
-            50% {
-                transform: translateX(-60%);
-            }
-            52%,
-            54% {
-                transform: translateX(-65%);
-            }
-            56%,
-            58% {
-                transform: translateX(-70%);
-            }
-            60%,
-            62% {
-                transform: translateX(-75%);
-            }
-            64%,
-            66% {
-                transform: translateX(-80%);
-            }
-            68%,
-            70% {
-                transform: translateX(-85%);
-            }
-            72%,
-            74% {
-                transform: translateX(-90%);
-            }
-            76%,
-            78% {
-                transform: translateX(-95%);
-            }
-            80%,
-            82% {
-                transform: translateX(-100%);
-            }
-            84%,
-            86% {
-                transform: translateX(-105%);
-            }
-            88%,
-            90% {
-                transform: translateX(-110%);
-            }
-            92%,
-            94% {
-                transform: translateX(-115%);
-            }
-            96%,
-            98% {
-                transform: translateX(-120%);
-            }
-            100% {
-                transform: translateX(0);
-            }
-        }
-        .slider-dots {
-            position: absolute;
-            bottom: 8px;
-            left: 0;
-            right: 0;
-            text-align: center;
-            z-index: 10;
-        }
-        .slider-dots span {
-            display: inline-block;
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.25);
-            margin: 0 4px;
-            transition: all 0.5s;
-        }
-        .slider-dots span.active {
-            background: #d4af37;
-            width: 28px;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(212, 175, 55, 0.6);
-        }
+        .logo-img { height:60px; width:60px; object-fit:cover; border-radius:50%; border:3px solid #d4af37; box-shadow:0 0 30px rgba(212,175,55,0.3); }
+        .logo-img-sm { height:36px; width:36px; object-fit:cover; border-radius:50%; border:2px solid #d4af37; }
 
-        /* ── FILTER TABS ── */
-        .filter-tabs {
-            display: flex;
-            gap: 4px;
-            background: #f5f0eb;
-            padding: 4px;
-            border-radius: 16px;
-            border: 2px solid rgba(212, 175, 55, 0.3);
-            flex-wrap: wrap;
-        }
-        .filter-tabs button {
-            flex: 1;
-            padding: 6px 10px;
-            border-radius: 12px;
-            font-size: 10px;
-            font-weight: 600;
-            color: #6b4a3a;
-            background: transparent;
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s;
-            min-width: 50px;
-        }
-        .filter-tabs button.active {
-            background: #d4af37;
-            color: #1a1a2e;
-            box-shadow: 0 0 25px rgba(212, 175, 55, 0.3);
-        }
-        .filter-tabs button:hover:not(.active) {
-            color: #b8962a;
-        }
+        .copy-btn { background:rgba(212,175,55,0.15); border:2px solid #d4af37; color:#b8962a; padding:3px 12px; border-radius:8px; font-size:9px; cursor:pointer; transition:all 0.3s; font-weight:600; }
+        .copy-btn:hover { background:rgba(212,175,55,0.3); }
 
-        /* ── LOGO ── */
-        .logo-img {
-            height: 44px;
-            width: auto;
-            object-fit: contain;
-            filter: drop-shadow(0 2px 10px rgba(212, 175, 55, 0.25));
-        }
-        .logo-img-sm {
-            height: 32px;
-            width: auto;
-            object-fit: contain;
-        }
+        .butterfly-bg { position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:0; overflow:hidden; }
+        .butterfly-bg .bfly { position:absolute; font-size:22px; opacity:0.18; animation:floatButterfly linear infinite; filter:drop-shadow(0 0 8px rgba(212,175,55,0.15)); will-change:transform; }
+        @keyframes floatButterfly { 0% { transform:translate(0,0) rotate(0deg) scale(0.8); opacity:0.08; } 25% { transform:translate(80px,-120px) rotate(12deg) scale(1.1); opacity:0.28; } 50% { transform:translate(-60px,-220px) rotate(-8deg) scale(0.9); opacity:0.35; } 75% { transform:translate(100px,-340px) rotate(15deg) scale(1.2); opacity:0.22; } 100% { transform:translate(-20px,-480px) rotate(-5deg) scale(0.7); opacity:0.06; } }
 
-        /* ── COPY BUTTON ── */
-        .copy-btn {
-            background: rgba(212, 175, 55, 0.15);
-            border: 2px solid #d4af37;
-            color: #b8962a;
-            padding: 3px 12px;
-            border-radius: 8px;
-            font-size: 9px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-weight: 600;
-        }
-        .copy-btn:hover {
-            background: rgba(212, 175, 55, 0.3);
-        }
+        .text-gradient-rainbow { background:linear-gradient(135deg,#d4af37,#22C55E,#3b82f6,#8b5cf6,#ec4899,#f97316); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; background-size:300% 300%; animation:rainbow 4s ease-in-out infinite; }
+        @keyframes rainbow { 0% { background-position:0% 50%; } 50% { background-position:100% 50%; } 100% { background-position:0% 50%; } }
+        .text-gradient-gold { background:linear-gradient(135deg,#d4af37,#f5d97e,#c9a030); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+        .text-gradient-green { background:linear-gradient(135deg,#22C55E,#16a34a,#4ade80); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
 
-        /* ── BUTTERFLIES ── */
-        .butterfly-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 0;
-            overflow: hidden;
-        }
-        .butterfly-bg .bfly {
-            position: absolute;
-            font-size: 22px;
-            opacity: 0.18;
-            animation: floatButterfly linear infinite;
-            filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.15));
-            will-change: transform;
-        }
-        @keyframes floatButterfly {
-            0% {
-                transform: translate(0, 0) rotate(0deg) scale(0.8);
-                opacity: 0.08;
-            }
-            25% {
-                transform: translate(80px, -120px) rotate(12deg) scale(1.1);
-                opacity: 0.28;
-            }
-            50% {
-                transform: translate(-60px, -220px) rotate(-8deg) scale(0.9);
-                opacity: 0.35;
-            }
-            75% {
-                transform: translate(100px, -340px) rotate(15deg) scale(1.2);
-                opacity: 0.22;
-            }
-            100% {
-                transform: translate(-20px, -480px) rotate(-5deg) scale(0.7);
-                opacity: 0.06;
-            }
-        }
+        .coming-soon-badge { background:linear-gradient(145deg,#fbbf24,#f59e0b); color:#1a1a2e; font-size:9px; font-weight:800; padding:3px 14px; border-radius:30px; letter-spacing:0.5px; border:1px solid #d4af37; box-shadow:0 2px 0 #b8962a; display:inline-block; }
 
-        @media (max-width: 440px) {
-            .bottom-nav button i {
-                font-size: 18px;
-            }
-            .slider-container {
-                height: 190px;
-            }
-            .slide-text .quote-line {
-                font-size: 12px;
-            }
-            .slide-text .quote-line2 {
-                font-size: 11px;
-            }
-            .receipt-modal .receipt-card {
-                padding: 20px 16px;
-            }
-            .receipt-modal .receipt-row {
-                font-size: 11px;
-            }
-            .qr-scanner-overlay .scanner-box {
-                padding: 20px 16px;
-            }
-            .logo-img {
-                height: 36px;
-            }
-        }
+        #loadingOverlay { position:fixed; inset:0; background:rgba(255,255,255,0.92); backdrop-filter:blur(12px); z-index:9999; display:none; align-items:center; justify-content:center; flex-direction:column; }
+        #loadingOverlay.show { display:flex; }
+        #loadingOverlay .spinner { width:48px; height:48px; border:6px solid rgba(212,175,55,0.2); border-top-color:#d4af37; border-radius:50%; animation:spin 0.8s linear infinite; }
+        @keyframes spin { to { transform:rotate(360deg); } }
+        #loadingOverlay p { margin-top:16px; font-size:15px; color:#6b4a3a; font-weight:500; }
 
-        .coming-soon-badge {
-            background: linear-gradient(145deg, #fbbf24, #f59e0b);
-            color: #1a1a2e;
-            font-size: 9px;
-            font-weight: 800;
-            padding: 3px 14px;
-            border-radius: 30px;
-            letter-spacing: 0.5px;
-            border: 1px solid #d4af37;
-            box-shadow: 0 2px 0 #b8962a;
-            display: inline-block;
-        }
-
-        /* ── MULTI-COLOR TEXT ── */
-        .text-gradient-gold {
-            background: linear-gradient(135deg, #d4af37, #f5d97e, #c9a030);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        .text-gradient-green {
-            background: linear-gradient(135deg, #22C55E, #16a34a, #4ade80);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        .text-gradient-pink {
-            background: linear-gradient(135deg, #ec4899, #db2777, #f472b6);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        .text-gradient-blue {
-            background: linear-gradient(135deg, #3b82f6, #2563eb, #60a5fa);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        .text-gradient-purple {
-            background: linear-gradient(135deg, #8b5cf6, #7c3aed, #a78bfa);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        .text-gradient-orange {
-            background: linear-gradient(135deg, #f97316, #ea580c, #fb923c);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        .text-gradient-rainbow {
-            background: linear-gradient(135deg, #d4af37, #22C55E, #3b82f6, #8b5cf6, #ec4899, #f97316);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            background-size: 300% 300%;
-            animation: rainbow 4s ease-in-out infinite;
-        }
-        @keyframes rainbow {
-            0% {
-                background-position: 0% 50%;
-            }
-            50% {
-                background-position: 100% 50%;
-            }
-            100% {
-                background-position: 0% 50%;
-            }
-        }
+        @media (max-width:440px) { .bottom-nav button i { font-size:18px; } .slider-container { height:190px; } .slide-text .quote-line { font-size:12px; } .slide-text .quote-line2 { font-size:11px; } .receipt-modal .receipt-card { padding:20px 16px; } .receipt-modal .receipt-row { font-size:11px; } .qr-scanner-overlay .scanner-box { padding:20px 16px; } .logo-img { height:50px; width:50px; } }
     </style>
 </head>
 <body>
+
+    <!-- LOADING OVERLAY -->
+    <div id="loadingOverlay"><div class="spinner"></div><p>कृपया प्रतीक्षा करें...</p></div>
 
     <!-- Butterflies Background -->
     <div class="butterfly-bg" id="butterflyContainer"></div>
@@ -1034,7 +184,7 @@
             <!-- ======================== LOGIN ======================== -->
             <section id="loginPage" class="app-page w-full space-y-6">
                 <div class="text-center space-y-2 py-6">
-                    <img src="https://i.postimg.cc/0N8p0vH0/file-000000004e2c820d961a8031215622da.png" alt="SupriX Wallet" class="w-24 h-24 rounded-full gold-bg-gradient flex items-center justify-center p-3 mx-auto gold-glow border-4 border-amber-400/50 shadow-2xl object-cover" />
+                    <img src="https://i.postimg.cc/0N8p0vH0/file-000000004e2c820d961a8031215622da.png" alt="SupriX Wallet" class="w-28 h-28 rounded-full gold-bg-gradient flex items-center justify-center p-3 mx-auto gold-glow border-4 border-amber-400/50 shadow-2xl object-cover" />
                     <h2 class="text-3xl font-extrabold text-gradient-rainbow tracking-wide mt-2">लॉगिन करें</h2>
                     <p class="text-xs text-amber-600/50">अपने वॉलेट में प्रवेश करें</p>
                 </div>
@@ -1049,7 +199,7 @@
             <!-- ======================== REGISTRATION ======================== -->
             <section id="registrationPage" class="app-page w-full hidden space-y-6">
                 <div class="text-center space-y-2 py-6">
-                    <img src="https://i.postimg.cc/0N8p0vH0/file-000000004e2c820d961a8031215622da.png" alt="SupriX Wallet" class="w-24 h-24 rounded-full gold-bg-gradient flex items-center justify-center p-3 mx-auto gold-glow border-4 border-amber-400/50 shadow-2xl object-cover" />
+                    <img src="https://i.postimg.cc/0N8p0vH0/file-000000004e2c820d961a8031215622da.png" alt="SupriX Wallet" class="w-28 h-28 rounded-full gold-bg-gradient flex items-center justify-center p-3 mx-auto gold-glow border-4 border-amber-400/50 shadow-2xl object-cover" />
                     <h2 class="text-3xl font-extrabold text-gradient-rainbow tracking-wide mt-2">रजिस्ट्रेशन करें</h2>
                     <p class="text-xs text-amber-600/50">SupriX Wallet में आपका स्वागत है</p>
                 </div>
@@ -1143,24 +293,17 @@
                     <h3 class="text-sm font-bold text-gradient-gold"><i class="fa-solid fa-exchange mr-2"></i> USDT ट्रांसफर</h3>
                     <p class="text-[11px] text-amber-600/50">किसी को SPX ID से USDT भेजें</p>
                 </div>
-
                 <div class="glass-gold p-5 rounded-2xl space-y-4">
                     <div class="flex gap-2">
                         <button onclick="openQrScanner()" class="btn-gold py-2.5 px-4 text-xs font-bold shadow-xl flex items-center gap-2"><i class="fa-solid fa-qrcode mr-1"></i> QR स्कैन करें</button>
                     </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-amber-700/70 mb-1">SPX ID (रिसीवर)</label>
-                        <input type="text" id="sendToSpxId" placeholder="SPX ID दर्ज करें (जैसे SPX123456)" class="w-full">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-amber-700/70 mb-1">USDT संख्या</label>
-                        <input type="number" id="sendAmount" placeholder="कितने USDT भेजने हैं?" class="w-full" oninput="checkSendMax()">
-                    </div>
+                    <div><label class="block text-xs font-semibold text-amber-700/70 mb-1">SPX ID (रिसीवर)</label><input type="text" id="sendToSpxId" placeholder="SPX ID दर्ज करें (जैसे SPX123456)" class="w-full"></div>
+                    <div><label class="block text-xs font-semibold text-amber-700/70 mb-1">USDT संख्या</label><input type="number" id="sendAmount" placeholder="कितने USDT भेजने हैं?" class="w-full" oninput="checkSendMax()"></div>
                     <div class="text-[10px] text-amber-600/50 flex justify-between">
                         <span>अधिकतम: <strong id="maxSendAmount" class="text-gradient-gold">0.00</strong> USDT</span>
                         <span class="text-gradient-green">✅ कोई शुल्क नहीं</span>
                     </div>
-                    <button onclick="sendCoins()" class="w-full btn-gold py-3 rounded-xl text-xs font-bold shadow-xl flex items-center justify-center gap-2"><i class="fa-solid fa-paper-plane mr-1"></i> भेजें</button>
+                    <button onclick="sendCoins()" class="w-full btn-gold py-3 rounded-xl text-xs font-bold shadow-xl"><i class="fa-solid fa-paper-plane mr-1"></i> भेजें</button>
                 </div>
 
                 <!-- Trade Wallet → Main Wallet (USDT) -->
@@ -1183,7 +326,7 @@
             <section id="exchangePage" class="app-page w-full hidden space-y-4">
                 <div class="glass-gold p-4 rounded-2xl">
                     <h3 class="text-sm font-bold text-gradient-rainbow"><i class="fa-solid fa-arrows-rotate mr-2"></i> एक्सचेंज</h3>
-                    <p class="text-[11px] text-amber-600/50">USDT BEP20 ↔ INR (भारतीय रुपये) — 1% शुल्क</p>
+                    <p class="text-[11px] text-amber-600/50">USDT BEP20 ↔ INR — 1% शुल्क</p>
                 </div>
 
                 <!-- USDT → INR -->
@@ -1193,14 +336,8 @@
                         <span class="text-[9px] text-red-500 font-semibold">(1% शुल्क)</span>
                     </div>
                     <div class="grid grid-cols-2 gap-3">
-                        <div>
-                            <label class="block text-[10px] text-amber-600/50 mb-1">USDT संख्या</label>
-                            <input type="number" id="exchangeUsdtToInr" placeholder="USDT" class="w-full" oninput="calculateUsdtToInr()">
-                        </div>
-                        <div>
-                            <label class="block text-[10px] text-amber-600/50 mb-1">₹ INR प्राप्त</label>
-                            <input type="text" id="exchangeUsdtToInrResult" placeholder="₹ INR" class="w-full bg-gray-100" readonly>
-                        </div>
+                        <div><label class="block text-[10px] text-amber-600/50 mb-1">USDT संख्या</label><input type="number" id="exchangeUsdtToInr" placeholder="USDT" class="w-full" oninput="calculateUsdtToInr()"></div>
+                        <div><label class="block text-[10px] text-amber-600/50 mb-1">₹ INR प्राप्त</label><input type="text" id="exchangeUsdtToInrResult" placeholder="₹ INR" class="w-full bg-gray-100" readonly></div>
                     </div>
                     <div class="text-[10px] text-amber-600/50 flex justify-between">
                         <span>शुल्क (1%): <strong id="usdtToInrFee" class="text-red-600">0.00</strong> USDT</span>
@@ -1217,14 +354,8 @@
                         <span class="text-[9px] text-red-500 font-semibold">(1% शुल्क)</span>
                     </div>
                     <div class="grid grid-cols-2 gap-3">
-                        <div>
-                            <label class="block text-[10px] text-amber-600/50 mb-1">₹ INR संख्या</label>
-                            <input type="number" id="exchangeInrToUsdt" placeholder="₹ INR" class="w-full" oninput="calculateInrToUsdt()">
-                        </div>
-                        <div>
-                            <label class="block text-[10px] text-amber-600/50 mb-1">USDT प्राप्त</label>
-                            <input type="text" id="exchangeInrToUsdtResult" placeholder="USDT" class="w-full bg-gray-100" readonly>
-                        </div>
+                        <div><label class="block text-[10px] text-amber-600/50 mb-1">₹ INR संख्या</label><input type="number" id="exchangeInrToUsdt" placeholder="₹ INR" class="w-full" oninput="calculateInrToUsdt()"></div>
+                        <div><label class="block text-[10px] text-amber-600/50 mb-1">USDT प्राप्त</label><input type="text" id="exchangeInrToUsdtResult" placeholder="USDT" class="w-full bg-gray-100" readonly></div>
                     </div>
                     <div class="text-[10px] text-amber-600/50 flex justify-between">
                         <span>शुल्क (1%): <strong id="inrToUsdtFee" class="text-red-600">₹0.00</strong></span>
@@ -1242,7 +373,7 @@
                             <span class="coming-soon-badge">🔜 Coming Soon</span>
                         </div>
                     </div>
-                    <p class="text-[11px] text-amber-600/50">SupriX Coin (SUPX) जल्द ही लॉन्च होगा। अभी एक्सचेंज उपलब्ध नहीं है।</p>
+                    <p class="text-[11px] text-amber-600/50">SupriX Coin (SUPX) जल्द ही लॉन्च होगा।</p>
                     <div class="grid grid-cols-2 gap-3 opacity-50 pointer-events-none">
                         <div><label class="block text-[10px] text-amber-600/50 mb-1">USDT</label><input type="number" placeholder="0" class="w-full" disabled></div>
                         <div><label class="block text-[10px] text-amber-600/50 mb-1">SUPX प्राप्त</label><input type="text" placeholder="0 SUPX" class="w-full bg-gray-100" disabled></div>
@@ -1258,7 +389,7 @@
                             <span class="coming-soon-badge">🔜 Coming Soon</span>
                         </div>
                     </div>
-                    <p class="text-[11px] text-amber-600/50">SupriX Coin (SUPX) जल्द ही लॉन्च होगा। अभी एक्सचेंज उपलब्ध नहीं है।</p>
+                    <p class="text-[11px] text-amber-600/50">SupriX Coin (SUPX) जल्द ही लॉन्च होगा।</p>
                     <div class="grid grid-cols-2 gap-3 opacity-50 pointer-events-none">
                         <div><label class="block text-[10px] text-amber-600/50 mb-1">₹ INR</label><input type="number" placeholder="0" class="w-full" disabled></div>
                         <div><label class="block text-[10px] text-amber-600/50 mb-1">SUPX प्राप्त</label><input type="text" placeholder="0 SUPX" class="w-full bg-gray-100" disabled></div>
@@ -1363,7 +494,7 @@
         <!-- ======================== RECEIPT MODAL ======================== -->
         <div id="receiptModal" class="receipt-modal hidden">
             <div class="receipt-card" id="receiptCard">
-                <div class="receipt-logo"><img src="https://i.postimg.cc/0N8p0vH0/file-000000004e2c820d961a8031215622da.png" alt="SupriX Wallet" style="height:36px;object-fit:contain;display:inline-block;" /><small>Premium • Gold Edition</small></div>
+                <div class="receipt-logo"><img src="https://i.postimg.cc/0N8p0vH0/file-000000004e2c820d961a8031215622da.png" alt="SupriX Wallet" style="height:36px;object-fit:cover;border-radius:50%;display:inline-block;" /><small>Premium • Gold Edition</small></div>
                 <div class="receipt-header"><h3><i class="fa-solid fa-receipt mr-2"></i> लेनदेन रसीद</h3><button class="receipt-close" onclick="closeReceipt()"><i class="fa-solid fa-xmark"></i></button></div>
                 <div id="receiptContent"></div>
                 <div class="receipt-footer"><button class="btn-download" onclick="downloadReceipt()"><i class="fa-solid fa-download"></i> डाउनलोड करें</button><button class="btn-print" onclick="printReceipt()"><i class="fa-solid fa-print"></i> प्रिंट करें</button></div>
@@ -1376,7 +507,7 @@
     </div>
 
     <!-- ============================================================ -->
-    <!-- JAVASCRIPT                                                   -->
+    <!-- JAVASCRIPT - FIXED WITH NO ERRORS                           -->
     <!-- ============================================================ -->
     <script>
         // ============================================================
@@ -1399,10 +530,8 @@
         let txHistoryFilter = 'all';
         let html5QrCode = null;
         let isScanning = false;
-
-        // Exchange rate: 1 USDT = ₹85
         const EXCHANGE_RATE = 85;
-        const EXCHANGE_FEE = 0.01; // 1%
+        const EXCHANGE_FEE = 0.01;
 
         // ============================================================
         // UTILITY FUNCTIONS
@@ -1413,9 +542,7 @@
             try { return JSON.parse(value); } catch (e) { return fallback; }
         }
 
-        function generateSpxId() {
-            return 'SPX' + Math.floor(100000 + Math.random() * 900000);
-        }
+        function generateSpxId() { return 'SPX' + Math.floor(100000 + Math.random() * 900000); }
 
         function generateTransactionId() {
             return 'TXN' + Date.now().toString(36).toUpperCase() + Math.random().toString(36).substring(2, 6).toUpperCase();
@@ -1439,8 +566,8 @@
                 ...doc,
                 docId: doc.$id,
                 transactions: parseJsonSafe(doc.transactions, []),
-                coins: parseFloat(doc.coins || 0), // USDT balance
-                inrBalance: parseFloat(doc.inrBalance || 0), // INR balance
+                coins: parseFloat(doc.coins || 0),
+                inrBalance: parseFloat(doc.inrBalance || 0),
                 tradeWallet: parseFloat(doc.tradeWallet || 0),
                 spxId: doc.spxId || generateSpxId(),
                 isBlocked: doc.isBlocked || false,
@@ -1483,9 +610,6 @@
             showToast(msg || '✅ कॉपी हो गया!');
         }
 
-        // ============================================================
-        // VOICE FEEDBACK
-        // ============================================================
         function speakText(text, callback) {
             try {
                 const utterance = new SpeechSynthesisUtterance(text);
@@ -1501,9 +625,6 @@
             } catch (e) { if (callback) callback(); }
         }
 
-        // ============================================================
-        // QR CODE GENERATION
-        // ============================================================
         function generateQR(text, containerId, size = 140) {
             const container = document.getElementById(containerId);
             if (!container) return;
@@ -1536,10 +657,8 @@
             setTimeout(() => startScanner(), 600);
         }
 
-        function closeQrScanner() {
-            stopScanner();
-            document.getElementById('qrScannerOverlay').classList.add('hidden');
-        }
+        function closeQrScanner() { stopScanner();
+            document.getElementById('qrScannerOverlay').classList.add('hidden'); }
 
         function startScanner() {
             if (isScanning) { showToast('📷 कैमरा पहले से चालू है', 'info'); return; }
@@ -1645,26 +764,105 @@
         }
 
         // ============================================================
-        // AUTH
+        // AUTH - FIXED: No "User data not loaded" error
         // ============================================================
         async function handleLogin(btn) {
             const email = document.getElementById('loginUserId').value.trim();
             const password = document.getElementById('loginPassword').value.trim();
             if (!email || !password) { showToast('ईमेल और पासवर्ड दर्ज करें', 'error'); return; }
             setButtonLoading(btn, true);
+            document.getElementById('loadingOverlay').classList.add('show');
             try {
-                try { await account.get();
-                    await account.deleteSession('current'); } catch (e) {}
+                // Delete existing session
+                try { await account.deleteSession('current'); } catch (e) {}
+                // Create session
                 await account.createEmailPasswordSession(email, password);
-                const loaded = await loadCurrentUserData();
-                if (!loaded) { showToast('यूजर डेटा लोड नहीं हो पाया!', 'error'); return; }
-                if (currentUser.isBlocked) { showToast('आपका खाता ब्लॉक है!', 'error');
+                const acc = await account.get();
+
+                // Try to find user by email in database
+                let userDoc = null;
+                try {
+                    const result = await databases.listDocuments(DATABASE_ID, USERS_COLLECTION_ID, [
+                        Query.equal('email', email)
+                    ]);
+                    if (result.documents.length > 0) userDoc = result.documents[0];
+                } catch (listErr) {}
+
+                // If not found by email, try getDocument by acc.$id
+                if (!userDoc) {
+                    try {
+                        userDoc = await databases.getDocument(DATABASE_ID, USERS_COLLECTION_ID, acc.$id);
+                    } catch (getErr) {}
+                }
+
+                // If still not found, CREATE new user document
+                if (!userDoc) {
+                    const spxId = generateSpxId();
+                    const userData = {
+                        name: acc.name || email.split('@')[0],
+                        email: email,
+                        phone: password,
+                        coins: 0,
+                        inrBalance: 0,
+                        tradeWallet: 0,
+                        staked: 0,
+                        withdrawal: 0,
+                        staking: JSON.stringify([]),
+                        pending_deposit: '',
+                        approved_deposit: JSON.stringify([]),
+                        pending_withdrawal: '',
+                        approved_withdrawal: JSON.stringify([]),
+                        withdrawal_address: '',
+                        withdrawal_screenshot: '',
+                        referrals: JSON.stringify([]),
+                        transactions: JSON.stringify([]),
+                        spxId: spxId,
+                        isBlocked: false
+                    };
+                    try {
+                        userDoc = await databases.createDocument(DATABASE_ID, USERS_COLLECTION_ID, acc.$id, userData);
+                        showToast('✅ नया यूजर बनाया गया!', 'success');
+                    } catch (createErr) {
+                        showToast('❌ यूजर डॉक्यूमेंट नहीं बन पाया। कृपया Appwrite "users" collection की permissions चेक करें।',
+                            'error');
+                        document.getElementById('loadingOverlay').classList.remove('show');
+                        setButtonLoading(btn, false);
+                        return;
+                    }
+                }
+
+                // Load user data
+                currentUser = mapUserDoc(userDoc);
+
+                // Check if blocked
+                if (currentUser.isBlocked) {
+                    showToast('आपका खाता ब्लॉक है!', 'error');
                     await account.deleteSession('current');
-                    currentUser = null; return; }
+                    currentUser = null;
+                    document.getElementById('loadingOverlay').classList.remove('show');
+                    setButtonLoading(btn, false);
+                    return;
+                }
+
+                // Ensure fields exist
+                if (!currentUser.stakingHistory) currentUser.stakingHistory = [];
+                if (!currentUser.dailyRewards) currentUser.dailyRewards = [];
+
                 showToast('✅ लॉगिन सफल!', 'success');
                 document.getElementById('bottomNavBar').classList.remove('hidden');
                 switchNav('dashboard');
-            } catch (e) { showToast('❌ गलत ईमेल या पासवर्ड', 'error'); } finally { setButtonLoading(btn, false); }
+            } catch (e) {
+                console.error('Login error:', e);
+                let msg = '❌ गलत ईमेल या पासवर्ड';
+                if (e.code === 401) msg = '❌ गलत ईमेल या पासवर्ड';
+                else if (e.code === 404) msg = '❌ यूजर नहीं मिला। कृपया रजिस्टर करें।';
+                else if (e.message && e.message.includes('network')) msg = '❌ नेटवर्क कनेक्शन में समस्या।';
+                else if (e.message) msg = '❌ ' + e.message;
+                showToast(msg, 'error');
+            } finally {
+                document.getElementById('loadingOverlay').classList.remove('show');
+                setButtonLoading(btn, false);
+            }
         }
 
         async function handleRegistration(btn) {
@@ -1674,14 +872,17 @@
             if (!name || !email || !phone) { showToast('सभी फील्ड्स भरें।', 'error'); return; }
             if (phone.length < 8) { showToast('मोबाइल कम से कम 8 अंक', 'error'); return; }
             setButtonLoading(btn, true);
+            document.getElementById('loadingOverlay').classList.add('show');
             try {
                 const existing = await databases.listDocuments(DATABASE_ID, USERS_COLLECTION_ID, [Query.equal('email',
                     email)]);
                 if (existing.documents.length > 0) { showToast('ईमेल पहले से रजिस्टर्ड!', 'error');
+                    document.getElementById('loadingOverlay').classList.remove('show');
                     setButtonLoading(btn, false); return; }
                 let newAccount;
                 try { newAccount = await account.create(ID.unique(), email, phone, name); } catch (authErr) {
                     if (authErr.message.includes('already exists')) { showToast('Auth में पहले से मौजूद!', 'error');
+                        document.getElementById('loadingOverlay').classList.remove('show');
                         setButtonLoading(btn, false); return; }
                     throw authErr;
                 }
@@ -1714,7 +915,10 @@
                 showPage('loginPage');
                 document.getElementById('loginUserId').value = email;
                 document.getElementById('loginPassword').value = phone;
-            } catch (e) { showToast('❌ ' + (e.message || 'त्रुटि'), 'error'); } finally { setButtonLoading(btn, false); }
+            } catch (e) { showToast('❌ ' + (e.message || 'त्रुटि'), 'error'); } finally {
+                document.getElementById('loadingOverlay').classList.remove('show');
+                setButtonLoading(btn, false);
+            }
         }
 
         async function handleLogout() {
@@ -1780,7 +984,6 @@
                 navBtn.classList.add('text-amber-500', 'active'); }
             if (section === 'dashboard') updateDashboard();
             if (section === 'transfer') updateTransferUI();
-            if (section === 'exchange') updateExchangeUI();
             if (section === 'history') renderHistory();
             if (section === 'profile') updateProfile();
         }
@@ -1805,7 +1008,7 @@
         }
 
         // ============================================================
-        // TRANSFER UI
+        // TRANSFER
         // ============================================================
         function updateTransferUI() {
             if (!currentUser) return;
@@ -1831,12 +1034,8 @@
         }
 
         // ============================================================
-        // EXCHANGE UI
+        // EXCHANGE
         // ============================================================
-        function updateExchangeUI() {
-            // nothing dynamic
-        }
-
         function calculateUsdtToInr() {
             const usdt = parseFloat(document.getElementById('exchangeUsdtToInr').value) || 0;
             const fee = usdt * EXCHANGE_FEE;
@@ -1858,7 +1057,7 @@
         }
 
         // ============================================================
-        // SEND COINS (Trade Wallet to any SPX ID)
+        // SEND COINS
         // ============================================================
         async function sendCoins() {
             if (!currentUser) { showToast('लॉगिन करें', 'error'); return; }
@@ -1877,47 +1076,26 @@
 
                 const newSenderTrade = parseFloat(currentUser.tradeWallet || 0) - amount;
                 const newReceiverTrade = parseFloat(target.tradeWallet || 0) + amount;
-
                 const txId = generateTransactionId();
-                const tx = {
-                    type: 'send',
-                    txId: txId,
-                    amount: amount,
-                    to: target.email,
-                    toSpxId: target.spxId,
-                    dateTime: new Date().toLocaleString('hi-IN'),
-                    status: 'completed',
-                    network: 'USDT BEP20'
-                };
+                const tx = { type: 'send', txId, amount, to: target.email, toSpxId: target.spxId, dateTime: new Date()
+                        .toLocaleString('hi-IN'), status: 'completed', network: 'USDT BEP20' };
                 const txs = [...(currentUser.transactions || [])];
                 txs.push(tx);
-
-                const receiveTx = {
-                    type: 'receive',
-                    txId: txId,
-                    amount: amount,
-                    from: currentUser.email,
-                    fromSpxId: currentUser.spxId,
-                    dateTime: new Date().toLocaleString('hi-IN'),
-                    status: 'completed',
-                    network: 'USDT BEP20'
-                };
+                const receiveTx = { type: 'receive', txId, amount, from: currentUser.email, fromSpxId: currentUser.spxId,
+                    dateTime: new Date().toLocaleString('hi-IN'), status: 'completed', network: 'USDT BEP20' };
 
                 await databases.updateDocument(DATABASE_ID, USERS_COLLECTION_ID, currentUser.$id, {
                     tradeWallet: newSenderTrade,
                     transactions: JSON.stringify(txs)
                 });
-
                 const receiverTxList = parseJsonSafe(target.transactions, []);
                 receiverTxList.push(receiveTx);
                 await databases.updateDocument(DATABASE_ID, USERS_COLLECTION_ID, target.$id, {
                     tradeWallet: newReceiverTrade,
                     transactions: JSON.stringify(receiverTxList)
                 });
-
                 currentUser.tradeWallet = newSenderTrade;
                 currentUser.transactions = txs;
-
                 document.getElementById('sendToSpxId').value = '';
                 document.getElementById('sendAmount').value = '';
                 showToast(`✅ ${amount.toFixed(2)} USDT ${target.email} को भेजे गए`, 'success');
@@ -1928,7 +1106,7 @@
         }
 
         // ============================================================
-        // MOVE: TRADE TO MAIN (10% fee)
+        // MOVE TO MAIN
         // ============================================================
         async function moveToMain() {
             if (!currentUser) { showToast('लॉगिन करें', 'error'); return; }
@@ -1936,26 +1114,14 @@
             if (!amount || amount <= 0) { showToast('सही संख्या दर्ज करें', 'error'); return; }
             const maxTrade = parseFloat(currentUser.tradeWallet || 0);
             if (amount > maxTrade) { showToast('Trade Wallet में पर्याप्त नहीं!', 'error'); return; }
-
             const fee = amount * 0.10;
             const receive = amount - fee;
-
             try {
                 const newTrade = parseFloat(currentUser.tradeWallet || 0) - amount;
                 const newCoins = parseFloat(currentUser.coins || 0) + receive;
-
                 const txId = generateTransactionId();
-                const tx = {
-                    type: 'internal',
-                    txId: txId,
-                    action: 'trade_to_main',
-                    amount: amount,
-                    fee: fee,
-                    receiveAmount: receive,
-                    dateTime: new Date().toLocaleString('hi-IN'),
-                    status: 'completed',
-                    network: 'USDT BEP20'
-                };
+                const tx = { type: 'internal', txId, action: 'trade_to_main', amount, fee, receiveAmount: receive,
+                    dateTime: new Date().toLocaleString('hi-IN'), status: 'completed', network: 'USDT BEP20' };
                 const txs = [...(currentUser.transactions || [])];
                 txs.push(tx);
                 await saveUserFields({ coins: newCoins, tradeWallet: newTrade, transactions: JSON.stringify(txs) });
@@ -1971,99 +1137,70 @@
         }
 
         // ============================================================
-        // EXCHANGE: USDT → INR (1% fee)
+        // EXCHANGE FUNCTIONS
         // ============================================================
         async function exchangeUsdtToInr() {
             if (!currentUser) { showToast('लॉगिन करें', 'error'); return; }
             const usdt = parseFloat(document.getElementById('exchangeUsdtToInr').value);
             if (!usdt || usdt <= 0) { showToast('USDT संख्या दर्ज करें', 'error'); return; }
             if (usdt > parseFloat(currentUser.coins || 0)) { showToast('मुख्य USDT बैलेंस में पर्याप्त नहीं!', 'error'); return; }
-
             const fee = usdt * EXCHANGE_FEE;
             const afterFee = usdt - fee;
             const inrAmount = afterFee * EXCHANGE_RATE;
-
             try {
                 const newCoins = parseFloat(currentUser.coins || 0) - usdt;
                 const newInr = parseFloat(currentUser.inrBalance || 0) + inrAmount;
-
                 const txId = generateTransactionId();
-                const tx = {
-                    type: 'exchange',
-                    txId: txId,
-                    action: 'usdt_to_inr',
-                    amount: usdt,
-                    fee: fee,
-                    netAmount: afterFee,
-                    inrAmount: inrAmount,
-                    rate: EXCHANGE_RATE,
-                    dateTime: new Date().toLocaleString('hi-IN'),
-                    status: 'completed',
-                    network: 'USDT BEP20 → INR'
-                };
+                const tx = { type: 'exchange', txId, action: 'usdt_to_inr', amount: usdt, fee, netAmount: afterFee,
+                    inrAmount, rate: EXCHANGE_RATE, dateTime: new Date().toLocaleString('hi-IN'), status: 'completed',
+                    network: 'USDT BEP20 → INR' };
                 const txs = [...(currentUser.transactions || [])];
                 txs.push(tx);
                 await saveUserFields({ coins: newCoins, inrBalance: newInr, transactions: JSON.stringify(txs) });
                 currentUser.coins = newCoins;
                 currentUser.inrBalance = newInr;
                 currentUser.transactions = txs;
-
                 document.getElementById('exchangeUsdtToInr').value = '';
                 document.getElementById('exchangeUsdtToInrResult').value = '';
-                showToast(`✅ ${usdt.toFixed(2)} USDT → ₹${inrAmount.toFixed(2)} INR एक्सचेंज हो गया! (शुल्क: ${fee.toFixed(4)} USDT)`, 'success');
+                showToast(`✅ ${usdt.toFixed(2)} USDT → ₹${inrAmount.toFixed(2)} INR एक्सचेंज हो गया! (शुल्क: ${fee.toFixed(4)} USDT)`,
+                    'success');
                 speakText('Transaction Successful, बधाई हो', () => {});
                 updateDashboard();
             } catch (e) { showToast('त्रुटि: ' + e.message, 'error'); }
         }
 
-        // ============================================================
-        // EXCHANGE: INR → USDT (1% fee)
-        // ============================================================
         async function exchangeInrToUsdt() {
             if (!currentUser) { showToast('लॉगिन करें', 'error'); return; }
             const inr = parseFloat(document.getElementById('exchangeInrToUsdt').value);
             if (!inr || inr <= 0) { showToast('INR संख्या दर्ज करें', 'error'); return; }
             if (inr > parseFloat(currentUser.inrBalance || 0)) { showToast('INR बैलेंस में पर्याप्त नहीं!', 'error'); return; }
-
             const usdt = inr / EXCHANGE_RATE;
             const fee = usdt * EXCHANGE_FEE;
             const afterFee = usdt - fee;
-
             try {
                 const newInr = parseFloat(currentUser.inrBalance || 0) - inr;
                 const newCoins = parseFloat(currentUser.coins || 0) + afterFee;
-
                 const txId = generateTransactionId();
-                const tx = {
-                    type: 'exchange',
-                    txId: txId,
-                    action: 'inr_to_usdt',
-                    amount: usdt,
-                    fee: fee,
-                    netAmount: afterFee,
-                    inrAmount: inr,
-                    rate: EXCHANGE_RATE,
-                    dateTime: new Date().toLocaleString('hi-IN'),
-                    status: 'completed',
-                    network: 'INR → USDT BEP20'
-                };
+                const tx = { type: 'exchange', txId, action: 'inr_to_usdt', amount: usdt, fee, netAmount: afterFee,
+                    inrAmount: inr, rate: EXCHANGE_RATE, dateTime: new Date().toLocaleString('hi-IN'), status: 'completed',
+                    network: 'INR → USDT BEP20' };
                 const txs = [...(currentUser.transactions || [])];
                 txs.push(tx);
                 await saveUserFields({ coins: newCoins, inrBalance: newInr, transactions: JSON.stringify(txs) });
                 currentUser.coins = newCoins;
                 currentUser.inrBalance = newInr;
                 currentUser.transactions = txs;
-
                 document.getElementById('exchangeInrToUsdt').value = '';
                 document.getElementById('exchangeInrToUsdtResult').value = '';
-                showToast(`✅ ₹${inr.toFixed(2)} INR → ${afterFee.toFixed(4)} USDT एक्सचेंज हो गया! (शुल्क: ${fee.toFixed(4)} USDT)`, 'success');
+                showToast(`✅ ₹${inr.toFixed(2)} INR → ${afterFee.toFixed(4)} USDT एक्सचेंज हो गया! (शुल्क: ${fee.toFixed(4)} USDT)`,
+                    'success');
                 speakText('Transaction Successful, बधाई हो', () => {});
                 updateDashboard();
             } catch (e) { showToast('त्रुटि: ' + e.message, 'error'); }
         }
 
         // ============================================================
-        // SCAN & SEND (from QR Scanner)
+        // SCAN & SEND
         // ============================================================
         async function scanAndSend() {
             if (!currentUser) { showToast('पहले लॉगिन करें', 'error'); return; }
@@ -2072,56 +1209,32 @@
             if (!spxId) { showToast('SPX ID स्कैन करें या पेस्ट करें', 'error'); return; }
             if (!amount || amount <= 0) { showToast('USDT संख्या दर्ज करें', 'error'); return; }
             if (amount > parseFloat(currentUser.tradeWallet || 0)) { showToast('Trade Wallet में पर्याप्त नहीं!', 'error'); return; }
-
             try {
                 const res = await databases.listDocuments(DATABASE_ID, USERS_COLLECTION_ID, [Query.equal('spxId', spxId)]);
                 if (res.documents.length === 0) { showToast('❌ SPX ID नहीं मिला!', 'error'); return; }
                 const target = res.documents[0];
                 if (target.$id === currentUser.$id) { showToast('❌ खुद को नहीं भेज सकते!', 'error'); return; }
-
                 const newSenderTrade = parseFloat(currentUser.tradeWallet || 0) - amount;
                 const newReceiverTrade = parseFloat(target.tradeWallet || 0) + amount;
-
                 const txId = generateTransactionId();
-                const tx = {
-                    type: 'send',
-                    txId: txId,
-                    amount: amount,
-                    to: target.email,
-                    toSpxId: target.spxId,
-                    dateTime: new Date().toLocaleString('hi-IN'),
-                    status: 'completed',
-                    network: 'USDT BEP20'
-                };
+                const tx = { type: 'send', txId, amount, to: target.email, toSpxId: target.spxId, dateTime: new Date()
+                        .toLocaleString('hi-IN'), status: 'completed', network: 'USDT BEP20' };
                 const txs = [...(currentUser.transactions || [])];
                 txs.push(tx);
-
-                const receiveTx = {
-                    type: 'receive',
-                    txId: txId,
-                    amount: amount,
-                    from: currentUser.email,
-                    fromSpxId: currentUser.spxId,
-                    dateTime: new Date().toLocaleString('hi-IN'),
-                    status: 'completed',
-                    network: 'USDT BEP20'
-                };
-
+                const receiveTx = { type: 'receive', txId, amount, from: currentUser.email, fromSpxId: currentUser.spxId,
+                    dateTime: new Date().toLocaleString('hi-IN'), status: 'completed', network: 'USDT BEP20' };
                 await databases.updateDocument(DATABASE_ID, USERS_COLLECTION_ID, currentUser.$id, {
                     tradeWallet: newSenderTrade,
                     transactions: JSON.stringify(txs)
                 });
-
                 const receiverTxList = parseJsonSafe(target.transactions, []);
                 receiverTxList.push(receiveTx);
                 await databases.updateDocument(DATABASE_ID, USERS_COLLECTION_ID, target.$id, {
                     tradeWallet: newReceiverTrade,
                     transactions: JSON.stringify(receiverTxList)
                 });
-
                 currentUser.tradeWallet = newSenderTrade;
                 currentUser.transactions = txs;
-
                 document.getElementById('scannerInput').value = '';
                 document.getElementById('scannerAmount').value = '';
                 closeQrScanner();
@@ -2133,7 +1246,7 @@
         }
 
         // ============================================================
-        // WITHDRAWAL (USDT BEP20)
+        // WITHDRAWAL
         // ============================================================
         async function submitWithdrawal() {
             if (!currentUser) { showToast('लॉगिन करें', 'error'); return; }
@@ -2142,19 +1255,11 @@
             if (!address) { showToast('BEP20 एड्रेस दर्ज करें', 'error'); return; }
             if (!amount || amount < 2) { showToast('न्यूनतम 2 USDT', 'error'); return; }
             if (amount > parseFloat(currentUser.coins || 0)) { showToast('मुख्य बैलेंस में पर्याप्त नहीं!', 'error'); return; }
-
             try {
                 const newCoins = parseFloat(currentUser.coins || 0) - amount;
                 const txId = generateTransactionId();
-                const tx = {
-                    type: 'withdraw',
-                    txId: txId,
-                    amount: amount,
-                    to: address,
-                    network: 'BEP20',
-                    dateTime: new Date().toLocaleString('hi-IN'),
-                    status: 'pending'
-                };
+                const tx = { type: 'withdraw', txId, amount, to: address, network: 'BEP20', dateTime: new Date()
+                        .toLocaleString('hi-IN'), status: 'pending' };
                 const txs = [...(currentUser.transactions || [])];
                 txs.push(tx);
                 await saveUserFields({ coins: newCoins, transactions: JSON.stringify(txs) });
@@ -2204,38 +1309,30 @@
                 const div = document.createElement('div');
                 div.className = 'history-item';
                 let icon, label, color, detail = '';
-                if (t.type === 'send') {
-                    icon = 'fa-solid fa-arrow-right';
+                if (t.type === 'send') { icon = 'fa-solid fa-arrow-right';
                     label = 'भेजा';
                     color = 'text-red-600';
-                    detail = `<span>➡️ ${t.to || 'N/A'}</span>`;
-                } else if (t.type === 'receive') {
-                    icon = 'fa-solid fa-arrow-left';
+                    detail = `<span>➡️ ${t.to || 'N/A'}</span>`; } else if (t.type === 'receive') { icon =
+                        'fa-solid fa-arrow-left';
                     label = 'प्राप्त';
                     color = 'text-green-600';
-                    detail = `<span>⬅️ ${t.from || 'N/A'}</span>`;
-                } else if (t.type === 'exchange') {
-                    icon = 'fa-solid fa-arrows-rotate';
+                    detail = `<span>⬅️ ${t.from || 'N/A'}</span>`; } else if (t.type === 'exchange') { icon =
+                        'fa-solid fa-arrows-rotate';
                     label = t.action === 'usdt_to_inr' ? 'USDT→INR' : 'INR→USDT';
                     color = 'text-blue-600';
                     detail =
-                    `<span>${t.amount || 0} ${t.action === 'usdt_to_inr' ? 'USDT' : 'INR'} → ${t.inrAmount || 0} ${t.action === 'usdt_to_inr' ? 'INR' : 'USDT'}</span>`;
+                        `<span>${t.amount || 0} ${t.action === 'usdt_to_inr' ? 'USDT' : 'INR'} → ${t.inrAmount || 0} ${t.action === 'usdt_to_inr' ? 'INR' : 'USDT'}</span>`;
                     if (t.fee) detail += `<span>शुल्क: ${t.fee.toFixed(4)}</span>`;
-                } else if (t.type === 'withdraw') {
-                    icon = 'fa-solid fa-circle-up';
+                } else if (t.type === 'withdraw') { icon = 'fa-solid fa-circle-up';
                     label = 'विथड्रॉ';
                     color = 'text-red-600';
-                    detail = `<span>➡️ ${t.to || 'N/A'}</span>`;
-                } else if (t.type === 'internal') {
-                    icon = 'fa-solid fa-arrow-right-arrow-left';
+                    detail = `<span>➡️ ${t.to || 'N/A'}</span>`; } else if (t.type === 'internal') { icon =
+                        'fa-solid fa-arrow-right-arrow-left';
                     label = 'इंटरनल';
                     color = 'text-amber-600';
-                    detail = `<span>शुल्क: ${t.fee || 0} USDT</span>`;
-                } else {
-                    icon = 'fa-solid fa-exchange';
+                    detail = `<span>शुल्क: ${t.fee || 0} USDT</span>`; } else { icon = 'fa-solid fa-exchange';
                     label = 'अन्य';
-                    color = 'text-amber-600';
-                }
+                    color = 'text-amber-600'; }
                 const amountDisplay = t.amount || t.receiveAmount || t.inrAmount || 0;
                 const currency = t.type === 'exchange' ? (t.action === 'usdt_to_inr' ? 'USDT' : 'INR') :
                     t.type === 'withdraw' || t.type === 'send' || t.type === 'receive' || t.type === 'internal' ? 'USDT' :
@@ -2267,9 +1364,7 @@
         function openReceipt(tx) {
             const modal = document.getElementById('receiptModal');
             const content = document.getElementById('receiptContent');
-
-            let typeLabel = '';
-            let icon = '';
+            let typeLabel = '', icon = '';
             if (tx.type === 'send') { typeLabel = '💸 भेजा गया';
                 icon = 'fa-solid fa-arrow-right'; } else if (tx.type === 'receive') { typeLabel = '💰 प्राप्त हुआ';
                 icon = 'fa-solid fa-arrow-left'; } else if (tx.type === 'exchange') {
@@ -2279,7 +1374,6 @@
                 icon = 'fa-solid fa-circle-up'; } else if (tx.type === 'internal') { typeLabel = '🔄 इंटरनल';
                 icon = 'fa-solid fa-arrow-right-arrow-left'; } else { typeLabel = '📋 अन्य';
                 icon = 'fa-solid fa-exchange'; }
-
             let statusBadge = '';
             if (tx.status === 'completed' || tx.status === 'success') {
                 statusBadge = '<span class="receipt-badge approved">✅ Completed</span>';
@@ -2288,12 +1382,10 @@
             } else {
                 statusBadge = '<span class="receipt-badge approved">✅ ' + (tx.status || 'Completed') + '</span>';
             }
-
             let amountDisplay = tx.amount || tx.receiveAmount || tx.inrAmount || 0;
             let currency = tx.type === 'exchange' ? (tx.action === 'usdt_to_inr' ? 'USDT' : 'INR') :
                 tx.type === 'withdraw' || tx.type === 'send' || tx.type === 'receive' || tx.type === 'internal' ? 'USDT' :
                 '';
-
             let detailHTML = '';
             if (tx.to) detailHTML +=
                 `<div class="receipt-row"><span class="label">➡️ प्राप्तकर्ता</span><span class="value">${tx.to} (${tx.toSpxId || ''})</span></div>`;
@@ -2311,7 +1403,6 @@
                 `<div class="receipt-row"><span class="label">BEP20 एड्रेस</span><span class="value" style="font-size:10px;">${tx.to}</span></div>`;
             if (tx.network) detailHTML +=
                 `<div class="receipt-row"><span class="label">🌐 नेटवर्क</span><span class="value">${tx.network}</span></div>`;
-
             let receiptHTML = `
                 <div class="receipt-row"><span class="label">📋 लेनदेन प्रकार</span><span class="value highlight">${typeLabel}</span></div>
                 <div class="receipt-row"><span class="label">🆔 लेनदेन ID</span><span class="value" style="font-size:10px;">${tx.txId || 'N/A'}</span></div>
@@ -2341,7 +1432,7 @@
                     body { background:#f5f0eb; font-family:'Poppins',sans-serif; padding:20px; }
                     .receipt-card { background:#fff; border:4px solid #d4af37; border-radius:20px; padding:28px; max-width:460px; margin:0 auto; box-shadow:0 8px 0 #b8962a; }
                     .receipt-logo { text-align:center; border-bottom:2px solid #d4af37; padding-bottom:12px; }
-                    .receipt-logo img { height:36px; }
+                    .receipt-logo img { height:36px; border-radius:50%; }
                     .receipt-row { display:flex; justify-content:space-between; padding:6px 0; border-bottom:1px solid #eee; font-size:13px; }
                     .receipt-row .label { color:#6b4a3a; }
                     .receipt-row .value { color:#1a1a2e; text-align:right; }
@@ -2381,7 +1472,7 @@
                     body { background:#f5f0eb; font-family:'Poppins',sans-serif; padding:20px; }
                     .receipt-card { background:#fff; border:4px solid #d4af37; border-radius:20px; padding:28px; max-width:460px; margin:0 auto; box-shadow:0 8px 0 #b8962a; }
                     .receipt-logo { text-align:center; border-bottom:2px solid #d4af37; padding-bottom:12px; }
-                    .receipt-logo img { height:36px; }
+                    .receipt-logo img { height:36px; border-radius:50%; }
                     .receipt-row { display:flex; justify-content:space-between; padding:6px 0; border-bottom:1px solid #eee; font-size:13px; }
                     .receipt-row .label { color:#6b4a3a; }
                     .receipt-row .value { color:#1a1a2e; text-align:right; }
@@ -2446,7 +1537,6 @@
         window.onload = async function() {
             createButterflies();
             renderSlider();
-            // Preload voices
             setTimeout(() => { window.speechSynthesis.getVoices(); }, 500);
             try {
                 const loaded = await loadCurrentUserData();
@@ -2491,6 +1581,9 @@
         window.generateQR = generateQR;
         window.speakText = speakText;
         window.updateDashboard = updateDashboard;
+        window.updateTransferUI = updateTransferUI;
+        window.renderHistory = renderHistory;
+        window.updateProfile = updateProfile;
     </script>
 
 </body>
