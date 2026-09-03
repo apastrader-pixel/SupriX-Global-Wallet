@@ -150,7 +150,12 @@
         @keyframes spin { to { transform:rotate(360deg); } }
         #loadingOverlay p { margin-top:16px; font-size:15px; color:#6b4a3a; font-weight:500; }
 
-        @media (max-width:440px) { .bottom-nav button i { font-size:18px; } .slider-container { height:190px; } .slide-text .quote-line { font-size:12px; } .slide-text .quote-line2 { font-size:11px; } .receipt-modal .receipt-card { padding:20px 16px; } .receipt-modal .receipt-row { font-size:11px; } .qr-scanner-overlay .scanner-box { padding:20px 16px; } .logo-img { height:50px; width:50px; } }
+        /* --- APP DOWNLOAD BUTTON --- */
+        .app-download-btn { background:linear-gradient(145deg,#1a1a2e,#2d2d44); color:#d4af37; border:2px solid #d4af37; padding:6px 16px; border-radius:30px; font-size:11px; font-weight:700; cursor:pointer; transition:all 0.3s; display:flex; align-items:center; gap:6px; box-shadow:0 4px 0 #b8962a,0 4px 15px rgba(212,175,55,0.2); }
+        .app-download-btn:hover { background:#d4af37; color:#1a1a2e; transform:scale(1.05); box-shadow:0 6px 0 #b8962a,0 8px 25px rgba(212,175,55,0.3); }
+        .app-download-btn i { font-size:14px; }
+
+        @media (max-width:440px) { .bottom-nav button i { font-size:18px; } .slider-container { height:190px; } .slide-text .quote-line { font-size:12px; } .slide-text .quote-line2 { font-size:11px; } .receipt-modal .receipt-card { padding:20px 16px; } .receipt-modal .receipt-row { font-size:11px; } .qr-scanner-overlay .scanner-box { padding:20px 16px; } .logo-img { height:50px; width:50px; } .app-download-btn { font-size:9px; padding:4px 12px; } }
     </style>
 </head>
 <body>
@@ -174,6 +179,10 @@
                 </div>
             </div>
             <div class="flex items-center gap-2">
+                <!-- APP DOWNLOAD BUTTON -->
+                <button onclick="downloadApp()" class="app-download-btn" title="App Download (APPMINT)">
+                    <i class="fa-solid fa-download"></i> <span class="hidden sm:inline">App</span>
+                </button>
                 <span id="headerBadge" class="text-[10px] bg-amber-500/15 text-amber-700 border border-amber-500/30 px-3 py-0.5 rounded-full font-bold">User</span>
             </div>
         </header>
@@ -272,17 +281,17 @@
                     <div class="text-[10px] text-amber-600/50 text-center mt-1">⏳ Processing – अधिकतम 24 घंटे</div>
                 </div>
 
-                <!-- SPX ID QR -->
+                <!-- MY QR (PAYMENT QR - Email based) -->
                 <div class="glass-gold p-5 rounded-2xl space-y-3 text-center">
-                    <h4 class="text-sm font-bold text-gradient-gold"><i class="fa-solid fa-qrcode mr-2"></i> मेरी SPX ID</h4>
+                    <h4 class="text-sm font-bold text-gradient-gold"><i class="fa-solid fa-qrcode mr-2"></i> मेरा Payment QR</h4>
                     <div class="flex justify-center">
                         <div class="qr-box" id="profileQrContainer"></div>
                     </div>
-                    <p class="text-[9px] text-amber-600/50">इस QR को स्कैन करें और USDT भेजें</p>
+                    <p class="text-[9px] text-amber-600/50">इस QR को स्कैन करें और मुझे USDT भेजें</p>
                     <div class="flex justify-center gap-3">
-                        <button onclick="copyToClipboard('spxIdDisplay', '✅ SPX ID कॉपी हो गया!')" class="copy-btn text-xs">📋 कॉपी</button>
+                        <button onclick="copyEmail()" class="copy-btn text-xs">📋 Email कॉपी</button>
                     </div>
-                    <span id="spxIdDisplay" class="text-sm font-bold text-gradient-gold font-mono block">SPX-XXXX</span>
+                    <span id="userEmailDisplay" class="text-sm font-bold text-gradient-gold font-mono block">user@example.com</span>
                 </div>
 
             </section>
@@ -291,32 +300,33 @@
             <section id="transferPage" class="app-page w-full hidden space-y-4">
                 <div class="glass-gold p-4 rounded-2xl">
                     <h3 class="text-sm font-bold text-gradient-gold"><i class="fa-solid fa-exchange mr-2"></i> USDT ट्रांसफर</h3>
-                    <p class="text-[11px] text-amber-600/50">किसी को SPX ID से USDT भेजें</p>
+                    <p class="text-[11px] text-amber-600/50">किसी को Email से USDT भेजें</p>
                 </div>
                 <div class="glass-gold p-5 rounded-2xl space-y-4">
                     <div class="flex gap-2">
                         <button onclick="openQrScanner()" class="btn-gold py-2.5 px-4 text-xs font-bold shadow-xl flex items-center gap-2"><i class="fa-solid fa-qrcode mr-1"></i> QR स्कैन करें</button>
                     </div>
-                    <div><label class="block text-xs font-semibold text-amber-700/70 mb-1">SPX ID (रिसीवर)</label><input type="text" id="sendToSpxId" placeholder="SPX ID दर्ज करें (जैसे SPX123456)" class="w-full"></div>
+                    <div><label class="block text-xs font-semibold text-amber-700/70 mb-1">रिसीवर Email</label><input type="email" id="sendToEmail" placeholder="रिसीवर की Email दर्ज करें" class="w-full"></div>
                     <div><label class="block text-xs font-semibold text-amber-700/70 mb-1">USDT संख्या</label><input type="number" id="sendAmount" placeholder="कितने USDT भेजने हैं?" class="w-full" oninput="checkSendMax()"></div>
                     <div class="text-[10px] text-amber-600/50 flex justify-between">
                         <span>अधिकतम: <strong id="maxSendAmount" class="text-gradient-gold">0.00</strong> USDT</span>
                         <span class="text-gradient-green">✅ कोई शुल्क नहीं</span>
                     </div>
-                    <button onclick="sendCoins()" class="w-full btn-gold py-3 rounded-xl text-xs font-bold shadow-xl"><i class="fa-solid fa-paper-plane mr-1"></i> भेजें</button>
+                    <button onclick="sendCoinsByEmail()" class="w-full btn-gold py-3 rounded-xl text-xs font-bold shadow-xl"><i class="fa-solid fa-paper-plane mr-1"></i> भेजें</button>
                 </div>
 
-                <!-- Trade Wallet → Main Wallet (USDT) - NO FEE -->
+                <!-- Trade Wallet → Main Wallet (USDT) -->
                 <div class="glass-gold p-5 rounded-2xl space-y-4">
                     <h4 class="text-xs font-bold text-gradient-gold"><i class="fa-solid fa-arrow-right mr-2"></i> Trade Wallet → मुख्य वॉलेट</h4>
-                    <p class="text-[9px] text-amber-600/50">Trade Wallet से मुख्य वॉलेट में USDT ट्रांसफर (कोई शुल्क नहीं)</p>
+                    <p class="text-[9px] text-amber-600/50">Trade Wallet से मुख्य वॉलेट में USDT ट्रांसफर (10% शुल्क)</p>
                     <div class="flex gap-2">
                         <input type="number" id="moveToMainInput" placeholder="USDT संख्या" class="flex-1" oninput="updateMoveMainFee()">
                         <button onclick="moveToMain()" class="btn-gold px-4 py-2.5 rounded-xl text-xs font-bold shadow-xl whitespace-nowrap"><i class="fa-solid fa-arrow-right mr-1"></i> भेजें</button>
                     </div>
                     <div class="flex justify-between text-[10px] text-amber-600/50 flex-wrap gap-1">
                         <span>अधिकतम: <strong id="maxMoveToMain" class="text-gradient-gold">0.00</strong> USDT</span>
-                        <span>शुल्क: <strong class="text-green-600">0.00</strong> USDT (मुफ्त)</span>
+                        <span>शुल्क (10%): <strong id="moveMainFeePreview" class="text-red-600">0.00</strong> USDT</span>
+                        <span>प्राप्त: <strong id="moveMainReceivePreview" class="text-gradient-green">0.00</strong> USDT</span>
                     </div>
                 </div>
             </section>
@@ -325,43 +335,43 @@
             <section id="exchangePage" class="app-page w-full hidden space-y-4">
                 <div class="glass-gold p-4 rounded-2xl">
                     <h3 class="text-sm font-bold text-gradient-rainbow"><i class="fa-solid fa-arrows-rotate mr-2"></i> एक्सचेंज</h3>
-                    <p class="text-[11px] text-amber-600/50">USDT ↔ INR — $1 = ₹100 (कोई शुल्क नहीं)</p>
+                    <p class="text-[11px] text-amber-600/50">USDT BEP20 ↔ INR — 1% शुल्क</p>
                 </div>
 
                 <!-- USDT → INR -->
                 <div class="glass-gold p-5 rounded-2xl space-y-4">
                     <div class="flex items-center gap-2">
                         <span class="bg-amber-500/20 px-3 py-1 rounded-full text-xs font-bold text-gradient-gold">💲 USDT → ₹ INR</span>
-                        <span class="text-[9px] text-green-600 font-semibold">(कोई शुल्क नहीं)</span>
+                        <span class="text-[9px] text-red-500 font-semibold">(1% शुल्क)</span>
                     </div>
                     <div class="grid grid-cols-2 gap-3">
                         <div><label class="block text-[10px] text-amber-600/50 mb-1">USDT संख्या</label><input type="number" id="exchangeUsdtToInr" placeholder="USDT" class="w-full" oninput="calculateUsdtToInr()"></div>
                         <div><label class="block text-[10px] text-amber-600/50 mb-1">₹ INR प्राप्त</label><input type="text" id="exchangeUsdtToInrResult" placeholder="₹ INR" class="w-full bg-gray-100" readonly></div>
                     </div>
                     <div class="text-[10px] text-amber-600/50 flex justify-between">
-                        <span>शुल्क: <strong class="text-green-600">0.00</strong> USDT (मुफ्त)</span>
+                        <span>शुल्क (1%): <strong id="usdtToInrFee" class="text-red-600">0.00</strong> USDT</span>
                         <span>प्राप्त: <strong id="usdtToInrReceive" class="text-gradient-green">₹0.00</strong></span>
                     </div>
                     <button onclick="exchangeUsdtToInr()" class="w-full btn-gold py-2.5 rounded-xl text-xs font-bold shadow-xl">🔄 USDT → INR एक्सचेंज करें</button>
-                    <p class="text-[9px] text-amber-600/40 text-center">दर: 1 USDT = ₹100</p>
+                    <p class="text-[9px] text-amber-600/40 text-center">दर: 1 USDT = ₹85</p>
                 </div>
 
                 <!-- INR → USDT -->
                 <div class="glass-gold p-5 rounded-2xl space-y-4">
                     <div class="flex items-center gap-2">
                         <span class="bg-green-500/20 px-3 py-1 rounded-full text-xs font-bold text-gradient-green">₹ INR → 💲 USDT</span>
-                        <span class="text-[9px] text-green-600 font-semibold">(कोई शुल्क नहीं)</span>
+                        <span class="text-[9px] text-red-500 font-semibold">(1% शुल्क)</span>
                     </div>
                     <div class="grid grid-cols-2 gap-3">
                         <div><label class="block text-[10px] text-amber-600/50 mb-1">₹ INR संख्या</label><input type="number" id="exchangeInrToUsdt" placeholder="₹ INR" class="w-full" oninput="calculateInrToUsdt()"></div>
                         <div><label class="block text-[10px] text-amber-600/50 mb-1">USDT प्राप्त</label><input type="text" id="exchangeInrToUsdtResult" placeholder="USDT" class="w-full bg-gray-100" readonly></div>
                     </div>
                     <div class="text-[10px] text-amber-600/50 flex justify-between">
-                        <span>शुल्क: <strong class="text-green-600">₹0.00</strong> (मुफ्त)</span>
+                        <span>शुल्क (1%): <strong id="inrToUsdtFee" class="text-red-600">₹0.00</strong></span>
                         <span>प्राप्त: <strong id="inrToUsdtReceive" class="text-gradient-gold">0.00</strong> USDT</span>
                     </div>
                     <button onclick="exchangeInrToUsdt()" class="w-full btn-gold py-2.5 rounded-xl text-xs font-bold shadow-xl">🔄 INR → USDT एक्सचेंज करें</button>
-                    <p class="text-[9px] text-amber-600/40 text-center">दर: ₹100 = 1 USDT</p>
+                    <p class="text-[9px] text-amber-600/40 text-center">दर: ₹85 = 1 USDT</p>
                 </div>
 
                 <!-- USDT → SUPX COIN (Coming Soon) -->
@@ -426,9 +436,9 @@
                         </div>
                     </div>
                     <div class="text-right">
-                        <span class="text-[9px] text-amber-600/50">SPX ID</span>
-                        <span id="profileSpxId" class="text-sm font-bold text-gradient-gold font-mono block">SPX-XXXX</span>
-                        <button onclick="copyToClipboard('profileSpxId', '✅ SPX ID कॉपी हो गया!')" class="copy-btn text-xs mt-1">📋 कॉपी</button>
+                        <span class="text-[9px] text-amber-600/50">Email</span>
+                        <span id="profileEmailDisplay" class="text-sm font-bold text-gradient-gold font-mono block">user@example.com</span>
+                        <button onclick="copyEmail()" class="copy-btn text-xs mt-1">📋 कॉपी</button>
                     </div>
                 </div>
 
@@ -444,9 +454,9 @@
                     </div>
                 </div>
 
-                <!-- SPX ID QR -->
+                <!-- MY QR (Payment QR - Email based) -->
                 <div class="glass-gold p-5 rounded-2xl space-y-3 text-center">
-                    <h4 class="text-sm font-bold text-gradient-gold"><i class="fa-solid fa-qrcode mr-2"></i> मेरा SPX QR</h4>
+                    <h4 class="text-sm font-bold text-gradient-gold"><i class="fa-solid fa-qrcode mr-2"></i> मेरा Payment QR</h4>
                     <div class="flex justify-center">
                         <div class="qr-box" id="profileQrContainer2"></div>
                     </div>
@@ -472,7 +482,7 @@
             <button class="close-scanner" onclick="closeQrScanner()"><i class="fa-solid fa-xmark"></i></button>
             <div class="scanner-box">
                 <h3 class="text-amber-600 font-bold text-base mb-1"><i class="fa-solid fa-camera mr-2"></i> QR स्कैन करें</h3>
-                <p class="text-[10px] text-amber-600/50 mb-2">कैमरा चालू करें और SPX ID QR कोड दिखाएँ</p>
+                <p class="text-[10px] text-amber-600/50 mb-2">कैमरा चालू करें और Email QR कोड दिखाएँ</p>
                 <div id="reader"></div>
                 <div id="scannerStatus" class="scanner-status text-center">⏳ कैमरा शुरू हो रहा है...</div>
                 <div class="flex gap-2 mt-2 flex-wrap justify-center">
@@ -480,13 +490,13 @@
                     <button onclick="stopScanner()" class="scan-btn scan-btn-secondary"><i class="fa-solid fa-stop mr-1"></i> बंद करें</button>
                 </div>
                 <div class="mt-3">
-                    <input type="text" id="scannerInput" placeholder="पेस्ट करें SPX ID..." class="w-full" readonly>
+                    <input type="email" id="scannerInput" placeholder="स्कैन की गई Email..." class="w-full" readonly>
                     <div class="flex gap-2 mt-2">
                         <input type="number" id="scannerAmount" placeholder="USDT संख्या" class="flex-1">
                         <button onclick="scanAndSend()" class="scan-btn px-4 py-2 text-xs"><i class="fa-solid fa-paper-plane mr-1"></i> भेजें</button>
                     </div>
                 </div>
-                <p class="text-[8px] text-amber-600/30 mt-2">स्कैन करने के बाद SPX ID ऑटो-फिल हो जाएगा</p>
+                <p class="text-[8px] text-amber-600/30 mt-2">स्कैन करने के बाद Email ऑटो-फिल हो जाएगा</p>
             </div>
         </div>
 
@@ -506,7 +516,7 @@
     </div>
 
     <!-- ============================================================ -->
-    <!-- JAVASCRIPT - FEES REMOVED, RATE = 100, HINDI VOICE          -->
+    <!-- JAVASCRIPT - FIXED: Wallet with Email-based transfers        -->
     <!-- ============================================================ -->
     <script>
         // ============================================================
@@ -523,14 +533,14 @@
         const account = new Account(client);
 
         // ============================================================
-        // STATE - UPDATED: RATE = 100, NO FEES
+        // STATE
         // ============================================================
         let currentUser = null;
         let txHistoryFilter = 'all';
         let html5QrCode = null;
         let isScanning = false;
-        const EXCHANGE_RATE = 100;   // $1 = ₹100
-        const EXCHANGE_FEE = 0;       // No fee
+        const EXCHANGE_RATE = 85;
+        const EXCHANGE_FEE = 0.01;
 
         // ============================================================
         // UTILITY FUNCTIONS
@@ -643,7 +653,29 @@
         }
 
         // ============================================================
-        // QR SCANNER (unchanged)
+        // APP DOWNLOAD (APPMINT)
+        // ============================================================
+        function downloadApp() {
+            showToast('📲 App Download: APPMINT से अपडेट होगा', 'info');
+            // आप यहाँ अपना APPMINT लिंक डाल सकते हैं:
+            // window.open('https://appmint.io/your-app-link', '_blank');
+        }
+
+        // ============================================================
+        // COPY EMAIL
+        // ============================================================
+        function copyEmail() {
+            if (!currentUser) { showToast('लॉगिन करें', 'error'); return; }
+            const email = currentUser.email || '';
+            if (!email) { showToast('Email नहीं मिला', 'error'); return; }
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(email).then(() => showToast('✅ Email कॉपी हो गया!'))
+                    .catch(() => legacyCopyFallback(email, '✅ Email कॉपी हो गया!'));
+            } else { legacyCopyFallback(email, '✅ Email कॉपी हो गया!'); }
+        }
+
+        // ============================================================
+        // QR SCANNER - SCANS EMAIL
         // ============================================================
         function openQrScanner() {
             const overlay = document.getElementById('qrScannerOverlay');
@@ -652,7 +684,7 @@
             document.getElementById('scannerAmount').value = '';
             document.getElementById('scannerStatus').innerHTML = '⏳ कैमरा शुरू हो रहा है...';
             document.getElementById('scannerStatus').className = 'scanner-status info';
-            speakText('QR Scan करें', () => {});
+            speakText('QR Scan करें, Email स्कैन होगा', () => {});
             setTimeout(() => startScanner(), 600);
         }
 
@@ -675,17 +707,18 @@
                 const config = { fps: 15, qrbox: { width: 240, height: 240 }, aspectRatio: 1.0 };
                 html5QrCode.start({ facingMode: "environment" }, config,
                     function(decodedText) {
+                        // decodedText is Email
                         document.getElementById('scannerInput').value = decodedText;
-                        document.getElementById('scannerStatus').innerHTML = '✅ SPX ID स्कैन हो गया!';
+                        document.getElementById('scannerStatus').innerHTML = '✅ Email स्कैन हो गया!';
                         document.getElementById('scannerStatus').className = 'scanner-status success';
-                        speakText('SPX ID स्कैन हो गया, अमाउंट डालें और Submit करें', () => {});
-                        showToast('✅ SPX ID स्कैन हो गया! अब राशि डालें और भेजें।', 'success');
+                        speakText('Email स्कैन हो गया, अमाउंट डालें और Submit करें', () => {});
+                        showToast('✅ Email स्कैन हो गया! अब राशि डालें और भेजें।', 'success');
                         stopScanner();
                     },
                     function(error) {}
                 ).then(() => {
                     isScanning = true;
-                    document.getElementById('scannerStatus').innerHTML = '📷 कैमरा चालू है, QR कोड दिखाएँ';
+                    document.getElementById('scannerStatus').innerHTML = '📷 कैमरा चालू है, Email QR कोड दिखाएँ';
                     document.getElementById('scannerStatus').className = 'scanner-status info';
                     showToast('📷 कैमरा चालू हो गया है', 'info');
                 }).catch(function(err) {
@@ -716,7 +749,162 @@
         }
 
         // ============================================================
-        // SLIDER (unchanged)
+        // SCAN AND SEND (Email based)
+        // ============================================================
+        async function scanAndSend() {
+            if (!currentUser) { showToast('पहले लॉगिन करें', 'error'); return; }
+            const email = document.getElementById('scannerInput').value.trim();
+            const amount = parseFloat(document.getElementById('scannerAmount').value);
+            if (!email) { showToast('Email स्कैन करें या पेस्ट करें', 'error'); return; }
+            if (!amount || amount <= 0) { showToast('USDT संख्या दर्ज करें', 'error'); return; }
+            if (email === currentUser.email) { showToast('❌ खुद को नहीं भेज सकते!', 'error'); return; }
+            if (amount > parseFloat(currentUser.coins || 0)) { showToast('बैलेंस में पर्याप्त USDT नहीं!', 'error'); return; }
+
+            try {
+                // Find receiver by email
+                const res = await databases.listDocuments(DATABASE_ID, USERS_COLLECTION_ID, [
+                    Query.equal('email', email)
+                ]);
+                if (res.documents.length === 0) { showToast('❌ यह Email पंजीकृत नहीं है!', 'error'); return; }
+                const target = res.documents[0];
+                if (target.$id === currentUser.$id) { showToast('❌ खुद को नहीं भेज सकते!', 'error'); return; }
+
+                const newSenderCoins = parseFloat(currentUser.coins || 0) - amount;
+                const newReceiverCoins = parseFloat(target.coins || 0) + amount;
+                const txId = generateTransactionId();
+
+                // Sender transaction
+                const tx = { type: 'send', txId, amount, to: target.email, toEmail: target.email, dateTime: new Date()
+                        .toLocaleString('hi-IN'), status: 'completed', network: 'USDT BEP20' };
+                const txs = [...(currentUser.transactions || [])];
+                txs.push(tx);
+
+                // Receiver transaction
+                const receiveTx = { type: 'receive', txId, amount, from: currentUser.email, fromEmail: currentUser.email,
+                    dateTime: new Date().toLocaleString('hi-IN'), status: 'completed', network: 'USDT BEP20' };
+
+                await databases.updateDocument(DATABASE_ID, USERS_COLLECTION_ID, currentUser.$id, {
+                    coins: newSenderCoins,
+                    transactions: JSON.stringify(txs)
+                });
+                const receiverTxList = parseJsonSafe(target.transactions, []);
+                receiverTxList.push(receiveTx);
+                await databases.updateDocument(DATABASE_ID, USERS_COLLECTION_ID, target.$id, {
+                    coins: newReceiverCoins,
+                    transactions: JSON.stringify(receiverTxList)
+                });
+
+                currentUser.coins = newSenderCoins;
+                currentUser.transactions = txs;
+
+                document.getElementById('scannerInput').value = '';
+                document.getElementById('scannerAmount').value = '';
+                closeQrScanner();
+
+                showToast(`✅ ${amount.toFixed(2)} USDT ${target.email} को भेजे गए`, 'success');
+                speakText('Transaction Successful, बधाई हो', () => {});
+                updateDashboard();
+                updateTransferUI();
+            } catch (e) {
+                showToast('त्रुटि: ' + e.message, 'error');
+            }
+        }
+
+        // ============================================================
+        // SEND COINS BY EMAIL
+        // ============================================================
+        async function sendCoinsByEmail() {
+            if (!currentUser) { showToast('लॉगिन करें', 'error'); return; }
+            const email = document.getElementById('sendToEmail').value.trim();
+            const amount = parseFloat(document.getElementById('sendAmount').value);
+            if (!email) { showToast('रिसीवर की Email दर्ज करें', 'error'); return; }
+            if (!amount || amount <= 0) { showToast('सही USDT संख्या दर्ज करें', 'error'); return; }
+            if (email === currentUser.email) { showToast('❌ खुद को नहीं भेज सकते!', 'error'); return; }
+            if (amount > parseFloat(currentUser.coins || 0)) { showToast('बैलेंस में पर्याप्त USDT नहीं!', 'error'); return; }
+
+            try {
+                const res = await databases.listDocuments(DATABASE_ID, USERS_COLLECTION_ID, [
+                    Query.equal('email', email)
+                ]);
+                if (res.documents.length === 0) { showToast('❌ यह Email पंजीकृत नहीं है!', 'error'); return; }
+                const target = res.documents[0];
+                if (target.$id === currentUser.$id) { showToast('❌ खुद को नहीं भेज सकते!', 'error'); return; }
+
+                const newSenderCoins = parseFloat(currentUser.coins || 0) - amount;
+                const newReceiverCoins = parseFloat(target.coins || 0) + amount;
+                const txId = generateTransactionId();
+
+                const tx = { type: 'send', txId, amount, to: target.email, toEmail: target.email, dateTime: new Date()
+                        .toLocaleString('hi-IN'), status: 'completed', network: 'USDT BEP20' };
+                const txs = [...(currentUser.transactions || [])];
+                txs.push(tx);
+
+                const receiveTx = { type: 'receive', txId, amount, from: currentUser.email, fromEmail: currentUser.email,
+                    dateTime: new Date().toLocaleString('hi-IN'), status: 'completed', network: 'USDT BEP20' };
+
+                await databases.updateDocument(DATABASE_ID, USERS_COLLECTION_ID, currentUser.$id, {
+                    coins: newSenderCoins,
+                    transactions: JSON.stringify(txs)
+                });
+                const receiverTxList = parseJsonSafe(target.transactions, []);
+                receiverTxList.push(receiveTx);
+                await databases.updateDocument(DATABASE_ID, USERS_COLLECTION_ID, target.$id, {
+                    coins: newReceiverCoins,
+                    transactions: JSON.stringify(receiverTxList)
+                });
+
+                currentUser.coins = newSenderCoins;
+                currentUser.transactions = txs;
+
+                document.getElementById('sendToEmail').value = '';
+                document.getElementById('sendAmount').value = '';
+
+                showToast(`✅ ${amount.toFixed(2)} USDT ${target.email} को भेजे गए`, 'success');
+                speakText('Transaction Successful, बधाई हो', () => {});
+                updateDashboard();
+                updateTransferUI();
+            } catch (e) {
+                showToast('त्रुटि: ' + e.message, 'error');
+            }
+        }
+
+        // ============================================================
+        // MOVE TO MAIN
+        // ============================================================
+        async function moveToMain() {
+            if (!currentUser) { showToast('लॉगिन करें', 'error'); return; }
+            const amount = parseFloat(document.getElementById('moveToMainInput').value);
+            if (!amount || amount <= 0) { showToast('सही संख्या दर्ज करें', 'error'); return; }
+            const maxTrade = parseFloat(currentUser.tradeWallet || 0);
+            if (amount > maxTrade) { showToast('Trade Wallet में पर्याप्त नहीं!', 'error'); return; }
+            const fee = amount * 0.10;
+            const receive = amount - fee;
+            try {
+                const newTrade = parseFloat(currentUser.tradeWallet || 0) - amount;
+                const newCoins = parseFloat(currentUser.coins || 0) + receive;
+                const txId = generateTransactionId();
+                const tx = { type: 'internal', txId, action: 'trade_to_main', amount, fee, receiveAmount: receive,
+                    dateTime: new Date().toLocaleString('hi-IN'), status: 'completed', network: 'USDT BEP20' };
+                const txs = [...(currentUser.transactions || [])];
+                txs.push(tx);
+                await databases.updateDocument(DATABASE_ID, USERS_COLLECTION_ID, currentUser.$id, {
+                    coins: newCoins,
+                    tradeWallet: newTrade,
+                    transactions: JSON.stringify(txs)
+                });
+                currentUser.coins = newCoins;
+                currentUser.tradeWallet = newTrade;
+                currentUser.transactions = txs;
+                document.getElementById('moveToMainInput').value = '';
+                showToast(`✅ ${receive.toFixed(2)} USDT मुख्य वॉलेट में जमा (शुल्क: ${fee.toFixed(2)})`, 'success');
+                speakText('Transaction Successful, बधाई हो', () => {});
+                updateTransferUI();
+                updateDashboard();
+            } catch (e) { showToast('त्रुटि: ' + e.message, 'error'); }
+        }
+
+        // ============================================================
+        // SLIDER
         // ============================================================
         const slideData = [
             { img: 'https://picsum.photos/seed/suprix1/600/400', icon: '🚀', line1: 'SupriX Wallet के साथ', line2: 'अपने सपनों को पंख लगाओ', badge: '✦ प्रीमियम ✦' },
@@ -763,7 +951,7 @@
         }
 
         // ============================================================
-        // AUTH - FIXED: No "User data not loaded" error
+        // AUTH
         // ============================================================
         async function handleLogin(btn) {
             const email = document.getElementById('loginUserId').value.trim();
@@ -836,13 +1024,9 @@
                     return;
                 }
 
-                if (!currentUser.stakingHistory) currentUser.stakingHistory = [];
-                if (!currentUser.dailyRewards) currentUser.dailyRewards = [];
-
                 showToast('✅ लॉगिन सफल!', 'success');
                 document.getElementById('bottomNavBar').classList.remove('hidden');
                 switchNav('dashboard');
-                speakText('स्वागत है, आपका डैशबोर्ड लोड हो रहा है', () => {});
             } catch (e) {
                 console.error('Login error:', e);
                 let msg = '❌ गलत ईमेल या पासवर्ड';
@@ -904,7 +1088,6 @@
                 };
                 await databases.createDocument(DATABASE_ID, USERS_COLLECTION_ID, newAccount.$id, userData);
                 showToast('🎉 रजिस्ट्रेशन सफल!', 'success');
-                speakText('रजिस्ट्रेशन सफल, अब लॉगिन करें', () => {});
                 showPage('loginPage');
                 document.getElementById('loginUserId').value = email;
                 document.getElementById('loginPassword').value = phone;
@@ -921,39 +1104,6 @@
             document.querySelectorAll('.app-page').forEach(p => p.classList.add('hidden'));
             document.getElementById('loginPage').classList.remove('hidden');
             showToast('लॉगआउट हो गया', 'info');
-            speakText('आप लॉगआउट हो गए', () => {});
-        }
-
-        async function loadCurrentUserData() {
-            try {
-                const acc = await account.get();
-                const doc = await databases.getDocument(DATABASE_ID, USERS_COLLECTION_ID, acc.$id);
-                if (!doc.spxId) {
-                    const newId = generateSpxId();
-                    await databases.updateDocument(DATABASE_ID, USERS_COLLECTION_ID, doc.$id, { spxId: newId });
-                    doc.spxId = newId;
-                }
-                if (doc.inrBalance === undefined || doc.inrBalance === null) {
-                    await databases.updateDocument(DATABASE_ID, USERS_COLLECTION_ID, doc.$id, { inrBalance: 0 });
-                    doc.inrBalance = 0;
-                }
-                if (doc.tradeWallet === undefined || doc.tradeWallet === null) {
-                    await databases.updateDocument(DATABASE_ID, USERS_COLLECTION_ID, doc.$id, { tradeWallet: 0 });
-                    doc.tradeWallet = 0;
-                }
-                currentUser = mapUserDoc(doc);
-                return true;
-            } catch (e) { return false; }
-        }
-
-        async function saveUserFields(fields) {
-            if (!currentUser) return;
-            await databases.updateDocument(DATABASE_ID, USERS_COLLECTION_ID, currentUser.$id, fields);
-            Object.assign(currentUser, fields);
-            if ('transactions' in fields) currentUser.transactions = parseJsonSafe(fields.transactions, []);
-            if ('coins' in fields) currentUser.coins = parseFloat(fields.coins);
-            if ('inrBalance' in fields) currentUser.inrBalance = parseFloat(fields.inrBalance);
-            if ('tradeWallet' in fields) currentUser.tradeWallet = parseFloat(fields.tradeWallet);
         }
 
         // ============================================================
@@ -980,15 +1130,6 @@
             if (section === 'transfer') updateTransferUI();
             if (section === 'history') renderHistory();
             if (section === 'profile') updateProfile();
-            // Hindi voice for section
-            const msgMap = {
-                'dashboard': 'डैशबोर्ड',
-                'transfer': 'भेजें पेज',
-                'exchange': 'एक्सचेंज पेज',
-                'history': 'हिस्ट्री पेज',
-                'profile': 'प्रोफाइल पेज'
-            };
-            speakText(msgMap[section] || 'पेज लोड हो गया', () => {});
         }
 
         // ============================================================
@@ -1002,164 +1143,95 @@
             document.getElementById('usdtBalance').innerText = parseFloat(currentUser.coins || 0).toFixed(2) + ' USDT';
             document.getElementById('profileInrBalance').innerHTML = '₹' + parseFloat(currentUser.inrBalance || 0).toFixed(2);
             document.getElementById('profileUsdtBalance').innerText = parseFloat(currentUser.coins || 0).toFixed(2) + ' USDT';
-            generateQR(currentUser.spxId || 'N/A', 'profileQrContainer', 140);
-            document.getElementById('spxIdDisplay').innerText = currentUser.spxId || 'N/A';
-            generateQR(currentUser.spxId || 'N/A', 'profileQrContainer2', 140);
-            document.getElementById('profileSpxId').innerText = currentUser.spxId || 'N/A';
+            
+            // QR - Email based
+            generateQR(currentUser.email || 'N/A', 'profileQrContainer', 140);
+            document.getElementById('userEmailDisplay').innerText = currentUser.email || 'N/A';
+            generateQR(currentUser.email || 'N/A', 'profileQrContainer2', 140);
+            document.getElementById('profileEmailDisplay').innerText = currentUser.email || 'N/A';
             document.getElementById('profileName').innerText = currentUser.name || 'User';
             document.getElementById('profileEmail').innerText = currentUser.email || '';
         }
 
         // ============================================================
-        // TRANSFER - updated: no fees
+        // TRANSFER
         // ============================================================
         function updateTransferUI() {
             if (!currentUser) return;
-            const maxTrade = parseFloat(currentUser.tradeWallet || 0);
-            document.getElementById('maxSendAmount').innerText = maxTrade.toFixed(2);
-            document.getElementById('maxMoveToMain').innerText = maxTrade.toFixed(2);
-            // No fee display for move to main
+            const maxCoins = parseFloat(currentUser.coins || 0);
+            document.getElementById('maxSendAmount').innerText = maxCoins.toFixed(2);
+            document.getElementById('maxMoveToMain').innerText = (parseFloat(currentUser.tradeWallet || 0)).toFixed(2);
+            updateMoveMainFee();
         }
 
         function updateMoveMainFee() {
-            // No fee, just show receive = amount
             const val = parseFloat(document.getElementById('moveToMainInput').value) || 0;
-            document.getElementById('moveMainFeePreview').innerText = '0.00';
-            document.getElementById('moveMainReceivePreview').innerText = val.toFixed(2);
+            const fee = val * 0.10;
+            const receive = val - fee;
+            document.getElementById('moveMainFeePreview').innerText = fee.toFixed(2);
+            document.getElementById('moveMainReceivePreview').innerText = receive.toFixed(2);
         }
 
         function checkSendMax() {
             const amount = parseFloat(document.getElementById('sendAmount').value) || 0;
-            const max = parseFloat(currentUser.tradeWallet || 0);
+            const max = parseFloat(currentUser.coins || 0);
             if (amount > max) { document.getElementById('sendAmount').value = max.toFixed(2);
                 showToast(`⚠️ सिर्फ ${max.toFixed(2)} USDT है!`, 'info'); }
         }
 
         // ============================================================
-        // EXCHANGE - updated: rate=100, no fees
+        // EXCHANGE
         // ============================================================
         function calculateUsdtToInr() {
             const usdt = parseFloat(document.getElementById('exchangeUsdtToInr').value) || 0;
-            const inr = usdt * EXCHANGE_RATE; // no fee
+            const fee = usdt * EXCHANGE_FEE;
+            const afterFee = usdt - fee;
+            const inr = afterFee * EXCHANGE_RATE;
             document.getElementById('exchangeUsdtToInrResult').value = '₹' + inr.toFixed(2);
-            document.getElementById('usdtToInrFee').innerText = '0.00';
+            document.getElementById('usdtToInrFee').innerText = fee.toFixed(4);
             document.getElementById('usdtToInrReceive').innerText = '₹' + inr.toFixed(2);
         }
 
         function calculateInrToUsdt() {
             const inr = parseFloat(document.getElementById('exchangeInrToUsdt').value) || 0;
             const usdt = inr / EXCHANGE_RATE;
-            document.getElementById('exchangeInrToUsdtResult').innerText = usdt.toFixed(4) + ' USDT';
-            document.getElementById('inrToUsdtFee').innerText = '₹0.00';
-            document.getElementById('inrToUsdtReceive').innerText = usdt.toFixed(4);
+            const fee = usdt * EXCHANGE_FEE;
+            const afterFee = usdt - fee;
+            document.getElementById('exchangeInrToUsdtResult').innerText = afterFee.toFixed(4) + ' USDT';
+            document.getElementById('inrToUsdtFee').innerText = '₹' + (inr * EXCHANGE_FEE).toFixed(2);
+            document.getElementById('inrToUsdtReceive').innerText = afterFee.toFixed(4);
         }
 
-        // ============================================================
-        // SEND COINS - no fee
-        // ============================================================
-        async function sendCoins() {
-            if (!currentUser) { showToast('लॉगिन करें', 'error'); return; }
-            const spxId = document.getElementById('sendToSpxId').value.trim();
-            const amount = parseFloat(document.getElementById('sendAmount').value);
-            if (!spxId) { showToast('SPX ID दर्ज करें', 'error'); return; }
-            if (!amount || amount <= 0) { showToast('सही USDT संख्या दर्ज करें', 'error'); return; }
-            const maxTrade = parseFloat(currentUser.tradeWallet || 0);
-            if (amount > maxTrade) { showToast('Trade Wallet में पर्याप्त USDT नहीं!', 'error'); return; }
-
-            try {
-                const res = await databases.listDocuments(DATABASE_ID, USERS_COLLECTION_ID, [Query.equal('spxId', spxId)]);
-                if (res.documents.length === 0) { showToast('❌ SPX ID नहीं मिला!', 'error'); return; }
-                const target = res.documents[0];
-                if (target.$id === currentUser.$id) { showToast('❌ खुद को नहीं भेज सकते!', 'error'); return; }
-
-                const newSenderTrade = parseFloat(currentUser.tradeWallet || 0) - amount;
-                const newReceiverTrade = parseFloat(target.tradeWallet || 0) + amount;
-                const txId = generateTransactionId();
-                const tx = { type: 'send', txId, amount, to: target.email, toSpxId: target.spxId, dateTime: new Date()
-                        .toLocaleString('hi-IN'), status: 'completed', network: 'USDT BEP20' };
-                const txs = [...(currentUser.transactions || [])];
-                txs.push(tx);
-                const receiveTx = { type: 'receive', txId, amount, from: currentUser.email, fromSpxId: currentUser.spxId,
-                    dateTime: new Date().toLocaleString('hi-IN'), status: 'completed', network: 'USDT BEP20' };
-
-                await databases.updateDocument(DATABASE_ID, USERS_COLLECTION_ID, currentUser.$id, {
-                    tradeWallet: newSenderTrade,
-                    transactions: JSON.stringify(txs)
-                });
-                const receiverTxList = parseJsonSafe(target.transactions, []);
-                receiverTxList.push(receiveTx);
-                await databases.updateDocument(DATABASE_ID, USERS_COLLECTION_ID, target.$id, {
-                    tradeWallet: newReceiverTrade,
-                    transactions: JSON.stringify(receiverTxList)
-                });
-                currentUser.tradeWallet = newSenderTrade;
-                currentUser.transactions = txs;
-                document.getElementById('sendToSpxId').value = '';
-                document.getElementById('sendAmount').value = '';
-                showToast(`✅ ${amount.toFixed(2)} USDT ${target.email} को भेजे गए`, 'success');
-                speakText('लेनदेन सफल, बधाई हो', () => {});
-                updateTransferUI();
-                updateDashboard();
-            } catch (e) { showToast('त्रुटि: ' + e.message, 'error'); }
-        }
-
-        // ============================================================
-        // MOVE TO MAIN - no fee
-        // ============================================================
-        async function moveToMain() {
-            if (!currentUser) { showToast('लॉगिन करें', 'error'); return; }
-            const amount = parseFloat(document.getElementById('moveToMainInput').value);
-            if (!amount || amount <= 0) { showToast('सही संख्या दर्ज करें', 'error'); return; }
-            const maxTrade = parseFloat(currentUser.tradeWallet || 0);
-            if (amount > maxTrade) { showToast('Trade Wallet में पर्याप्त नहीं!', 'error'); return; }
-            // No fee, full amount moves
-            try {
-                const newTrade = parseFloat(currentUser.tradeWallet || 0) - amount;
-                const newCoins = parseFloat(currentUser.coins || 0) + amount;
-                const txId = generateTransactionId();
-                const tx = { type: 'internal', txId, action: 'trade_to_main', amount, fee: 0, receiveAmount: amount,
-                    dateTime: new Date().toLocaleString('hi-IN'), status: 'completed', network: 'USDT BEP20' };
-                const txs = [...(currentUser.transactions || [])];
-                txs.push(tx);
-                await saveUserFields({ coins: newCoins, tradeWallet: newTrade, transactions: JSON.stringify(txs) });
-                currentUser.coins = newCoins;
-                currentUser.tradeWallet = newTrade;
-                currentUser.transactions = txs;
-                document.getElementById('moveToMainInput').value = '';
-                showToast(`✅ ${amount.toFixed(2)} USDT मुख्य वॉलेट में जमा (कोई शुल्क नहीं)`, 'success');
-                speakText('लेनदेन सफल, बधाई हो', () => {});
-                updateTransferUI();
-                updateDashboard();
-            } catch (e) { showToast('त्रुटि: ' + e.message, 'error'); }
-        }
-
-        // ============================================================
-        // EXCHANGE FUNCTIONS - no fees
-        // ============================================================
         async function exchangeUsdtToInr() {
             if (!currentUser) { showToast('लॉगिन करें', 'error'); return; }
             const usdt = parseFloat(document.getElementById('exchangeUsdtToInr').value);
             if (!usdt || usdt <= 0) { showToast('USDT संख्या दर्ज करें', 'error'); return; }
             if (usdt > parseFloat(currentUser.coins || 0)) { showToast('मुख्य USDT बैलेंस में पर्याप्त नहीं!', 'error'); return; }
-            const inrAmount = usdt * EXCHANGE_RATE; // no fee
+            const fee = usdt * EXCHANGE_FEE;
+            const afterFee = usdt - fee;
+            const inrAmount = afterFee * EXCHANGE_RATE;
             try {
                 const newCoins = parseFloat(currentUser.coins || 0) - usdt;
                 const newInr = parseFloat(currentUser.inrBalance || 0) + inrAmount;
                 const txId = generateTransactionId();
-                const tx = { type: 'exchange', txId, action: 'usdt_to_inr', amount: usdt, fee: 0, netAmount: usdt,
+                const tx = { type: 'exchange', txId, action: 'usdt_to_inr', amount: usdt, fee, netAmount: afterFee,
                     inrAmount, rate: EXCHANGE_RATE, dateTime: new Date().toLocaleString('hi-IN'), status: 'completed',
-                    network: 'USDT → INR' };
+                    network: 'USDT BEP20 → INR' };
                 const txs = [...(currentUser.transactions || [])];
                 txs.push(tx);
-                await saveUserFields({ coins: newCoins, inrBalance: newInr, transactions: JSON.stringify(txs) });
+                await databases.updateDocument(DATABASE_ID, USERS_COLLECTION_ID, currentUser.$id, {
+                    coins: newCoins,
+                    inrBalance: newInr,
+                    transactions: JSON.stringify(txs)
+                });
                 currentUser.coins = newCoins;
                 currentUser.inrBalance = newInr;
                 currentUser.transactions = txs;
                 document.getElementById('exchangeUsdtToInr').value = '';
                 document.getElementById('exchangeUsdtToInrResult').value = '';
-                showToast(`✅ ${usdt.toFixed(2)} USDT → ₹${inrAmount.toFixed(2)} INR एक्सचेंज हो गया! (कोई शुल्क नहीं)`,
+                showToast(`✅ ${usdt.toFixed(2)} USDT → ₹${inrAmount.toFixed(2)} INR एक्सचेंज हो गया! (शुल्क: ${fee.toFixed(4)} USDT)`,
                     'success');
-                speakText('लेनदेन सफल, बधाई हो', () => {});
+                speakText('Transaction Successful, बधाई हो', () => {});
                 updateDashboard();
             } catch (e) { showToast('त्रुटि: ' + e.message, 'error'); }
         }
@@ -1169,77 +1241,37 @@
             const inr = parseFloat(document.getElementById('exchangeInrToUsdt').value);
             if (!inr || inr <= 0) { showToast('INR संख्या दर्ज करें', 'error'); return; }
             if (inr > parseFloat(currentUser.inrBalance || 0)) { showToast('INR बैलेंस में पर्याप्त नहीं!', 'error'); return; }
-            const usdt = inr / EXCHANGE_RATE; // no fee
+            const usdt = inr / EXCHANGE_RATE;
+            const fee = usdt * EXCHANGE_FEE;
+            const afterFee = usdt - fee;
             try {
                 const newInr = parseFloat(currentUser.inrBalance || 0) - inr;
-                const newCoins = parseFloat(currentUser.coins || 0) + usdt;
+                const newCoins = parseFloat(currentUser.coins || 0) + afterFee;
                 const txId = generateTransactionId();
-                const tx = { type: 'exchange', txId, action: 'inr_to_usdt', amount: usdt, fee: 0, netAmount: usdt,
+                const tx = { type: 'exchange', txId, action: 'inr_to_usdt', amount: usdt, fee, netAmount: afterFee,
                     inrAmount: inr, rate: EXCHANGE_RATE, dateTime: new Date().toLocaleString('hi-IN'), status: 'completed',
-                    network: 'INR → USDT' };
+                    network: 'INR → USDT BEP20' };
                 const txs = [...(currentUser.transactions || [])];
                 txs.push(tx);
-                await saveUserFields({ coins: newCoins, inrBalance: newInr, transactions: JSON.stringify(txs) });
+                await databases.updateDocument(DATABASE_ID, USERS_COLLECTION_ID, currentUser.$id, {
+                    coins: newCoins,
+                    inrBalance: newInr,
+                    transactions: JSON.stringify(txs)
+                });
                 currentUser.coins = newCoins;
                 currentUser.inrBalance = newInr;
                 currentUser.transactions = txs;
                 document.getElementById('exchangeInrToUsdt').value = '';
                 document.getElementById('exchangeInrToUsdtResult').value = '';
-                showToast(`✅ ₹${inr.toFixed(2)} INR → ${usdt.toFixed(4)} USDT एक्सचेंज हो गया! (कोई शुल्क नहीं)`,
+                showToast(`✅ ₹${inr.toFixed(2)} INR → ${afterFee.toFixed(4)} USDT एक्सचेंज हो गया! (शुल्क: ${fee.toFixed(4)} USDT)`,
                     'success');
-                speakText('लेनदेन सफल, बधाई हो', () => {});
+                speakText('Transaction Successful, बधाई हो', () => {});
                 updateDashboard();
             } catch (e) { showToast('त्रुटि: ' + e.message, 'error'); }
         }
 
         // ============================================================
-        // SCAN & SEND - no fee
-        // ============================================================
-        async function scanAndSend() {
-            if (!currentUser) { showToast('पहले लॉगिन करें', 'error'); return; }
-            const spxId = document.getElementById('scannerInput').value.trim();
-            const amount = parseFloat(document.getElementById('scannerAmount').value);
-            if (!spxId) { showToast('SPX ID स्कैन करें या पेस्ट करें', 'error'); return; }
-            if (!amount || amount <= 0) { showToast('USDT संख्या दर्ज करें', 'error'); return; }
-            if (amount > parseFloat(currentUser.tradeWallet || 0)) { showToast('Trade Wallet में पर्याप्त नहीं!', 'error'); return; }
-            try {
-                const res = await databases.listDocuments(DATABASE_ID, USERS_COLLECTION_ID, [Query.equal('spxId', spxId)]);
-                if (res.documents.length === 0) { showToast('❌ SPX ID नहीं मिला!', 'error'); return; }
-                const target = res.documents[0];
-                if (target.$id === currentUser.$id) { showToast('❌ खुद को नहीं भेज सकते!', 'error'); return; }
-                const newSenderTrade = parseFloat(currentUser.tradeWallet || 0) - amount;
-                const newReceiverTrade = parseFloat(target.tradeWallet || 0) + amount;
-                const txId = generateTransactionId();
-                const tx = { type: 'send', txId, amount, to: target.email, toSpxId: target.spxId, dateTime: new Date()
-                        .toLocaleString('hi-IN'), status: 'completed', network: 'USDT BEP20' };
-                const txs = [...(currentUser.transactions || [])];
-                txs.push(tx);
-                const receiveTx = { type: 'receive', txId, amount, from: currentUser.email, fromSpxId: currentUser.spxId,
-                    dateTime: new Date().toLocaleString('hi-IN'), status: 'completed', network: 'USDT BEP20' };
-                await databases.updateDocument(DATABASE_ID, USERS_COLLECTION_ID, currentUser.$id, {
-                    tradeWallet: newSenderTrade,
-                    transactions: JSON.stringify(txs)
-                });
-                const receiverTxList = parseJsonSafe(target.transactions, []);
-                receiverTxList.push(receiveTx);
-                await databases.updateDocument(DATABASE_ID, USERS_COLLECTION_ID, target.$id, {
-                    tradeWallet: newReceiverTrade,
-                    transactions: JSON.stringify(receiverTxList)
-                });
-                currentUser.tradeWallet = newSenderTrade;
-                currentUser.transactions = txs;
-                document.getElementById('scannerInput').value = '';
-                document.getElementById('scannerAmount').value = '';
-                closeQrScanner();
-                showToast(`✅ ${amount.toFixed(2)} USDT भेजे गए`, 'success');
-                speakText('लेनदेन सफल, बधाई हो', () => {});
-                updateDashboard();
-                updateTransferUI();
-            } catch (e) { showToast('त्रुटि: ' + e.message, 'error'); }
-        }
-
-        // ============================================================
-        // WITHDRAWAL - no fee
+        // WITHDRAWAL
         // ============================================================
         async function submitWithdrawal() {
             if (!currentUser) { showToast('लॉगिन करें', 'error'); return; }
@@ -1255,19 +1287,21 @@
                         .toLocaleString('hi-IN'), status: 'pending' };
                 const txs = [...(currentUser.transactions || [])];
                 txs.push(tx);
-                await saveUserFields({ coins: newCoins, transactions: JSON.stringify(txs) });
+                await databases.updateDocument(DATABASE_ID, USERS_COLLECTION_ID, currentUser.$id, {
+                    coins: newCoins,
+                    transactions: JSON.stringify(txs)
+                });
                 currentUser.coins = newCoins;
                 currentUser.transactions = txs;
                 document.getElementById('withdrawAddress').value = '';
                 document.getElementById('withdrawAmount').value = '';
                 showToast(`✅ ${amount.toFixed(2)} USDT विथड्रॉवल रिक्वेस्ट भेजी गई (Admin Approval पेंडिंग)`, 'success');
-                speakText('विथड्रॉवल रिक्वेस्ट भेजी गई', () => {});
                 updateDashboard();
             } catch (e) { showToast('त्रुटि: ' + e.message, 'error'); }
         }
 
         // ============================================================
-        // HISTORY (unchanged)
+        // HISTORY
         // ============================================================
         function filterTxHistory(filter) {
             txHistoryFilter = filter;
@@ -1306,11 +1340,11 @@
                 if (t.type === 'send') { icon = 'fa-solid fa-arrow-right';
                     label = 'भेजा';
                     color = 'text-red-600';
-                    detail = `<span>➡️ ${t.to || 'N/A'}</span>`; } else if (t.type === 'receive') { icon =
+                    detail = `<span>➡️ ${t.toEmail || t.to || 'N/A'}</span>`; } else if (t.type === 'receive') { icon =
                         'fa-solid fa-arrow-left';
                     label = 'प्राप्त';
                     color = 'text-green-600';
-                    detail = `<span>⬅️ ${t.from || 'N/A'}</span>`; } else if (t.type === 'exchange') { icon =
+                    detail = `<span>⬅️ ${t.fromEmail || t.from || 'N/A'}</span>`; } else if (t.type === 'exchange') { icon =
                         'fa-solid fa-arrows-rotate';
                     label = t.action === 'usdt_to_inr' ? 'USDT→INR' : 'INR→USDT';
                     color = 'text-blue-600';
@@ -1381,11 +1415,11 @@
                 tx.type === 'withdraw' || tx.type === 'send' || tx.type === 'receive' || tx.type === 'internal' ? 'USDT' :
                 '';
             let detailHTML = '';
-            if (tx.to) detailHTML +=
-                `<div class="receipt-row"><span class="label">➡️ प्राप्तकर्ता</span><span class="value">${tx.to} (${tx.toSpxId || ''})</span></div>`;
-            if (tx.from) detailHTML +=
-                `<div class="receipt-row"><span class="label">⬅️ भेजने वाला</span><span class="value">${tx.from} (${tx.fromSpxId || ''})</span></div>`;
-            if (tx.fee && tx.fee > 0) detailHTML +=
+            if (tx.to || tx.toEmail) detailHTML +=
+                `<div class="receipt-row"><span class="label">➡️ प्राप्तकर्ता</span><span class="value">${tx.toEmail || tx.to || ''}</span></div>`;
+            if (tx.from || tx.fromEmail) detailHTML +=
+                `<div class="receipt-row"><span class="label">⬅️ भेजने वाला</span><span class="value">${tx.fromEmail || tx.from || ''}</span></div>`;
+            if (tx.fee) detailHTML +=
                 `<div class="receipt-row"><span class="label">शुल्क</span><span class="value red">${tx.fee.toFixed(4)} ${tx.type === 'exchange' ? (tx.action === 'usdt_to_inr' ? 'USDT' : 'USDT') : 'USDT'}</span></div>`;
             if (tx.netAmount) detailHTML +=
                 `<div class="receipt-row"><span class="label">नेट राशि</span><span class="value green">${tx.netAmount.toFixed(4)} ${tx.type === 'exchange' ? (tx.action === 'usdt_to_inr' ? 'USDT' : 'USDT') : 'USDT'}</span></div>`;
@@ -1492,14 +1526,14 @@
         }
 
         // ============================================================
-        // PROFILE (unchanged)
+        // PROFILE
         // ============================================================
         function updateProfile() {
             if (!currentUser) return;
             document.getElementById('profileName').innerText = currentUser.name || 'User';
             document.getElementById('profileEmail').innerText = currentUser.email || '';
-            document.getElementById('profileSpxId').innerText = currentUser.spxId || 'N/A';
-            generateQR(currentUser.spxId || 'N/A', 'profileQrContainer2', 140);
+            document.getElementById('profileEmailDisplay').innerText = currentUser.email || '';
+            generateQR(currentUser.email || 'N/A', 'profileQrContainer2', 140);
         }
 
         // ============================================================
@@ -1537,7 +1571,6 @@
                 if (loaded && !currentUser.isBlocked) {
                     document.getElementById('bottomNavBar').classList.remove('hidden');
                     switchNav('dashboard');
-                    speakText('स्वागत है, आपका डैशबोर्ड लोड हो गया', () => {});
                 } else {
                     document.getElementById('loginPage').classList.remove('hidden');
                 }
@@ -1546,13 +1579,35 @@
             }
         };
 
+        async function loadCurrentUserData() {
+            try {
+                const acc = await account.get();
+                const doc = await databases.getDocument(DATABASE_ID, USERS_COLLECTION_ID, acc.$id);
+                if (!doc.spxId) {
+                    const newId = generateSpxId();
+                    await databases.updateDocument(DATABASE_ID, USERS_COLLECTION_ID, doc.$id, { spxId: newId });
+                    doc.spxId = newId;
+                }
+                if (doc.inrBalance === undefined || doc.inrBalance === null) {
+                    await databases.updateDocument(DATABASE_ID, USERS_COLLECTION_ID, doc.$id, { inrBalance: 0 });
+                    doc.inrBalance = 0;
+                }
+                if (doc.tradeWallet === undefined || doc.tradeWallet === null) {
+                    await databases.updateDocument(DATABASE_ID, USERS_COLLECTION_ID, doc.$id, { tradeWallet: 0 });
+                    doc.tradeWallet = 0;
+                }
+                currentUser = mapUserDoc(doc);
+                return true;
+            } catch (e) { return false; }
+        }
+
         // Global functions
         window.handleLogin = handleLogin;
         window.handleRegistration = handleRegistration;
         window.handleLogout = handleLogout;
         window.switchNav = switchNav;
         window.copyToClipboard = copyToClipboard;
-        window.sendCoins = sendCoins;
+        window.sendCoinsByEmail = sendCoinsByEmail;
         window.moveToMain = moveToMain;
         window.exchangeUsdtToInr = exchangeUsdtToInr;
         window.exchangeInrToUsdt = exchangeInrToUsdt;
@@ -1579,6 +1634,8 @@
         window.updateTransferUI = updateTransferUI;
         window.renderHistory = renderHistory;
         window.updateProfile = updateProfile;
+        window.copyEmail = copyEmail;
+        window.downloadApp = downloadApp;
     </script>
 
 </body>
