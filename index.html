@@ -180,7 +180,7 @@
             </div>
             <div class="flex items-center gap-2">
                 <!-- APP DOWNLOAD BUTTON -->
-                <button onclick="downloadApp()" class="app-download-btn" title="App Download (APPMINT)">
+                <button onclick="downloadApp()" class="app-download-btn" title="App Download (APK)">
                     <i class="fa-solid fa-download"></i> <span class="hidden sm:inline">App</span>
                 </button>
                 <span id="headerBadge" class="text-[10px] bg-amber-500/15 text-amber-700 border border-amber-500/30 px-3 py-0.5 rounded-full font-bold">User</span>
@@ -336,6 +336,7 @@
                 <div class="glass-gold p-4 rounded-2xl">
                     <h3 class="text-sm font-bold text-gradient-rainbow"><i class="fa-solid fa-arrows-rotate mr-2"></i> एक्सचेंज</h3>
                     <p class="text-[11px] text-amber-600/50">USDT BEP20 ↔ INR — 1% शुल्क</p>
+                    <p class="text-xs text-amber-600/70 font-semibold mt-1">💰 दर: $1 = ₹100 | ₹100 = $1</p>
                 </div>
 
                 <!-- USDT → INR -->
@@ -353,7 +354,7 @@
                         <span>प्राप्त: <strong id="usdtToInrReceive" class="text-gradient-green">₹0.00</strong></span>
                     </div>
                     <button onclick="exchangeUsdtToInr()" class="w-full btn-gold py-2.5 rounded-xl text-xs font-bold shadow-xl">🔄 USDT → INR एक्सचेंज करें</button>
-                    <p class="text-[9px] text-amber-600/40 text-center">दर: 1 USDT = ₹85</p>
+                    <p class="text-[9px] text-amber-600/40 text-center">दर: 1 USDT = ₹100</p>
                 </div>
 
                 <!-- INR → USDT -->
@@ -371,7 +372,7 @@
                         <span>प्राप्त: <strong id="inrToUsdtReceive" class="text-gradient-gold">0.00</strong> USDT</span>
                     </div>
                     <button onclick="exchangeInrToUsdt()" class="w-full btn-gold py-2.5 rounded-xl text-xs font-bold shadow-xl">🔄 INR → USDT एक्सचेंज करें</button>
-                    <p class="text-[9px] text-amber-600/40 text-center">दर: ₹85 = 1 USDT</p>
+                    <p class="text-[9px] text-amber-600/40 text-center">दर: ₹100 = 1 USDT</p>
                 </div>
 
                 <!-- USDT → SUPX COIN (Coming Soon) -->
@@ -539,7 +540,7 @@
         let txHistoryFilter = 'all';
         let html5QrCode = null;
         let isScanning = false;
-        const EXCHANGE_RATE = 85;
+        const EXCHANGE_RATE = 100;
         const EXCHANGE_FEE = 0.01;
 
         // ============================================================
@@ -653,12 +654,12 @@
         }
 
         // ============================================================
-        // APP DOWNLOAD (APPMINT)
+        // APP DOWNLOAD (APK)
         // ============================================================
         function downloadApp() {
-            showToast('📲 App Download: APPMINT से अपडेट होगा', 'info');
-            // आप यहाँ अपना APPMINT लिंक डाल सकते हैं:
-            // window.open('https://appmint.io/your-app-link', '_blank');
+            const apkLink = "https://drive.google.com/file/d/1-gXlVKXBxo_qJdjKhENMT8g7ugobuNqB/view?usp=drivesdk";
+            window.open(apkLink, '_blank');
+            showToast('📲 APK डाउनलोड लिंक खुल रहा है...', 'info');
         }
 
         // ============================================================
