@@ -1,0 +1,542 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>SupriX Wallet – USDT BEP20 & SPX ID</title>
+<script src="https://cdn.jsdelivr.net/npm/appwrite@17.0.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+<style>
+:root{--primary:#0a58ca;--dark:#043270;--green:#198754;--bg:#f0f6ff;--card:#ffffff;--text:#122033;--line:#cce0ff}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+.app{max-width:480px;margin:auto;padding:12px 14px 32px}
+.header{position:sticky;top:6px;z-index:30;background:rgba(255,255,255,.95);backdrop-filter:blur(12px);border:2px solid #b3d7ff;border-radius:20px;padding:10px 14px;box-shadow:0 6px 0 #7cb5ec,0 12px 24px rgba(0,0,0,.08);display:flex;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:10px}
+.logo{width:46px;height:46px;border-radius:50%;object-fit:cover;border:2px solid var(--primary);box-shadow:0 3px 0 var(--dark)}
+.brand h1{margin:0;font-size:17px;letter-spacing:.3px}
+.brand small{color:#557090;font-weight:700;font-size:10px}
+.warning{font-size:8px;text-align:center;margin-top:4px;color:#8a4d00;font-weight:700}
+.screen{margin-top:14px}
+.card{background:var(--card);border:2px solid #b3d7ff;border-radius:20px;padding:16px;margin-bottom:12px;box-shadow:0 6px 0 #8abff7,0 12px 30px rgba(0,0,0,.06)}
+.hidden{display:none!important}
+h2,h3{margin:0 0 10px;font-size:18px}
+.sub{font-size:11px;color:#557090;margin-bottom:8px}
+.field{margin:10px 0}
+.field label{display:block;font-size:11px;font-weight:800;margin-bottom:4px;color:#223854}
+.field input{width:100%;padding:12px;border:2px solid var(--line);border-radius:12px;background:#f8fbff;outline:0;font-size:14px;color:var(--text)}
+.field input:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(10,88,202,.15)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.btn{width:100%;border:0;border-radius:14px;padding:12px;font-weight:800;cursor:pointer;margin-top:8px;background:var(--primary);color:#fff;box-shadow:0 5px 0 var(--dark);font-size:14px;display:flex;align-items:center;justify-content:center;gap:6px}
+.btn:active{transform:translateY(3px);box-shadow:0 2px 0 var(--dark)}
+.btn.alt{background:#2a4365;box-shadow:0 5px 0 #1a2c42}
+.btn.green{background:var(--green);box-shadow:0 5px 0 #0f5132}
+.pill{display:inline-flex;padding:4px 10px;border-radius:99px;background:#e7f1ff;border:1px solid #b6d4fe;font-size:10px;font-weight:900;color:var(--primary)}
+.balance{font-size:32px;font-weight:900;color:var(--primary);line-height:1.1}
+.spx{font-size:16px;font-weight:900;color:#1c3d5a;word-break:break-all}
+.nav{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;position:sticky;bottom:8px;z-index:40;background:#ffffff;padding:6px;border:2px solid #b3d7ff;border-radius:18px;box-shadow:0 -6px 0 #8abff7,0 10px 25px rgba(0,0,0,.08)}
+.nav button{padding:8px 2px;border:0;border-radius:12px;background:transparent;font-size:9px;font-weight:800;color:#557090;cursor:pointer}
+.nav button.active{background:#e7f1ff;color:var(--primary);box-shadow:0 2px 0 #b6d4fe}
+.tx{padding:10px;border:2px solid var(--line);border-radius:12px;margin:8px 0;background:#fcfdff;font-size:11px}
+.tx b{display:block;font-size:12px}
+.tx .amount{font-size:16px;font-weight:900;color:var(--primary)}
+.tx-received{border-left:5px solid var(--green)}
+.tx-sent{border-left:5px solid var(--primary)}
+.tx-withdraw{border-left:5px solid #d97706}
+.qr-box{display:grid;place-items:center;padding:12px;background:#fff;border-radius:12px;border:2px dashed var(--line);margin:10px 0}
+.scanner{width:100%;min-height:260px;border-radius:14px;overflow:hidden;background:#000}
+.modal{position:fixed;inset:0;background:rgba(3,17,40,.75);display:grid;place-items:center;padding:16px;z-index:100}
+.modalbox{max-width:420px;width:100%;max-height:90vh;overflow:auto;background:#fff;border:2px solid var(--primary);border-radius:20px;padding:18px;box-shadow:0 10px 30px rgba(0,0,0,.2)}
+.status{padding:10px;border-radius:10px;background:#f0f6ff;font-size:11px;margin-top:8px;font-weight:700}
+.success-msg{color:var(--green)}
+.error-msg{color:#b91c1c}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="header">
+<div class="brand">
+<img class="logo" src="https://i.postimg.cc/g2WqZ0Ld/file-000000007b0c82118553e4de6af679b3.png" alt="SupriX Logo">
+<div><h1>SupriX Wallet</h1><small>USDT BEP20 • SPX ID</small></div>
+</div>
+<button class="btn alt hidden" style="width:auto;margin:0;padding:6px 12px;font-size:11px" onclick="logoutWallet()" id="logoutBtn">Logout</button>
+</header>
+<div class="warning">⚠️ सुझबूझ के साथ अपने फंड्स व निवेश का प्रबंधन करें।</div>
+
+<section id="authScreen" class="screen">
+<div id="loginCard" class="card">
+<h2>Wallet Login</h2>
+<p class="sub">अपने SupriX ID और password से लॉगिन करें।</p>
+<div class="field"><label>Wallet SPX ID</label><input id="loginSPX" placeholder="SPX-WXXXXXXXX" autocomplete="username"></div>
+<div class="field"><label>Password</label><input id="loginPass" type="password" autocomplete="current-password"></div>
+<button class="btn" onclick="loginWallet()">Login</button>
+<div class="grid">
+<button class="btn alt" onclick="showAuth('registerCard')">Create Wallet</button>
+<button class="btn alt" onclick="showAuth('forgotCard')">Forgot Password</button>
+</div>
+<div id="loginStatus" class="status hidden"></div>
+</div>
+
+<div id="registerCard" class="card hidden">
+<h2>Create Wallet</h2>
+<p class="sub">अपना SupriX Wallet रजिस्टर करें।</p>
+<div class="field"><label>Name</label><input id="regName" placeholder="पूरा नाम" autocomplete="name"></div>
+<div class="field"><label>Mobile Number</label><input id="regMobile" type="tel" placeholder="10 अंकों का मोबाइल नंबर" autocomplete="tel"></div>
+<div class="field"><label>Password</label><input id="regPass" type="password" autocomplete="new-password" placeholder="पासवर्ड बनाएं"></div>
+<div class="field"><label>Confirm Password</label><input id="regPass2" type="password" autocomplete="new-password" placeholder="पासवर्ड दोबारा दर्ज करें"></div>
+<button class="btn green" onclick="registerWallet()">Submit Registration</button>
+<button class="btn alt" onclick="showAuth('loginCard')">Back to Login</button>
+<div id="regStatus" class="status hidden"></div>
+</div>
+
+<div id="forgotCard" class="card hidden">
+<h2>Forgot Password</h2>
+<p class="sub">अपनी SPX ID दर्ज करके नया पासवर्ड बनाएं।</p>
+<div class="field"><label>Wallet SPX ID</label><input id="forgotSPX" placeholder="SPX-WXXXXXXXX"></div>
+<div class="field"><label>New Password</label><input id="forgotPass" type="password" placeholder="नया पासवर्ड"></div>
+<div class="field"><label>Confirm New Password</label><input id="forgotPass2" type="password" placeholder="नया पासवर्ड पुष्टि करें"></div>
+<button class="btn" onclick="resetPasswordWallet()">Update Password</button>
+<button class="btn alt" onclick="showAuth('loginCard')">Back to Login</button>
+<div id="forgotStatus" class="status hidden"></div>
+</div>
+
+<div id="congratsCard" class="card hidden">
+<h2 class="success-msg">🎉 Congratulations!</h2>
+<p class="sub">आपका SupriX Wallet सफलतापूर्वक रजिस्टर हो गया है।</p>
+<div class="tx"><b>Your SPX ID</b><span id="createdSPX" class="spx"></span></div>
+<div class="tx"><b>Your Password</b><span id="createdPass"></span><br><small style="color:#d97706">कृपया इसे सुरक्षित नोट कर लें!</small></div>
+<button class="btn green" onclick="showAuth('loginCard')">Login Now</button>
+</div>
+</section>
+
+<section id="walletScreen" class="screen hidden">
+<div class="card">
+<span class="pill">Active Wallet SPX ID</span>
+<div id="displaySPX" class="spx" style="margin:6px 0"></div>
+<div class="balance"><span id="balanceAmount">0.00</span> <span style="font-size:18px">USDT BEP20</span></div>
+<small style="color:#557090">Available Balance in SupriX Wallet</small>
+</div>
+
+<div id="panelHome" class="card">
+<h3>Send USDT BEP20</h3>
+<div class="field"><label>Receiver SPX ID</label><input id="sendSPX" placeholder="SPX-WXXXXXXXX"></div>
+<div class="field"><label>Amount (USDT)</label><input id="sendAmount" type="number" step="0.01" min="0" placeholder="0.00"></div>
+<div class="grid">
+<button class="btn green" onclick="sendUSDTTransfer()">Send Now</button>
+<button class="btn alt" onclick="openScanner()">📷 Scan QR</button>
+</div>
+<div id="sendStatus" class="status hidden"></div>
+
+<div style="margin-top:20px;border-top:1px solid var(--line);padding-top:14px">
+<h3>Your Payment QR</h3>
+<div class="qr-box" id="myQRCode"></div>
+<p class="sub" style="text-align:center">दूसरा यूजर इस QR को स्कैन करके आपकी SPX ID प्राप्त कर सकता है।</p>
+</div>
+</div>
+
+<div id="panelHistory" class="card hidden">
+<h3>Transaction History (Sent)</h3>
+<div class="sub">आपके द्वारा भेजे गए सभी USDT BEP20 ट्रांसफर का इतिहास।</div>
+<div id="historyList"><p class="sub">Loading sent transactions...</p></div>
+</div>
+
+<div id="panelReceived" class="card hidden">
+<h3>You Received</h3>
+<div class="sub">प्राप्त हुए सभी USDT BEP20 फंड्स की पूरी जानकारी (किसने भेजा, SPX ID और समय)।</div>
+<div id="receivedList"><p class="sub">Loading received list...</p></div>
+</div>
+
+<div id="panelUserPanel" class="card hidden">
+<h3>User Panel Withdrawals</h3>
+<div class="status" style="background:#e7f1ff;color:#0a58ca">
+ℹ️ <b>User Panel Sync:</b> User panel से आने वाले विथड्रॉवल पर 10% चार्ज कटने के बाद SupriX Wallet में USDT BEP20 जुड़ जाता है।
+</div>
+<div id="userPanelWithdrawals" style="margin-top:12px"><p class="sub">No external withdrawals detected yet.</p></div>
+</div>
+
+<div id="panelProfile" class="card hidden">
+<h3>Wallet Profile</h3>
+<div class="tx"><b>Name</b><span id="profName">-</span></div>
+<div class="tx"><b>Mobile Number</b><span id="profMobile">-</span></div>
+<div class="tx"><b>SPX ID</b><span id="profSPX" class="spx">-</span></div>
+<button class="btn" style="background:#dc3527;box-shadow:0 5px 0 #9f1c16;margin-top:16px" onclick="logoutWallet()">Logout Wallet</button>
+</div>
+
+<nav class="nav">
+<button onclick="switchTab('Home')" id="navHome" class="active">Wallet</button>
+<button onclick="switchTab('History')" id="navHistory">Sent</button>
+<button onclick="switchTab('Received')" id="navReceived">Received</button>
+<button onclick="switchTab('UserPanel')" id="navUserPanel">Withdrawals</button>
+<button onclick="switchTab('Profile')" id="navProfile">Profile</button>
+</nav>
+</section>
+</div>
+
+<!-- QR SCANNER MODAL -->
+<div id="scannerModal" class="modal hidden">
+<div class="modalbox">
+<h3>Scan Receiver QR</h3>
+<p class="sub">कैमरे के सामने दूसरे यूजर का SupriX QR कोड लाएं।</p>
+<div id="reader" class="scanner"></div>
+<button class="btn alt" style="margin-top:12px" onclick="closeScanner()">Close Scanner</button>
+</div>
+</div>
+
+<script>
+const ENDPOINT = 'https://fra.cloud.appwrite.io/v1';
+const PROJECT_ID = '6a43cbf70027f5ff8960';
+const DATABASE_ID = '6a47b7550016c4291ab3';
+const COLLECTION_ID = 'users';
+
+const { Client, Databases, Query } = Appwrite;
+const client = new Client().setEndpoint(ENDPOINT).setProject(PROJECT_ID);
+const databases = new Databases(client);
+
+let currentUser = null;
+let html5QrCode = null;
+
+function el(id) { return document.getElementById(id); }
+
+function showAuth(cardId) {
+    ['loginCard', 'registerCard', 'forgotCard', 'congratsCard'].forEach(c => {
+        el(c).classList.toggle('hidden', c !== cardId);
+    });
+}
+
+function switchTab(tabName) {
+    ['Home', 'History', 'Received', 'UserPanel', 'Profile'].forEach(t => {
+        el('panel' + t).classList.toggle('hidden', t !== tabName);
+        el('nav' + t).classList.toggle('active', t === tabName);
+    });
+    if(tabName === 'History') loadTransactions('sent');
+    if(tabName === 'Received') loadTransactions('received');
+    if(tabName === 'UserPanel') loadUserPanelWithdrawals();
+}
+
+function showStatus(elemId, msg, isError = false) {
+    const e = el(elemId);
+    e.textContent = msg;
+    e.className = 'status ' + (isError ? 'error-msg' : 'success-msg');
+    e.classList.remove('hidden');
+}
+
+function generateSPXId() {
+    return 'SPX-W' + Math.floor(10000000 + Math.random() * 90000000);
+}
+
+async function registerWallet() {
+    const name = el('regName').value.trim();
+    const mobile = el('regMobile').value.trim();
+    const password = el('regPass').value;
+    const pass2 = el('regPass2').value;
+
+    if(!name || !mobile || !password) {
+        showStatus('regStatus', 'सभी फील्ड्स भरना अनिवार्य है।', true);
+        return;
+    }
+    if(password !== pass2) {
+        showStatus('regStatus', 'पासवर्ड मेल नहीं खा रहे हैं।', true);
+        return;
+    }
+
+    try {
+        const spxId = generateSPXId();
+        const check = await databases.listDocuments(DATABASE_ID, COLLECTION_ID, [Query.equal('spxId', spxId)]);
+        if(check.total > 0) {
+            registerWallet();
+            return;
+        }
+
+        const newDoc = {
+            name: name,
+            phone: mobile,
+            email: spxId.toLowerCase() + '@suprix.wallet',
+            spxId: spxId,
+            password: password,
+            coins: 0.0,
+            inrBalance: 0.0,
+            tradeWallet: 0.0,
+            transactions: JSON.stringify([])
+        };
+
+        await databases.createDocument(DATABASE_ID, COLLECTION_ID, Appwrite.ID.unique(), newDoc);
+
+        el('createdSPX').textContent = spxId;
+        el('createdPass').textContent = password;
+        showAuth('congratsCard');
+    } catch(err) {
+        showStatus('regStatus', 'रजिस्ट्रेशन त्रुटि: ' + err.message, true);
+    }
+}
+
+async function loginWallet() {
+    const spxId = el('loginSPX').value.trim();
+    const pass = el('loginPass').value;
+
+    if(!spxId || !pass) {
+        showStatus('loginStatus', 'कृपया SPX ID और पासवर्ड दर्ज करें।', true);
+        return;
+    }
+
+    try {
+        const res = await databases.listDocuments(DATABASE_ID, COLLECTION_ID, [Query.equal('spxId', spxId)]);
+        if(res.documents.length === 0) {
+            showStatus('loginStatus', 'यह SPX ID पंजीकृत नहीं है।', true);
+            return;
+        }
+
+        const user = res.documents[0];
+        if(user.password !== pass) {
+            showStatus('loginStatus', 'गलत पासवर्ड दर्ज किया गया है।', true);
+            return;
+        }
+
+        currentUser = user;
+        initDashboard();
+    } catch(err) {
+        showStatus('loginStatus', 'लॉगिन त्रुटि: ' + err.message, true);
+    }
+}
+
+async function resetPasswordWallet() {
+    const spxId = el('forgotSPX').value.trim();
+    const pass = el('forgotPass').value;
+    const pass2 = el('forgotPass2').value;
+
+    if(!spxId || !pass) {
+        showStatus('forgotStatus', 'सभी फील्ड्स भरें।', true);
+        return;
+    }
+    if(pass !== pass2) {
+        showStatus('forgotStatus', 'नए पासवर्ड मेल नहीं खा रहे।', true);
+        return;
+    }
+
+    try {
+        const res = await databases.listDocuments(DATABASE_ID, COLLECTION_ID, [Query.equal('spxId', spxId)]);
+        if(res.documents.length === 0) {
+            showStatus('forgotStatus', 'यह SPX ID नहीं मिली।', true);
+            return;
+        }
+
+        const docId = res.documents[0].$id;
+        await databases.updateDocument(DATABASE_ID, COLLECTION_ID, docId, { password: pass });
+        showStatus('forgotStatus', 'पासवर्ड सफलतापूर्वक बदल दिया गया है! अब लॉगिन करें।', false);
+        setTimeout(() => showAuth('loginCard'), 2000);
+    } catch(err) {
+        showStatus('forgotStatus', 'त्रुटि: ' + err.message, true);
+    }
+}
+
+function logoutWallet() {
+    currentUser = null;
+    el('loginSPX').value = '';
+    el('loginPass').value = '';
+    el('authScreen').classList.remove('hidden');
+    el('walletScreen').classList.add('hidden');
+    el('logoutBtn').classList.add('hidden');
+    showAuth('loginCard');
+}
+
+function initDashboard() {
+    el('authScreen').classList.add('hidden');
+    el('walletScreen').classList.remove('hidden');
+    el('logoutBtn').classList.remove('hidden');
+
+    el('displaySPX').textContent = currentUser.spxId;
+    el('balanceAmount').textContent = parseFloat(currentUser.coins || 0).toFixed(2);
+
+    el('profName').textContent = currentUser.name || '-';
+    el('profMobile').textContent = currentUser.phone || '-';
+    el('profSPX').textContent = currentUser.spxId;
+
+    const qrContainer = el('myQRCode');
+    qrContainer.innerHTML = '';
+    new QRCode(qrContainer, {
+        text: currentUser.spxId,
+        width: 140,
+        height: 140,
+        colorDark: '#0a58ca',
+        colorLight: '#ffffff',
+        correctLevel: QRCode.CorrectLevel.H
+    });
+
+    switchTab('Home');
+}
+
+async function refreshUserData() {
+    try {
+        const res = await databases.getDocument(DATABASE_ID, COLLECTION_ID, currentUser.$id);
+        currentUser = res;
+        el('balanceAmount').textContent = parseFloat(currentUser.coins || 0).toFixed(2);
+    } catch(e) {}
+}
+
+async function sendUSDTTransfer() {
+    const targetSPX = el('sendSPX').value.trim();
+    const amount = parseFloat(el('sendAmount').value);
+
+    if(!targetSPX || isNaN(amount) || amount <= 0) {
+        sendStatus('सही SPX ID और मान्य राशि दर्ज करें।', true);
+        return;
+    }
+
+    if(targetSPX === currentUser.spxId) {
+        sendStatus('आप खुद को USDT ट्रांसफर नहीं कर सकते।', true);
+        return;
+    }
+
+    const currentBalance = parseFloat(currentUser.coins || 0);
+    if(amount > currentBalance) {
+        sendStatus('पर्याप्त USDT बैलेंस उपलब्ध नहीं है।', true);
+        return;
+    }
+
+    try {
+        const recRes = await databases.listDocuments(DATABASE_ID, COLLECTION_ID, [Query.equal('spxId', targetSPX)]);
+        if(recRes.documents.length === 0) {
+            sendStatus('रिसीवर SPX ID सिस्टम में नहीं मिली।', true);
+            return;
+        }
+
+        const recipient = recRes.documents[0];
+
+        const newSenderBalance = currentBalance - amount;
+        let senderTxs = [];
+        try { senderTxs = JSON.parse(currentUser.transactions || '[]'); } catch(e){}
+        
+        const txId = 'TXN-' + Math.random().toString(36).substring(2, 9).toUpperCase();
+        const timestamp = new Date().toLocaleString('hi-IN');
+
+        senderTxs.push({
+            id: txId,
+            type: 'sent',
+            amount: amount,
+            targetSPX: recipient.spxId,
+            targetName: recipient.name,
+            time: timestamp
+        });
+
+        await databases.updateDocument(DATABASE_ID, COLLECTION_ID, currentUser.$id, {
+            coins: newSenderBalance,
+            transactions: JSON.stringify(senderTxs)
+        });
+
+        let recipTxs = [];
+        try { recipTxs = JSON.parse(recipient.transactions || '[]'); } catch(e){}
+        const newRecipBalance = parseFloat(recipient.coins || 0) + amount;
+
+        recipTxs.push({
+            id: txId,
+            type: 'received',
+            amount: amount,
+            fromSPX: currentUser.spxId,
+            fromName: currentUser.name,
+            time: timestamp
+        });
+
+        await databases.updateDocument(DATABASE_ID, COLLECTION_ID, recipient.$id, {
+            coins: newRecipBalance,
+            transactions: JSON.stringify(recipTxs)
+        });
+
+        currentUser.coins = newSenderBalance;
+        currentUser.transactions = JSON.stringify(senderTxs);
+
+        el('sendSPX').value = '';
+        el('sendAmount').value = '';
+        el('balanceAmount').textContent = newSenderBalance.toFixed(2);
+
+        sendStatus(`✅ सफलतापूर्वक ${amount.toFixed(2)} USDT BEP20 भेज दिए गए हैं! (Tx: ${txId})`, false);
+    } catch(err) {
+        sendStatus('ट्रांसफर त्रुटि: ' + err.message, true);
+    }
+}
+
+function sendStatus(msg, isErr) {
+    showStatus('sendStatus', msg, isErr);
+}
+
+async function loadTransactions(filterType) {
+    await refreshUserData();
+    const container = el(filterType === 'received' ? 'receivedList' : 'historyList');
+    
+    let txs = [];
+    try { txs = JSON.parse(currentUser.transactions || '[]'); } catch(e){}
+
+    if(filterType === 'received') {
+        txs = txs.filter(t => t.type === 'received');
+    } else {
+        txs = txs.filter(t => t.type === 'sent');
+    }
+
+    if(txs.length === 0) {
+        container.innerHTML = `<p class="sub">कोई ${filterType === 'received' ? 'प्राप्त (Received)' : 'भेजा गया (Sent)'} लेनदेन इतिहास नहीं मिला।</p>`;
+        return;
+    }
+
+    container.innerHTML = txs.reverse().map(t => {
+        const isRecv = t.type === 'received';
+        const cssClass = isRecv ? 'tx-received' : 'tx-sent';
+        const title = isRecv ? `📥 Received from ${t.fromName || 'User'} (${t.fromSPX})` : `📤 Sent to ${t.targetName || 'User'} (${t.targetSPX})`;
+        return `
+            <div class="tx ${cssClass}">
+                <b>${title}</b>
+                <div class="amount">${isRecv ? '+' : '-'}${parseFloat(t.amount).toFixed(2)} USDT</div>
+                <div class="sub" style="margin-top:4px">ID: ${t.id} | Time: ${t.time}</div>
+            </div>
+        `;
+    }).join('');
+}
+
+async function loadUserPanelWithdrawals() {
+    await refreshUserData();
+    const container = el('userPanelWithdrawals');
+    let txs = [];
+    try { txs = JSON.parse(currentUser.transactions || '[]'); } catch(e){}
+    
+    const panelTxs = txs.filter(t => t.type === 'withdraw' || t.type === 'user_panel');
+
+    if(panelTxs.length === 0) {
+        container.innerHTML = '<p class="sub">User panel से कोई विथड्रॉवल रिकॉर्ड नहीं है। (10% चार्ज कटने के बाद राशि यहाँ जुड़ती है)</p>';
+        return;
+    }
+
+    container.innerHTML = panelTxs.map(t => `
+        <div class="tx tx-withdraw">
+            <b>⚡ User Panel Withdrawal (10% Fee Applied)</b>
+            <div class="amount">+${parseFloat(t.amount).toFixed(2)} USDT</div>
+            <div class="sub">Time: ${t.time}</div>
+        </div>
+    `).join('');
+}
+
+function openScanner() {
+    el('scannerModal').classList.remove('hidden');
+    html5QrCode = new Html5Qrcode("reader");
+    html5QrCode.start(
+        { facingMode: "environment" },
+        { fps: 10, qrbox: { width: 220, height: 220 } },
+        (decodedText) => {
+            el('sendSPX').value = decodedText;
+            closeScanner();
+        },
+        (errorMessage) => {}
+    ).catch(err => {
+        alert("Camera access error: " + err);
+        closeScanner();
+    });
+}
+
+function closeScanner() {
+    if(html5QrCode) {
+        html5QrCode.stop().then(() => {
+            html5QrCode.clear();
+        }).catch(err => {});
+    }
+    el('scannerModal').classList.add('hidden');
+}
+</script>
+</body>
+</html>
