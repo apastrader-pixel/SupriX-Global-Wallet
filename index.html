@@ -1,0 +1,2067 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SupriX Wallet - Premium</title>
+    <meta name="google" content="notranslate">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/appwrite@16.0.2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+    <style>
+        :root {
+            --wallet-accent: #00d9ff;
+            --wallet-glow: #0066cc;
+            --bg-dark: #020810;
+            --card-bg: rgba(0, 15, 25, 0.85);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-dark);
+            background-image: radial-gradient(circle at 50% 0%, #001a2b 0%, #020810 80%);
+            overflow-x: hidden;
+            user-select: none;
+            color: #ffffff;
+            min-height: 100vh;
+            position: relative;
+        }
+        @keyframes walletBorder {
+            0%   { border-color: #00d9ff; box-shadow: 0 0 15px #00d9ff, inset 0 0 10px rgba(0,217,255,0.3); }
+            25%  { border-color: #0066cc; box-shadow: 0 0 15px #0066cc, inset 0 0 10px rgba(0,102,204,0.3); }
+            50%  { border-color: #00f0ff; box-shadow: 0 0 15px #00f0ff, inset 0 0 10px rgba(0,240,255,0.3); }
+            75%  { border-color: #0088ff; box-shadow: 0 0 15px #0088ff, inset 0 0 10px rgba(0,136,255,0.3); }
+            100% { border-color: #00d9ff; box-shadow: 0 0 15px #00d9ff, inset 0 0 10px rgba(0,217,255,0.3); }
+        }
+        @keyframes floatWallet {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95) translateY(10px); }
+            to   { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        @keyframes popIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            60% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        @keyframes bounceIn {
+            0% { transform: scale(0); opacity: 0; }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        @keyframes glowPulse {
+            0%, 100% { box-shadow: 0 0 20px rgba(0,217,255,0.5), 0 0 40px rgba(0,217,255,0.2); }
+            50% { box-shadow: 0 0 40px rgba(0,217,255,0.9), 0 0 80px rgba(0,217,255,0.4); }
+        }
+        @keyframes shine {
+            0% { left: -100%; }
+            50%, 100% { left: 200%; }
+        }
+        @keyframes confetti-fall {
+            0%   { transform: translateY(-100px) rotate(0deg) scale(1); opacity: 1; }
+            100% { transform: translateY(110vh) rotate(720deg) scale(0.3); opacity: 0; }
+        }
+
+        .glass-wallet {
+            background: var(--card-bg);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border: 2px solid var(--wallet-accent);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8), inset 0 0 15px rgba(0, 217, 255, 0.25);
+            animation: walletBorder 6s linear infinite;
+        }
+        .glass-wallet-light {
+            background: rgba(0, 15, 25, 0.6);
+            backdrop-filter: blur(14px);
+            border: 1.5px solid rgba(0, 217, 255, 0.4);
+            border-radius: 16px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6), inset 0 0 10px rgba(0, 217, 255, 0.15);
+            animation: walletBorder 8s linear infinite;
+        }
+
+        .btn-3d-wallet {
+            background: linear-gradient(145deg, #00d9ff, #0066cc);
+            color: #ffffff !important;
+            font-weight: 800;
+            border: 2px solid #66e5ff;
+            border-radius: 16px;
+            box-shadow: 0 6px 0 #004d99, 0 12px 20px rgba(0, 217, 255, 0.5), inset 0 2px 4px rgba(255, 255, 255, 0.4);
+            transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+            cursor: pointer;
+        }
+        .btn-3d-wallet:active {
+            transform: translateY(6px);
+            box-shadow: 0 0px 0 #004d99, 0 4px 10px rgba(0, 217, 255, 0.5), inset 0 2px 4px rgba(255, 255, 255, 0.4);
+        }
+        .btn-3d-green {
+            background: linear-gradient(145deg, #22c55e, #16a34a);
+            color: #ffffff !important;
+            font-weight: 800;
+            border: 2px solid #4ade80;
+            border-radius: 12px;
+            box-shadow: 0 4px 0 #14532d, 0 8px 15px rgba(34, 197, 94, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.4);
+            transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+        .btn-3d-green:active {
+            transform: translateY(4px);
+            box-shadow: 0 0px 0 #14532d, 0 3px 8px rgba(34, 197, 94, 0.4);
+        }
+        .btn-3d-red {
+            background: linear-gradient(145deg, #ef4444, #b91c1c);
+            color: #ffffff !important;
+            font-weight: 800;
+            border: 2px solid #f87171;
+            border-radius: 12px;
+            box-shadow: 0 4px 0 #7f1d1d, 0 8px 15px rgba(239, 68, 68, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.4);
+            transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+        .btn-3d-red:active {
+            transform: translateY(4px);
+            box-shadow: 0 0px 0 #7f1d1d, 0 3px 8px rgba(239, 68, 68, 0.4);
+        }
+
+        input, select, textarea {
+            background: rgba(0, 10, 20, 0.65) !important;
+            border: 2px solid rgba(0, 217, 255, 0.5) !important;
+            color: #ffffff !important;
+            box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.8) !important;
+            border-radius: 14px !important;
+        }
+        input:focus, select:focus, textarea:focus {
+            border-color: #00f0ff !important;
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.6) !important;
+            outline: none;
+        }
+        input::placeholder { color: rgba(255, 255, 255, 0.3); }
+
+        .wallet-id-box {
+            background: linear-gradient(145deg, rgba(0,217,255,0.1), rgba(0,102,204,0.1));
+            border: 2px solid rgba(0, 217, 255, 0.4);
+            border-radius: 16px; padding: 12px 16px;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .wallet-id-box .wallet-id-text {
+            font-size: 16px; font-weight: 800; color: #00d9ff;
+            letter-spacing: 1.5px; font-family: monospace;
+            text-shadow: 0 0 15px rgba(0, 217, 255, 0.5);
+        }
+        .wallet-balance-display {
+            font-size: 32px; font-weight: 900;
+            color: #00d9ff;
+            text-shadow: 0 0 25px rgba(0, 217, 255, 0.6), 0 0 50px rgba(0, 217, 255, 0.3);
+            letter-spacing: 1px;
+        }
+        .wallet-balance-label {
+            font-size: 10px; color: rgba(0, 217, 255, 0.6);
+            letter-spacing: 2px; text-transform: uppercase;
+        }
+        .wallet-tab-btn {
+            transition: all 0.3s; cursor: pointer;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1.5px solid rgba(0, 217, 255, 0.25);
+            color: rgba(255, 255, 255, 0.6);
+            padding: 8px 10px; border-radius: 12px;
+            font-size: 11px; font-weight: 600;
+            white-space: nowrap; position: relative;
+        }
+        .wallet-tab-btn.active {
+            background: linear-gradient(145deg, #00d9ff, #0066cc);
+            border-color: #66e5ff;
+            color: #ffffff;
+            box-shadow: 0 0 20px rgba(0, 217, 255, 0.5);
+        }
+        .wallet-tab-btn:hover:not(.active) { border-color: rgba(0, 217, 255, 0.5); color: #00d9ff; }
+
+        .copy-btn {
+            background: rgba(0, 217, 255, 0.15);
+            border: 1px solid rgba(0, 217, 255, 0.3);
+            color: #00d9ff; padding: 2px 10px;
+            border-radius: 6px; font-size: 9px;
+            cursor: pointer; transition: all 0.3s;
+        }
+
+        .wallet-big-btn {
+            width: 100%; padding: 18px;
+            border-radius: 18px;
+            background: linear-gradient(145deg, #00d9ff, #0066cc);
+            color: #fff; font-size: 18px; font-weight: 900;
+            border: 3px solid #66e5ff;
+            box-shadow: 0 8px 0 #004d99, 0 15px 35px rgba(0, 217, 255, 0.6), inset 0 2px 6px rgba(255, 255, 255, 0.4);
+            cursor: pointer; transition: all 0.15s;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+            letter-spacing: 1px; margin-top: 12px;
+        }
+        .wallet-big-btn:active {
+            transform: translateY(8px);
+            box-shadow: 0 0px 0 #004d99, 0 5px 15px rgba(0, 217, 255, 0.5);
+        }
+
+        .quick-action-wallet {
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            padding: 14px 8px; border-radius: 16px;
+            background: rgba(0, 15, 25, 0.78);
+            backdrop-filter: blur(14px);
+            border: 2px solid var(--wallet-accent);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6), inset 0 0 10px rgba(0, 217, 255, 0.15);
+            transition: all 0.3s; cursor: pointer;
+            animation: walletBorder 8s linear infinite;
+        }
+        .quick-action-wallet:hover { transform: translateY(-3px); box-shadow: 0 12px 35px rgba(0, 217, 255, 0.3); }
+        .quick-action-wallet i { font-size: 24px; color: var(--wallet-accent); margin-bottom: 4px; filter: drop-shadow(0 0 8px rgba(0, 217, 255, 0.6)); }
+        .quick-action-wallet span { font-size: 11px; font-weight: 700; color: #fff; }
+        .quick-action-wallet small { font-size: 8px; color: rgba(255, 255, 255, 0.5); }
+
+        .qr-scan-container {
+            width: 200px; height: 200px;
+            margin: 0 auto;
+            border: 3px solid var(--wallet-accent);
+            border-radius: 20px;
+            overflow: hidden;
+            background: #000;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .qr-scan-container video, .qr-scan-container canvas {
+            width: 100%; height: 100%; object-fit: cover;
+        }
+
+        .wallet-text-gradient {
+            background: linear-gradient(135deg, #99f0ff, #00d9ff, #0066cc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hidden { display: none !important; }
+        .flex { display: flex; }
+        .items-center { align-items: center; }
+        .justify-center { justify-content: center; }
+        .justify-between { justify-content: space-between; }
+        .gap-1 { gap: 4px; }
+        .gap-2 { gap: 8px; }
+        .gap-3 { gap: 12px; }
+        .w-full { width: 100%; }
+        .text-center { text-align: center; }
+        .text-right { text-align: right; }
+        .relative { position: relative; }
+        .absolute { position: absolute; }
+        .mx-auto { margin-left: auto; margin-right: auto; }
+        .rounded-lg { border-radius: 8px; }
+        .rounded-xl { border-radius: 12px; }
+        .rounded-2xl { border-radius: 16px; }
+        .rounded-3xl { border-radius: 24px; }
+        .rounded-full { border-radius: 9999px; }
+        .overflow-hidden { overflow: hidden; }
+        .overflow-y-auto { overflow-y: auto; }
+        .text-xs { font-size: 12px; }
+        .text-sm { font-size: 14px; }
+        .text-md { font-size: 16px; }
+        .text-lg { font-size: 18px; }
+        .text-xl { font-size: 20px; }
+        .text-2xl { font-size: 24px; }
+        .text-3xl { font-size: 30px; }
+        .font-bold { font-weight: 700; }
+        .font-extrabold { font-weight: 800; }
+        .font-semibold { font-weight: 600; }
+        .font-mono { font-family: monospace; }
+        .cursor-pointer { cursor: pointer; }
+        .break-all { word-break: break-all; }
+        .shrink-0 { flex-shrink: 0; }
+        .flex-1 { flex: 1; }
+        .flex-wrap { flex-wrap: wrap; }
+        .grid { display: grid; }
+        .grid-cols-2 { grid-template-columns: 1fr 1fr; }
+        .grid-cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+        .p-2 { padding: 8px; }
+        .p-3 { padding: 12px; }
+        .p-4 { padding: 16px; }
+        .p-5 { padding: 20px; }
+        .px-2 { padding-left: 8px; padding-right: 8px; }
+        .px-3 { padding-left: 12px; padding-right: 12px; }
+        .px-4 { padding-left: 16px; padding-right: 16px; }
+        .py-1 { padding-top: 4px; padding-bottom: 4px; }
+        .py-2 { padding-top: 8px; padding-bottom: 8px; }
+        .py-3 { padding-top: 12px; padding-bottom: 12px; }
+        .py-4 { padding-top: 16px; padding-bottom: 16px; }
+        .mt-1 { margin-top: 4px; }
+        .mt-2 { margin-top: 8px; }
+        .mt-3 { margin-top: 12px; }
+        .mt-4 { margin-top: 16px; }
+        .mb-1 { margin-bottom: 4px; }
+        .mb-2 { margin-bottom: 8px; }
+        .mb-3 { margin-bottom: 12px; }
+        .z-10 { z-index: 10; }
+        .z-40 { z-index: 40; }
+        .z-50 { z-index: 50; }
+
+        .voice-toast {
+            position: fixed; bottom: 90px; left: 50%;
+            transform: translateX(-50%);
+            max-width: 400px; width: 92%;
+            background: rgba(0, 15, 25, 0.95);
+            backdrop-filter: blur(20px);
+            border: 2px solid var(--wallet-accent);
+            border-radius: 20px; padding: 16px 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+            z-index: 998; text-align: center;
+            animation: fadeIn 0.4s ease; display: none;
+        }
+        .voice-toast.show { display: block; }
+        .voice-toast .voice-icon {
+            font-size: 32px; display: block; margin-bottom: 6px;
+            color: var(--wallet-accent);
+        }
+        .voice-toast .voice-msg { font-size: 13px; font-weight: 500; color: #fff; }
+        .voice-toast .voice-close {
+            margin-top: 8px;
+            background: rgba(0, 217, 255, 0.15);
+            border: none; padding: 4px 16px;
+            border-radius: 20px; font-size: 10px;
+            color: #00d9ff; cursor: pointer;
+        }
+
+        #loadingOverlay {
+            position: fixed; inset: 0;
+            background: rgba(2, 8, 16, 0.9);
+            backdrop-filter: blur(8px);
+            z-index: 9999; display: none;
+            align-items: center; justify-content: center;
+            flex-direction: column;
+        }
+        #loadingOverlay.show { display: flex; }
+        #loadingOverlay .spinner {
+            width: 48px; height: 48px;
+            border: 5px solid rgba(0, 217, 255, 0.2);
+            border-top-color: var(--wallet-accent);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        #loadingOverlay p { margin-top: 12px; font-size: 13px; color: #66e5ff; font-weight: 500; }
+
+        .app-popup {
+            position: fixed; inset: 0;
+            background: rgba(0, 0, 0, 0.88);
+            backdrop-filter: blur(18px);
+            z-index: 300; display: flex;
+            align-items: center; justify-content: center;
+            padding: 16px; animation: fadeIn 0.35s ease;
+        }
+        .app-popup .app-card {
+            position: relative;
+            background: linear-gradient(160deg, #001a2b 0%, #020810 60%, #001a2b 100%);
+            border: 3px solid transparent;
+            border-radius: 28px;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.95), 0 0 60px rgba(0, 217, 255, 0.35);
+            max-width: 400px; width: 100%;
+            padding: 26px 22px 22px;
+            text-align: center;
+            animation: popIn 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            background-clip: padding-box;
+            overflow: hidden;
+        }
+        .app-popup .app-logo {
+            width: 88px; height: 88px;
+            border-radius: 22px;
+            object-fit: cover;
+            border: 3px solid var(--wallet-accent);
+            box-shadow: 0 0 40px rgba(0, 217, 255, 0.6), inset 0 0 10px rgba(0,217,255,0.3);
+            margin: 0 auto 12px;
+            display: block;
+            position: relative; z-index: 2;
+            background: #020810;
+        }
+        .app-popup .app-title {
+            font-size: 22px; font-weight: 900;
+            background: linear-gradient(135deg, #99f0ff, #00d9ff, #0066cc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 0.5px;
+            position: relative; z-index: 2;
+        }
+        .app-popup .app-subtitle {
+            font-size: 10px; color: #66e5ff;
+            letter-spacing: 3px; font-weight: 600;
+            margin-bottom: 14px; text-transform: uppercase;
+            position: relative; z-index: 2;
+        }
+        .app-info-grid {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1.5px solid rgba(0, 217, 255, 0.3);
+            border-radius: 16px;
+            padding: 12px 14px;
+            margin-bottom: 16px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px 10px;
+            position: relative; z-index: 2;
+        }
+        .app-info-grid .info-item {
+            display: flex; flex-direction: column;
+            align-items: flex-start; text-align: left;
+        }
+        .app-info-grid .info-label {
+            font-size: 8.5px; color: rgba(102, 229, 255, 0.65);
+            letter-spacing: 0.5px; text-transform: uppercase;
+            margin-bottom: 2px;
+        }
+        .app-info-grid .info-value {
+            font-size: 12px; font-weight: 700; color: #fff;
+            text-shadow: 0 0 8px rgba(0, 217, 255, 0.4);
+        }
+        .app-info-grid .info-value.highlight-green { color: #34d399; text-shadow: 0 0 8px rgba(52, 211, 153, 0.5); }
+
+        .btn-download-premium {
+            position: relative;
+            width: 100%;
+            padding: 14px 18px;
+            border-radius: 16px;
+            background: linear-gradient(145deg, #00d9ff 0%, #0088cc 50%, #005599 100%);
+            color: #fff !important;
+            font-size: 14px;
+            font-weight: 900;
+            border: 2.5px solid #66e5ff;
+            box-shadow: 0 8px 0 #003366, 0 15px 35px rgba(0, 217, 255, 0.55), inset 0 2px 6px rgba(255, 255, 255, 0.45);
+            cursor: pointer;
+            transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
+            letter-spacing: 0.5px;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            margin-bottom: 10px;
+            overflow: hidden;
+            position: relative; z-index: 2;
+        }
+        .btn-download-premium::before {
+            content: '';
+            position: absolute; top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
+            animation: shine 2.5s infinite;
+        }
+        .btn-download-premium:active {
+            transform: translateY(8px);
+            box-shadow: 0 0px 0 #003366, 0 5px 15px rgba(0, 217, 255, 0.5), inset 0 2px 6px rgba(255, 255, 255, 0.45);
+        }
+        .btn-cancel-app {
+            width: 100%;
+            background: rgba(0, 217, 255, 0.08);
+            color: rgba(102, 229, 255, 0.85);
+            border: 1.5px solid rgba(0, 217, 255, 0.3);
+            padding: 10px 14px;
+            border-radius: 14px;
+            font-size: 11px; font-weight: 600;
+            cursor: pointer; transition: all 0.3s;
+            position: relative; z-index: 2;
+        }
+
+        .receipt-modal {
+            position: fixed; inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(12px);
+            z-index: 100; display: flex;
+            align-items: center; justify-content: center;
+            padding: 20px; animation: fadeIn 0.3s ease;
+        }
+        .receipt-modal .receipt-card {
+            background: #020810;
+            border: 3px solid var(--wallet-accent);
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.95), 0 0 40px rgba(0, 217, 255, 0.6);
+            max-width: 480px; width: 100%;
+            max-height: 90vh; overflow-y: auto;
+            padding: 28px 24px; color: #fff;
+        }
+        .receipt-row {
+            display: flex; justify-content: space-between;
+            padding: 5px 0;
+            border-bottom: 1px solid rgba(0, 217, 255, 0.08);
+            font-size: 12px;
+        }
+        .receipt-row .label { color: rgba(255, 255, 255, 0.5); }
+        .receipt-row .value { color: #fff; font-weight: 500; text-align: right; word-break: break-all; max-width: 60%; font-family: monospace; }
+        .receipt-currency-box {
+            border: 3px solid var(--wallet-accent);
+            border-radius: 16px; padding: 16px 18px;
+            margin: 10px 0 16px 0;
+            background: rgba(0, 217, 255, 0.06);
+            text-align: center;
+        }
+        .receipt-currency-box .usdt-amount { font-size: 32px; font-weight: 800; color: #00d9ff; letter-spacing: 1px; }
+        .receipt-currency-box .usdt-label { font-size: 14px; font-weight: 600; color: #00d9ff; display: block; margin-top: 2px; }
+
+        .withdraw-popup {
+            position: fixed; inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(12px);
+            z-index: 200; display: flex;
+            align-items: center; justify-content: center;
+            padding: 20px; animation: fadeIn 0.3s ease;
+        }
+        .withdraw-popup .withdraw-card {
+            background: #020810;
+            border: 3px solid var(--wallet-accent);
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.95), 0 0 40px rgba(0, 217, 255, 0.6);
+            max-width: 440px; width: 100%;
+            max-height: 90vh; overflow-y: auto;
+            padding: 24px 20px;
+        }
+
+        .congrats-popup {
+            position: fixed; inset: 0;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(15px);
+            z-index: 400; display: flex;
+            align-items: center; justify-content: center;
+            padding: 20px; animation: fadeIn 0.3s ease;
+        }
+        .congrats-popup .congrats-card {
+            background: linear-gradient(145deg, #020810, #001a2b);
+            border: 4px solid #22c55e;
+            border-radius: 28px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.95), 0 0 60px rgba(34, 197, 94, 0.6);
+            max-width: 380px; width: 100%;
+            padding: 32px 24px; text-align: center;
+            animation: popIn 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            position: relative; overflow: hidden;
+        }
+        .congrats-popup .congrats-card .trophy {
+            font-size: 72px; display: block; margin-bottom: 8px;
+            animation: bounceIn 0.8s ease-out;
+            filter: drop-shadow(0 0 30px rgba(34, 197, 94, 0.8));
+        }
+
+        .header-wallet-btn {
+            background: linear-gradient(145deg, #00d9ff, #0066cc);
+            border: 2px solid #66e5ff;
+            border-radius: 50%;
+            width: 34px; height: 34px;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: all 0.3s ease;
+            animation: floatWallet 2.8s ease-in-out infinite;
+            box-shadow: 0 2px 15px rgba(0, 217, 255, 0.5);
+            color: #fff; font-size: 14px; text-decoration: none;
+            flex-shrink: 0;
+        }
+        .header-apk-btn {
+            background: linear-gradient(145deg, #00d9ff, #0066cc);
+            border: 2px solid #66e5ff;
+            border-radius: 50%;
+            width: 34px; height: 34px;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: all 0.3s ease;
+            animation: floatWallet 3.2s ease-in-out infinite;
+            box-shadow: 0 2px 15px rgba(0, 217, 255, 0.5);
+            color: #fff; font-size: 14px; text-decoration: none;
+            flex-shrink: 0;
+        }
+        .voice-toggle-btn {
+            background: rgba(0, 217, 255, 0.15);
+            border: 1px solid rgba(0, 217, 255, 0.4);
+            color: #00d9ff; padding: 4px 10px;
+            border-radius: 30px; font-size: 9px;
+            font-weight: 600; cursor: pointer;
+            transition: all 0.3s;
+            display: flex; align-items: center; gap: 4px;
+        }
+        .voice-toggle-btn.off { color: rgba(255, 255, 255, 0.3); border-color: rgba(255, 255, 255, 0.2); background: rgba(255, 255, 255, 0.05); }
+
+        .admin-tab-btn {
+            transition: all 0.3s; cursor: pointer;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1.5px solid rgba(0, 217, 255, 0.25);
+            color: rgba(255, 255, 255, 0.6);
+            padding: 8px 10px; border-radius: 12px;
+            font-size: 11px; font-weight: 600;
+            white-space: nowrap; position: relative;
+        }
+        .admin-tab-btn.active {
+            background: linear-gradient(145deg, #00d9ff, #0066cc);
+            border-color: #66e5ff;
+            color: #ffffff;
+            box-shadow: 0 0 20px rgba(0, 217, 255, 0.5);
+        }
+        .admin-tab-btn:hover:not(.active) { border-color: rgba(0, 217, 255, 0.5); color: #00d9ff; }
+        .admin-tab-btn .badge-count {
+            position: absolute; top: -4px; right: -4px;
+            background: #f59e0b; color: #020810;
+            font-size: 8px; font-weight: 800;
+            padding: 1px 5px; border-radius: 10px;
+            min-width: 16px; text-align: center; display: none;
+        }
+        .admin-tab-btn .badge-count.show { display: inline-block; }
+
+        .item-card {
+            background: rgba(0, 15, 25, 0.5);
+            border: 1px solid rgba(0, 217, 255, 0.15);
+            border-radius: 14px; padding: 12px 14px;
+            transition: all 0.3s;
+        }
+        .item-card:hover { border-color: rgba(0, 217, 255, 0.4); }
+
+        .status-badge {
+            display: inline-block; padding: 2px 10px;
+            border-radius: 20px; font-size: 9px; font-weight: 700;
+        }
+        .status-approved { background: rgba(34, 197, 94, 0.15); color: #22c55e; border: 1px solid rgba(34, 197, 94, 0.3); }
+        .status-pending { background: rgba(245, 158, 11, 0.15); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.3); }
+        .status-blocked { background: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); }
+
+        .currency-usdt { color: #34d399 !important; text-shadow: 0 0 10px rgba(52, 211, 153, 0.5); }
+        .currency-wallet { color: #00d9ff !important; text-shadow: 0 0 10px rgba(0, 217, 255, 0.5); }
+
+        @media (max-width: 440px) {
+            .receipt-modal .receipt-card { padding: 18px 14px; }
+            .receipt-modal .receipt-row { font-size: 10px; padding: 4px 0; }
+            .receipt-currency-box .usdt-amount { font-size: 24px; }
+            .withdraw-popup .withdraw-card { padding: 18px 14px; }
+            .app-popup .app-card { padding: 22px 18px; }
+            .congrats-popup .congrats-card { padding: 24px 18px; }
+            .app-popup .app-logo { width: 76px; height: 76px; }
+            .app-popup .app-title { font-size: 19px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="loadingOverlay"><div class="spinner"></div><p>कृपया प्रतीक्षा करें...</p></div>
+
+    <div id="appContainer" class="w-full max-w-md mx-auto relative z-10">
+
+        <!-- HEADER -->
+        <header id="mainHeader" class="w-full glass-wallet py-2 px-3 flex items-center justify-between sticky top-0 z-40 shadow-xl" style="border-radius: 0 0 20px 20px; min-height: 58px;">
+            <div class="flex items-center gap-2 flex-1 min-w-0">
+                <img id="headerLogo" src="https://i.postimg.cc/g2WqZ0Ld/file-000000007b0c82118553e4de6af679b3.png" alt="SupriX Wallet" style="width: 34px; height: 34px; border-radius: 50%; border: 2px solid var(--wallet-accent); object-fit: cover; flex-shrink: 0;" onerror="this.src='https://i.ibb.co/hJg8qHkt/Chat-GPT-Image-Sep-10-2026-02-03-43-PM.png';" />
+                <h1 id="headerTitle" class="wallet-text-gradient font-extrabold tracking-wider leading-none truncate" style="font-size: 1.4rem;">SUPRIX WALLET 💎</h1>
+            </div>
+            <div class="flex items-center gap-1 flex-shrink-0">
+                <button onclick="toggleVoice()" id="voiceToggleBtn" class="voice-toggle-btn" title="वॉइस गाइड ऑन/ऑफ" style="padding: 3px 8px; font-size: 8px; width: 26px; height: 26px; justify-content: center;">
+                    <i class="fa-solid fa-volume-high"></i>
+                </button>
+                <a id="headerApkBtn" class="header-apk-btn" href="#" onclick="showAppDownloadPopup(event)" title="ऐप डाउनलोड करें" style="width: 26px; height: 26px; font-size: 11px;">
+                    <i class="fa-solid fa-download"></i>
+                </a>
+                <button onclick="toggleAdminSearch()" class="text-cyan-300/50 hover:text-cyan-400 transition-all text-xs" style="width: 26px; height: 26px; display: flex; align-items: center; justify-content: center;">
+                    <i class="fa-solid fa-search"></i>
+                </button>
+                <span id="headerBadge" class="text-[7px] bg-cyan-500/15 text-cyan-300 border border-cyan-500/30 px-1.5 py-0.5 rounded-full font-bold">Wallet</span>
+            </div>
+        </header>
+
+        <div id="adminSearchBox" class="hidden w-full glass-wallet p-3 rounded-xl mx-4 my-2" style="width: calc(100% - 32px);">
+            <div class="flex gap-2">
+                <input type="text" id="adminSecretInput" placeholder="एडमिन कोड दर्ज करें" class="flex-1 py-2 px-3 text-xs">
+                <button onclick="verifyAdminCode()" class="btn-3d-wallet px-4 py-2 rounded-xl text-xs font-bold">Verify</button>
+            </div>
+        </div>
+
+        <main class="w-full px-4 pt-4 pb-28 flex-1 flex flex-col justify-start z-10">
+
+            <div id="walletPanelContainer">
+
+                <!-- ============================================================
+                     WALLET REGISTRATION
+                     ============================================================ -->
+                <section id="walletRegistrationPage" class="app-page w-full space-y-6">
+                    <div class="text-center space-y-2 py-6">
+                        <img src="https://i.postimg.cc/g2WqZ0Ld/file-000000007b0c82118553e4de6af679b3.png" alt="SupriX Wallet" class="w-20 h-20 rounded-full mx-auto border-2 border-cyan-400 shadow-2xl object-cover" style="box-shadow: 0 0 40px rgba(0,217,255,0.5);" onerror="this.src='https://i.ibb.co/hJg8qHkt/Chat-GPT-Image-Sep-10-2026-02-03-43-PM.png';" />
+                        <h2 class="text-2xl font-extrabold wallet-text-gradient tracking-wide mt-2">SupriX Wallet</h2>
+                        <p class="text-xs text-cyan-300/60">अपना वॉलेट रजिस्टर करें — सुरक्षित और तेज़</p>
+                    </div>
+                    <div class="glass-wallet p-6 rounded-3xl space-y-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-cyan-300/80 mb-1.5"><i class="fa-solid fa-user mr-1 text-cyan-400"></i> पूरा नाम</label>
+                            <input type="text" id="walletRegName" placeholder="अपना नाम दर्ज करें" class="w-full py-3 px-4 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-cyan-300/80 mb-1.5"><i class="fa-solid fa-envelope mr-1 text-cyan-400"></i> ईमेल आईडी</label>
+                            <input type="email" id="walletRegEmail" placeholder="अपनी ईमेल आईडी दर्ज करें" class="w-full py-3 px-4 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-cyan-300/80 mb-1.5"><i class="fa-solid fa-phone mr-1 text-cyan-400"></i> मोबाइल नंबर</label>
+                            <input type="tel" id="walletRegPhone" placeholder="अपना 10 अंकों का मोबाइल नंबर डालें" class="w-full py-3 px-4 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-cyan-300/80 mb-1.5"><i class="fa-solid fa-lock mr-1 text-cyan-400"></i> पासवर्ड</label>
+                            <input type="password" id="walletRegPassword" placeholder="पासवर्ड दर्ज करें (कम से कम 6 अक्षर)" class="w-full py-3 px-4 text-sm font-mono">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-cyan-300/80 mb-1.5"><i class="fa-solid fa-lock mr-1 text-cyan-400"></i> पासवर्ड कन्फर्म करें</label>
+                            <input type="password" id="walletRegConfirmPassword" placeholder="पासवर्ड दोबारा दर्ज करें" class="w-full py-3 px-4 text-sm font-mono">
+                        </div>
+                        <button id="btn-wallet-register" onclick="handleWalletRegistration(this)" class="w-full btn-3d-wallet py-3.5 rounded-2xl text-sm flex items-center justify-center gap-2">
+                            <span>वॉलेट रजिस्टर करें</span> <i class="fa-solid fa-wallet"></i>
+                        </button>
+                        <p class="text-center text-xs text-cyan-300/40 mt-2">
+                            पहले से वॉलेट है? <button onclick="showPage('walletLoginPage')" class="text-cyan-400 font-semibold underline">वॉलेट लॉगिन करें</button>
+                        </p>
+                    </div>
+                </section>
+
+                <!-- ============================================================
+                     WALLET REG SUCCESS
+                     ============================================================ -->
+                <section id="walletRegSuccessPage" class="app-page w-full hidden space-y-6 text-center py-4">
+                    <div class="glass-wallet p-6 rounded-3xl space-y-6 relative overflow-hidden">
+                        <div id="walletConfettiContainer" class="absolute inset-0 pointer-events-none overflow-hidden"></div>
+                        <div class="relative z-10">
+                            <div class="flex items-center justify-center gap-3">
+                                <div class="w-20 h-20 bg-green-500/20 text-green-400 rounded-full flex items-center justify-center text-4xl border border-green-500/40 animate-bounce">
+                                    <i class="fa-solid fa-circle-check"></i>
+                                </div>
+                                <div class="text-left">
+                                    <h2 class="text-3xl font-extrabold text-green-400">🎉 बधाई हो! 🎉</h2>
+                                    <p class="text-sm text-cyan-300/80 font-semibold">आपका वॉलेट रजिस्ट्रेशन सफल!</p>
+                                </div>
+                            </div>
+                            <div class="glass-wallet-light text-left space-y-4 mt-4 p-4">
+                                <div>
+                                    <div class="text-[10px] font-bold text-cyan-300/70 mb-1"><i class="fa-solid fa-id-card text-cyan-400 mr-1"></i> SPX-W ID (Wallet Login ID)</div>
+                                    <div style="background: rgba(0,0,0,0.5); border: 1px solid rgba(0,217,255,0.3); border-radius: 14px; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between;">
+                                        <span id="walletSuccessId" style="font-size: 16px; font-weight: 800; color: #00d9ff; font-family: monospace; letter-spacing: 1.5px; word-break: break-all;">SPX-W0000000</span>
+                                        <button onclick="copyToClipboard('walletSuccessId', '✅ SPX-W ID कॉपी!')" class="copy-btn"><i class="fa-solid fa-copy"></i> कॉपी</button>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="text-[10px] font-bold text-cyan-300/70 mb-1"><i class="fa-solid fa-envelope text-cyan-400 mr-1"></i> ईमेल</div>
+                                    <div style="background: rgba(0,0,0,0.5); border: 1px solid rgba(0,217,255,0.3); border-radius: 14px; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between;">
+                                        <span id="walletSuccessEmail" style="font-size: 14px; font-weight: 700; color: #60a5fa; font-family: monospace; word-break: break-all;">user@example.com</span>
+                                        <button onclick="copyToClipboard('walletSuccessEmail', '✅ ईमेल कॉपी!')" class="copy-btn"><i class="fa-solid fa-copy"></i> कॉपी</button>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="text-[10px] font-bold text-cyan-300/70 mb-1"><i class="fa-solid fa-lock text-cyan-400 mr-1"></i> पासवर्ड</div>
+                                    <div style="background: rgba(0,0,0,0.5); border: 1px solid rgba(0,217,255,0.3); border-radius: 14px; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between;">
+                                        <span id="walletSuccessPassword" style="font-size: 14px; font-weight: 700; color: #2dd4bf; font-family: monospace;">XXXXXXXXXX</span>
+                                        <button onclick="copyToClipboard('walletSuccessPassword', '✅ पासवर्ड कॉपी!')" class="copy-btn"><i class="fa-solid fa-copy"></i> कॉपी</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <button onclick="showPage('walletLoginPage')" class="w-full btn-3d-wallet py-3.5 rounded-2xl text-sm flex items-center justify-center gap-2 mt-4">
+                                <i class="fa-solid fa-right-to-bracket"></i>
+                                <span>वॉलेट लॉगिन स्क्रीन</span>
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ============================================================
+                     WALLET LOGIN
+                     ============================================================ -->
+                <section id="walletLoginPage" class="app-page w-full hidden space-y-6">
+                    <div class="text-center space-y-2 py-6">
+                        <img src="https://i.postimg.cc/g2WqZ0Ld/file-000000007b0c82118553e4de6af679b3.png" alt="SupriX Wallet" class="w-20 h-20 rounded-full mx-auto border-2 border-cyan-400 shadow-2xl object-cover" style="box-shadow: 0 0 40px rgba(0,217,255,0.5);" onerror="this.src='https://i.ibb.co/hJg8qHkt/Chat-GPT-Image-Sep-10-2026-02-03-43-PM.png';" />
+                        <h2 class="text-2xl font-extrabold wallet-text-gradient tracking-wide mt-2">वॉलेट लॉगिन</h2>
+                        <p class="text-xs text-cyan-300/60">SPX-W ID और पासवर्ड से लॉगिन करें</p>
+                    </div>
+                    <div class="glass-wallet p-6 rounded-3xl space-y-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-cyan-300/80 mb-1.5"><i class="fa-solid fa-id-card mr-1 text-cyan-400"></i> SPX-W ID / ईमेल</label>
+                            <input type="text" id="walletLoginId" placeholder="SPX-W ID या ईमेल दर्ज करें" class="w-full py-3 px-4 text-sm font-mono">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-cyan-300/80 mb-1.5"><i class="fa-solid fa-lock mr-1 text-cyan-400"></i> पासवर्ड</label>
+                            <input type="password" id="walletLoginPassword" placeholder="पासवर्ड दर्ज करें" class="w-full py-3 px-4 text-sm font-mono">
+                        </div>
+                        <button id="btn-wallet-login" onclick="handleWalletLogin(this)" class="w-full btn-3d-wallet py-3.5 rounded-2xl text-sm mt-2 flex items-center justify-center gap-2">
+                            <span>वॉलेट लॉगिन करें</span> <i class="fa-solid fa-right-to-bracket"></i>
+                        </button>
+                        <p class="text-center text-xs text-cyan-300/40 mt-2">
+                            नया वॉलेट? <button onclick="showPage('walletRegistrationPage')" class="text-cyan-400 font-semibold underline">वॉलेट रजिस्टर करें</button>
+                        </p>
+                    </div>
+                </section>
+
+                <!-- ============================================================
+                     WALLET DASHBOARD
+                     ============================================================ -->
+                <section id="walletDashboardPage" class="app-page w-full hidden space-y-4">
+                    <!-- Wallet ID + Balance Card -->
+                    <div class="glass-wallet p-5 rounded-2xl space-y-3">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <div class="wallet-balance-label">Wallet Balance</div>
+                                <div class="wallet-balance-display" id="walletBalanceDisplay">0.00 <span style="font-size:16px;">USDT</span></div>
+                            </div>
+                            <div class="text-right">
+                                <img src="https://i.postimg.cc/g2WqZ0Ld/file-000000007b0c82118553e4de6af679b3.png" alt="Wallet" style="width:48px;height:48px;border-radius:50%;border:2px solid #00d9ff;object-fit:cover;" onerror="this.src='https://i.ibb.co/hJg8qHkt/Chat-GPT-Image-Sep-10-2026-02-03-43-PM.png';" />
+                            </div>
+                        </div>
+                        <div class="wallet-id-box">
+                            <div>
+                                <span class="text-[8px] text-cyan-300/50 block">SPX-W ID</span>
+                                <span class="wallet-id-text" id="walletDashboardId">SPX-W0000000</span>
+                            </div>
+                            <button onclick="copyToClipboard('walletDashboardId', '✅ SPX-W ID कॉपी!')" class="copy-btn"><i class="fa-solid fa-copy"></i> कॉपी</button>
+                        </div>
+                        <div class="flex justify-between text-[10px] text-cyan-300/60">
+                            <span>👤 <span id="walletDashboardName">User</span></span>
+                            <span>📧 <span id="walletDashboardEmail">user@example.com</span></span>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="grid grid-cols-2 gap-3">
+                        <button onclick="showPage('walletSendPage')" class="quick-action-wallet">
+                            <i class="fa-solid fa-paper-plane"></i>
+                            <span>भेजें</span>
+                            <small>Wallet / SPX ID</small>
+                        </button>
+                        <button onclick="showPage('walletReceivePage')" class="quick-action-wallet">
+                            <i class="fa-solid fa-qrcode"></i>
+                            <span>प्राप्त करें</span>
+                            <small>QR कोड</small>
+                        </button>
+                    </div>
+
+                    <!-- Wallet Transactions -->
+                    <div class="glass-wallet p-4 rounded-2xl space-y-2">
+                        <div class="flex justify-between items-center">
+                            <h4 class="text-xs font-bold text-cyan-300/80"><i class="fa-solid fa-list-check mr-1"></i> वॉलेट ट्रांजैक्शन</h4>
+                            <button onclick="refreshWalletTransactions()" class="bg-cyan-500/20 border border-cyan-400/30 text-cyan-300 text-[9px] px-2 py-1 rounded">🔄 Refresh</button>
+                        </div>
+                        <div id="walletTransactionList" class="space-y-2 text-xs max-h-[300px] overflow-y-auto">
+                            <p class="text-[10px] text-cyan-300/30 text-center py-2">कोई ट्रांजैक्शन नहीं।</p>
+                        </div>
+                    </div>
+
+                    <!-- Wallet Info -->
+                    <div class="glass-wallet p-4 rounded-2xl space-y-2">
+                        <h4 class="text-xs font-bold text-cyan-300/80"><i class="fa-solid fa-circle-info mr-1"></i> वॉलेट जानकारी</h4>
+                        <div class="grid grid-cols-2 gap-2 text-[10px]">
+                            <div class="bg-black/40 rounded-xl p-2">
+                                <span class="text-cyan-300/50 block">कुल प्राप्त</span>
+                                <span class="text-green-400 font-bold" id="walletTotalReceived">0.00 USDT</span>
+                            </div>
+                            <div class="bg-black/40 rounded-xl p-2">
+                                <span class="text-cyan-300/50 block">कुल भेजा</span>
+                                <span class="text-rose-400 font-bold" id="walletTotalSent">0.00 USDT</span>
+                            </div>
+                            <div class="bg-black/40 rounded-xl p-2">
+                                <span class="text-cyan-300/50 block">लेनदेन संख्या</span>
+                                <span class="text-white font-bold" id="walletTxCount">0</span>
+                            </div>
+                            <div class="bg-black/40 rounded-xl p-2">
+                                <span class="text-cyan-300/50 block">वॉलेट स्थिति</span>
+                                <span class="text-green-400 font-bold">✅ सक्रिय</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Logout -->
+                    <button onclick="handleWalletLogout()" class="w-full bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 font-semibold py-2.5 rounded-xl text-xs transition-all text-center">
+                        <i class="fa-solid fa-power-off mr-1.5"></i> वॉलेट लॉगआउट करें
+                    </button>
+                </section>
+
+                <!-- ============================================================
+                     WALLET SEND PAGE
+                     ============================================================ -->
+                <section id="walletSendPage" class="app-page w-full hidden space-y-4">
+                    <div class="glass-wallet p-4 rounded-2xl">
+                        <h3 class="text-sm font-bold text-cyan-400"><i class="fa-solid fa-paper-plane mr-1.5"></i> USDT भेजें</h3>
+                        <p class="text-[11px] text-cyan-300/60">SupriX Wallet या SPX ID पर USDT भेजें</p>
+                    </div>
+
+                    <div class="glass-wallet p-5 rounded-2xl space-y-4">
+                        <div>
+                            <label class="block text-[10px] text-cyan-300/50 mb-1">प्राप्तकर्ता प्रकार</label>
+                            <div class="grid grid-cols-2 gap-2">
+                                <button onclick="selectRecipientType('wallet')" id="recipientTypeWallet" class="wallet-tab-btn active py-2 text-center">💎 SupriX Wallet</button>
+                                <button onclick="selectRecipientType('spx')" id="recipientTypeSPX" class="wallet-tab-btn py-2 text-center">🆔 SPX ID</button>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] text-cyan-300/50 mb-1">प्राप्तकर्ता ID</label>
+                            <input type="text" id="walletSendRecipient" placeholder="SPX-W ID या SPX ID दर्ज करें" class="w-full py-2.5 px-3 text-xs font-mono">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] text-cyan-300/50 mb-1">राशि (USDT)</label>
+                            <input type="number" id="walletSendAmount" placeholder="USDT राशि दर्ज करें" class="w-full py-2.5 px-3 text-xs font-mono" min="0.01" step="0.01">
+                            <div class="flex justify-between text-[9px] text-cyan-300/40 px-1 mt-1">
+                                <span>उपलब्ध: <span id="walletSendAvailable">0.00 USDT</span></span>
+                                <button onclick="setMaxSendAmount()" class="text-cyan-400 underline">MAX</button>
+                            </div>
+                        </div>
+                        <button id="btn-wallet-send" onclick="handleWalletSend(this)" class="w-full wallet-big-btn">
+                            <i class="fa-solid fa-paper-plane mr-2"></i> USDT भेजें
+                        </button>
+                    </div>
+
+                    <div class="glass-wallet p-4 rounded-2xl space-y-2">
+                        <h4 class="text-xs font-bold text-cyan-300/80"><i class="fa-solid fa-qrcode mr-1"></i> QR स्कैन करके भेजें</h4>
+                        <p class="text-[10px] text-cyan-300/50">प्राप्तकर्ता का QR कोड स्कैन करें</p>
+                        <button onclick="openQrScanner()" class="w-full btn-3d-wallet py-3 rounded-xl text-sm">
+                            <i class="fa-solid fa-camera mr-1"></i> QR स्कैन करें
+                        </button>
+                        <div id="qrScannerModal" class="fixed inset-0 bg-black/95 flex flex-col items-center justify-center z-[500] hidden p-4">
+                            <div class="absolute top-4 right-4 z-50">
+                                <button onclick="closeQrScanner()" class="bg-cyan-500/20 hover:bg-cyan-500 text-cyan-400 hover:text-white w-10 h-10 rounded-full flex items-center justify-center">
+                                    <i class="fa-solid fa-xmark text-lg"></i>
+                                </button>
+                            </div>
+                            <div class="qr-scan-container" id="qrScannerContainer"></div>
+                            <p class="text-cyan-300/60 text-xs mt-4">QR कोड को कैमरे के सामने रखें</p>
+                            <p id="qrScanStatus" class="text-cyan-400 text-xs mt-2"></p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ============================================================
+                     WALLET RECEIVE PAGE
+                     ============================================================ -->
+                <section id="walletReceivePage" class="app-page w-full hidden space-y-4">
+                    <div class="glass-wallet p-4 rounded-2xl">
+                        <h3 class="text-sm font-bold text-cyan-400"><i class="fa-solid fa-qrcode mr-1.5"></i> USDT प्राप्त करें</h3>
+                        <p class="text-[11px] text-cyan-300/60">अपना QR कोड स्कैन करवाएं और USDT प्राप्त करें</p>
+                    </div>
+
+                    <div class="glass-wallet p-6 rounded-2xl flex flex-col items-center space-y-4">
+                        <div class="wallet-id-box w-full">
+                            <div>
+                                <span class="text-[8px] text-cyan-300/50 block">SPX-W ID</span>
+                                <span class="wallet-id-text" id="walletReceiveId">SPX-W0000000</span>
+                            </div>
+                            <button onclick="copyToClipboard('walletReceiveId', '✅ SPX-W ID कॉपी!')" class="copy-btn"><i class="fa-solid fa-copy"></i> कॉपी</button>
+                        </div>
+
+                        <div id="walletReceiveQrContainer" style="background:#fff;padding:16px;border-radius:16px;display:flex;align-items:center;justify-content:center;"></div>
+
+                        <div class="w-full text-center space-y-1">
+                            <p class="text-[10px] text-cyan-300/50">इस QR कोड को स्कैन करके आपको USDT भेजा जा सकता है</p>
+                            <p class="text-[9px] text-cyan-300/30">SupriX Wallet Network (USDT BEP20)</p>
+                        </div>
+
+                        <button onclick="shareWalletQr()" class="w-full btn-3d-wallet py-2.5 rounded-xl text-xs">
+                            <i class="fa-solid fa-share-nodes mr-1"></i> QR शेयर करें
+                        </button>
+                    </div>
+                </section>
+
+            </div>
+
+            <!-- ADMIN PANEL -->
+            <div id="adminPanelContainer" class="hidden">
+                <section id="adminLoginPage" class="admin-page w-full space-y-6">
+                    <div class="text-center space-y-2 py-6">
+                        <div class="w-20 h-20 rounded-full bg-black/60 text-cyan-400 flex items-center justify-center text-3xl mx-auto border-2 border-cyan-500 shadow-xl">
+                            <i class="fa-solid fa-shield-halved"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold text-cyan-400 mt-2">SupriX Wallet Admin</h2>
+                        <p class="text-xs text-cyan-300/50">एडमिन एक्सेस</p>
+                    </div>
+                    <div class="glass-wallet p-6 rounded-2xl space-y-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-cyan-300/70 mb-1.5">एडमिन ईमेल</label>
+                            <input type="email" id="adminUsernameInput" placeholder="एडमिन ईमेल" class="w-full py-3 px-4 text-sm font-mono">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-cyan-300/70 mb-1.5">एडमिन पासवर्ड</label>
+                            <input type="password" id="adminPasswordInput" placeholder="पासवर्ड" class="w-full py-3 px-4 text-sm font-mono">
+                        </div>
+                        <button id="btn-admin-login" onclick="submitAdminLogin(this)" class="w-full btn-3d-wallet py-3.5 rounded-xl text-sm mt-2 flex items-center justify-center gap-1.5">
+                            <span>एडमिन एक्सेस खोलें</span> <i class="fa-solid fa-unlock-keyhole"></i>
+                        </button>
+                    </div>
+                </section>
+                <section id="adminDashboardPage" class="admin-page w-full hidden space-y-4">
+                    <div class="glass-wallet p-4 rounded-2xl flex items-center justify-between">
+                        <div>
+                            <h3 class="text-sm font-bold text-cyan-400"><i class="fa-solid fa-wallet mr-1"></i> Wallet Admin Dashboard</h3>
+                        </div>
+                        <div class="flex gap-1.5">
+                            <button onclick="exportAllWalletData()" class="bg-cyan-500 hover:bg-cyan-600 text-white text-[9px] font-bold px-2 py-1 rounded"><i class="fa-solid fa-file-export"></i> Export</button>
+                            <button onclick="logoutAdmin()" class="bg-cyan-500/10 text-cyan-400 text-[9px] font-bold px-2 py-1 rounded border border-cyan-500/30"><i class="fa-solid fa-right-from-bracket"></i> लॉगआउट</button>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-3 gap-2 text-center text-xs">
+                        <div class="bg-black/40 p-2.5 rounded-xl border border-cyan-500/15"><span class="text-[8px] text-cyan-300/30 block mb-0.5">Total Wallets</span><strong id="statTotalWallets" class="text-white text-md">0</strong></div>
+                        <div class="bg-black/40 p-2.5 rounded-xl border border-cyan-500/15"><span class="text-[8px] text-cyan-300/30 block mb-0.5">Total Balance</span><strong id="statTotalBalance" class="text-cyan-400 text-md">0 USDT</strong></div>
+                        <div class="bg-black/40 p-2.5 rounded-xl border border-cyan-500/15"><span class="text-[8px] text-cyan-300/30 block mb-0.5">Transactions</span><strong id="statTotalTx" class="text-green-400 text-md">0</strong></div>
+                    </div>
+                    <div class="flex bg-black/40 p-1 rounded-xl border border-cyan-500/15 text-[10px] flex-wrap gap-1">
+                        <button onclick="switchAdminTab('wallets')" id="adminTab-wallets" class="admin-tab-btn active">💼 Wallets</button>
+                        <button onclick="switchAdminTab('transactions')" id="adminTab-transactions" class="admin-tab-btn">💳 Transactions</button>
+                        <button onclick="switchAdminTab('settings')" id="adminTab-settings" class="admin-tab-btn">⚙️ Settings</button>
+                    </div>
+                    <div id="adminSection-wallets" class="admin-sec space-y-3">
+                        <div class="glass-wallet p-4 rounded-2xl space-y-3">
+                            <div class="flex justify-between items-center">
+                                <h4 class="text-xs font-bold text-cyan-300/80">सभी वॉलेट</h4>
+                                <input id="adminWalletSearch" oninput="renderAdminWalletList()" placeholder="🔍 SPX-W ID / Name / Email" class="text-[10px] py-1 px-2 rounded-lg w-40">
+                            </div>
+                            <div id="adminWalletList" class="space-y-2 text-xs max-h-[500px] overflow-y-auto"></div>
+                        </div>
+                    </div>
+                    <div id="adminSection-transactions" class="admin-sec space-y-3 hidden">
+                        <div class="glass-wallet p-4 rounded-2xl space-y-3">
+                            <div class="flex justify-between items-center">
+                                <h4 class="text-xs font-bold text-cyan-300/80">सभी वॉलेट ट्रांजैक्शन</h4>
+                                <button onclick="refreshAdminTransactions(this)" class="bg-cyan-500/20 border border-cyan-300/30 text-cyan-200 text-[9px] px-3 py-2 rounded-lg">🔄 Refresh</button>
+                            </div>
+                            <div id="adminTransactionList" class="space-y-2 text-xs max-h-[500px] overflow-y-auto"></div>
+                        </div>
+                    </div>
+                    <div id="adminSection-settings" class="admin-sec space-y-3 hidden">
+                        <div class="glass-wallet p-4 rounded-2xl space-y-3">
+                            <h4 class="text-xs font-bold text-cyan-300/80"><i class="fa-solid fa-sliders mr-1"></i> Wallet Settings</h4>
+                            <div class="grid grid-cols-2 gap-2 text-xs">
+                                <div><label class="block text-[10px] text-cyan-300/50 mb-1">Min Transfer (USDT)</label><input type="number" id="adminMinTransfer" placeholder="0.01" class="w-full p-2 text-xs"></div>
+                                <div><label class="block text-[10px] text-cyan-300/50 mb-1">Transfer Fee %</label><input type="number" id="adminTransferFee" placeholder="0" class="w-full p-2 text-xs"></div>
+                                <div><label class="block text-[10px] text-cyan-300/50 mb-1">Wallet Enabled</label>
+                                    <select id="adminWalletEnabled" class="w-full p-2 text-xs">
+                                        <option value="true">✅ Enabled</option>
+                                        <option value="false">❌ Disabled</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <button onclick="saveWalletSettings(this)" class="w-full btn-3d-wallet py-2 rounded-xl text-xs">💾 सेव</button>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+        </main>
+
+        <!-- APP DOWNLOAD POPUP -->
+        <div id="appDownloadPopup" class="app-popup hidden">
+            <div class="app-card">
+                <img src="https://i.postimg.cc/g2WqZ0Ld/file-000000007b0c82118553e4de6af679b3.png" alt="SupriX Wallet" class="app-logo" onerror="this.src='https://i.ibb.co/hJg8qHkt/Chat-GPT-Image-Sep-10-2026-02-03-43-PM.png';" />
+                <h3 class="app-title">SupriX Wallet</h3>
+                <p class="app-subtitle">Premium Gold Edition</p>
+
+                <div class="app-info-grid">
+                    <div class="info-item">
+                        <span class="info-label"><i class="fa-solid fa-weight-hanging"></i> App Size</span>
+                        <span class="info-value highlight-green">12.98 MB</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label"><i class="fa-solid fa-code-branch"></i> Version</span>
+                        <span class="info-value">2.0.0</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label"><i class="fa-solid fa-calendar"></i> Updated</span>
+                        <span class="info-value">Sep 2026</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label"><i class="fa-solid fa-mobile-screen"></i> Requires</span>
+                        <span class="info-value">Android 8.0+</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label"><i class="fa-solid fa-download"></i> Downloads</span>
+                        <span class="info-value highlight-green">10K+</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label"><i class="fa-solid fa-shield-halved"></i> Security</span>
+                        <span class="info-value highlight-green">Verified</span>
+                    </div>
+                </div>
+
+                <button onclick="downloadApkDirect(event)" class="btn-download-premium">
+                    <i class="fa-solid fa-cloud-arrow-down"></i>
+                    <span>डाउनलोड करें (APK)</span>
+                </button>
+                <button onclick="closeAppDownloadPopup()" class="btn-cancel-app">
+                    रद्द करें
+                </button>
+            </div>
+        </div>
+
+        <!-- CONGRATULATIONS POPUP -->
+        <div id="congratsPopup" class="congrats-popup hidden">
+            <div class="congrats-card">
+                <div id="congratsConfetti" class="absolute inset-0 pointer-events-none overflow-hidden"></div>
+                <span class="trophy">🎉</span>
+                <h2 class="text-2xl font-extrabold text-green-400 mb-1">Congratulations!</h2>
+                <p class="text-sm text-cyan-300/70 mb-2" id="congratsMsg">आपका काम सफल हुआ!</p>
+                <button onclick="closeCongratsPopup()" class="w-full btn-3d-wallet py-3 rounded-xl text-sm font-bold mt-4">
+                    <i class="fa-solid fa-check mr-1"></i> ठीक है
+                </button>
+            </div>
+        </div>
+
+        <!-- RECEIPT MODAL -->
+        <div id="receiptModal" class="receipt-modal hidden">
+            <div class="receipt-card" id="receiptCard">
+                <div class="receipt-logo" style="text-align: center; padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid rgba(0,217,255,0.1);">
+                    <img src="https://i.postimg.cc/g2WqZ0Ld/file-000000007b0c82118553e4de6af679b3.png" alt="SupriX Wallet" style="height: 32px; width: 32px; object-fit: cover; border-radius: 50%; display: inline-block; border: 2px solid var(--wallet-accent);" onerror="this.src='https://i.ibb.co/hJg8qHkt/Chat-GPT-Image-Sep-10-2026-02-03-43-PM.png';" />
+                    <small style="display: block; font-size: 9px; color: #66e5ff; letter-spacing: 2px;">SupriX Wallet • Premium</small>
+                </div>
+                <div class="flex items-center justify-between border-b border-cyan-500/20 pb-3 mb-3">
+                    <h3 class="text-sm font-bold text-cyan-400"><i class="fa-solid fa-receipt mr-2"></i> Transaction Receipt</h3>
+                    <button onclick="closeReceipt()" class="text-cyan-300/40 hover:text-white text-lg">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                <div id="receiptContent"></div>
+            </div>
+        </div>
+
+        <!-- VOICE TOAST -->
+        <div id="voiceToast" class="voice-toast">
+            <span class="voice-icon"><i class="fa-solid fa-circle-check"></i></span>
+            <p class="voice-msg" id="voiceToastMsg"></p>
+            <button class="voice-close" onclick="closeVoiceToast()">ठीक है</button>
+        </div>
+
+        <!-- TOAST -->
+        <div id="toastNotification" style="background: rgba(0, 15, 25, 0.95); border: 2px solid var(--wallet-accent); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 217, 255, 0.5); color: white; border-radius: 16px; position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-20px); z-index: 9999; opacity: 0; pointer-events: none; transition: all 0.4s; padding: 12px 20px; font-size: 13px; width: 90%; max-width: 400px; text-align: center;">
+            <span id="toastMessage"></span>
+            <button onclick="hideToast()"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+
+    </div>
+
+    <script>
+        // ============================================================
+        // CONFIGURATION
+        // ============================================================
+        const APPWRITE_ENDPOINT = "https://fra.cloud.appwrite.io/v1";
+        const APPWRITE_PROJECT_ID = "6a43cbf70027f5ff8960";
+        const DATABASE_ID = "6a47b7550016c4291ab3";
+        const WALLET_COLLECTION_ID = "wallets";
+        const WALLET_TX_COLLECTION_ID = "wallet_transactions";
+        const USERS_COLLECTION_ID = "users";
+        const ADMIN_TEAM_ID = "6a4a84580012aed57e61";
+        const APK_DRIVE_ID = "1SzgBIisYlgSDZqwLojcdOlQO-mHL4p4-";
+        const WALLET_LOGO = "https://i.postimg.cc/g2WqZ0Ld/file-000000007b0c82118553e4de6af679b3.png";
+        const FALLBACK_IMG = "https://i.ibb.co/hJg8qHkt/Chat-GPT-Image-Sep-10-2026-02-03-43-PM.png";
+
+        const { Client, Databases, Account, Teams, Query, ID } = Appwrite;
+        const client = new Client().setEndpoint(APPWRITE_ENDPOINT).setProject(APPWRITE_PROJECT_ID);
+        const databases = new Databases(client);
+        const account = new Account(client);
+        const teams = new Teams(client);
+
+        // ============================================================
+        // STATE
+        // ============================================================
+        let currentWallet = null;
+        let wallets = [];
+        let walletTransactions = [];
+        let isAdminMode = false;
+        let currentAdminTab = 'wallets';
+        let voiceEnabled = true;
+        let recipientType = 'wallet';
+        let qrScannerStream = null;
+        let qrScannerAnimationId = null;
+        let walletSettings = {
+            minTransfer: 0.01,
+            transferFee: 0,
+            enabled: true
+        };
+
+        // ============================================================
+        // UTILS
+        // ============================================================
+        function parseJsonSafe(value, fallback) {
+            if (!value) return fallback;
+            if (typeof value !== 'string') return value;
+            try { return JSON.parse(value); } catch (e) { return fallback; }
+        }
+
+        function generateWalletId() {
+            const num = String(Math.floor(1000000 + Math.random() * 9000000));
+            return 'SPX-W' + num;
+        }
+
+        function generateReceiptId() {
+            const now = new Date();
+            const d = String(now.getFullYear()).slice(2) +
+                String(now.getMonth() + 1).padStart(2, '0') +
+                String(now.getDate()).padStart(2, '0');
+            const num = String(Math.floor(100000 + Math.random() * 900000));
+            return 'SPXW-' + d + '-' + num;
+        }
+
+        function setButtonLoading(btn, isLoading) {
+            if (!btn) return;
+            if (isLoading) {
+                btn.disabled = true;
+                btn.setAttribute('data-original', btn.innerHTML);
+                btn.innerHTML = '<i class="fa-solid fa-spinner animate-spin"></i> Processing...';
+            } else {
+                btn.disabled = false;
+                const orig = btn.getAttribute('data-original');
+                if (orig) btn.innerHTML = orig;
+            }
+        }
+
+        function mapWalletDoc(doc) {
+            return {
+                ...doc,
+                docId: doc.$id,
+                walletId: doc.walletId || '',
+                walletName: doc.walletName || '',
+                walletEmail: doc.walletEmail || '',
+                walletPhone: doc.walletPhone || '',
+                walletPassword: doc.walletPassword || '',
+                balance: parseFloat(doc.balance || 0),
+                transactions: parseJsonSafe(doc.transactions, []),
+                totalReceived: parseFloat(doc.totalReceived || 0),
+                totalSent: parseFloat(doc.totalSent || 0)
+            };
+        }
+
+        function showToast(msg, type = 'success') {
+            const toast = document.getElementById('toastNotification');
+            document.getElementById('toastMessage').innerText = msg;
+            const colors = { success: 'rgba(34,197,94,0.4)', error: 'rgba(239,68,68,0.4)', info: 'rgba(0,217,255,0.4)' };
+            toast.style.borderColor = colors[type] || colors.info;
+            toast.classList.add('show');
+            toast.style.opacity = '1';
+            toast.style.pointerEvents = 'auto';
+            toast.style.transform = 'translateX(-50%) translateY(0)';
+            clearTimeout(toast._timer);
+            toast._timer = setTimeout(() => {
+                toast.classList.remove('show');
+                toast.style.opacity = '0';
+                toast.style.pointerEvents = 'none';
+                toast.style.transform = 'translateX(-50%) translateY(-20px)';
+            }, 4000);
+        }
+
+        function hideToast() {
+            const toast = document.getElementById('toastNotification');
+            toast.classList.remove('show');
+            toast.style.opacity = '0';
+            toast.style.pointerEvents = 'none';
+        }
+
+        function copyToClipboard(elementId, successText) {
+            const elem = document.getElementById(elementId);
+            if (!elem) return;
+            const text = elem.innerText.trim();
+            if (!text) return;
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text)
+                    .then(() => showToast(successText || '✅ कॉपी हो गया!'))
+                    .catch(() => legacyCopyFallback(text, successText));
+            } else {
+                legacyCopyFallback(text, successText);
+            }
+        }
+
+        function legacyCopyFallback(text, msg) {
+            const inp = document.createElement('input');
+            inp.value = text;
+            document.body.appendChild(inp);
+            inp.select();
+            document.execCommand('copy');
+            document.body.removeChild(inp);
+            showToast(msg || '✅ कॉपी हो गया!');
+        }
+
+        function toggleVoice() {
+            voiceEnabled = !voiceEnabled;
+            const btn = document.getElementById('voiceToggleBtn');
+            if (voiceEnabled) {
+                btn.classList.remove('off');
+                showToast('🔊 वॉइस गाइड सक्रिय', 'info');
+                speakHindi('वॉइस गाइड सक्रिय हो गया है।');
+            } else {
+                btn.classList.add('off');
+                showToast('🔇 वॉइस गाइड बंद', 'info');
+            }
+        }
+
+        function speakHindi(text) {
+            if (!voiceEnabled) return;
+            if ('speechSynthesis' in window) {
+                try {
+                    window.speechSynthesis.cancel();
+                    let utterance = new SpeechSynthesisUtterance(text);
+                    utterance.lang = 'hi-IN';
+                    utterance.pitch = 1.0;
+                    utterance.rate = 0.80;
+                    const voices = window.speechSynthesis.getVoices();
+                    const gv = voices.find(v => v.lang.startsWith('hi') && v.name.includes('Google'));
+                    if (gv) utterance.voice = gv;
+                    window.speechSynthesis.speak(utterance);
+                } catch(e) { console.warn('Voice error:', e); }
+            }
+        }
+
+        function showVoiceToast(msg) {
+            const el = document.getElementById('voiceToast');
+            document.getElementById('voiceToastMsg').innerText = msg;
+            el.classList.add('show');
+            clearTimeout(el._timer);
+            el._timer = setTimeout(() => el.classList.remove('show'), 6000);
+        }
+        function closeVoiceToast() { document.getElementById('voiceToast').classList.remove('show'); }
+
+        function launchConfettiTo(containerId, count = 70) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            const emojis = ['💎', '✨', '🌟', '💫', '🎉', '🎊', '💰', '💵', '🪙', '🔷'];
+            const existing = container.querySelectorAll('.confetti-piece');
+            existing.forEach(el => el.remove());
+            for (let i = 0; i < count; i++) {
+                const c = document.createElement('div');
+                c.className = 'confetti-piece';
+                const emoji = emojis[Math.floor(Math.random() * emojis.length)];
+                const size = Math.random() * 22 + 18;
+                const left = Math.random() * 100;
+                const delay = Math.random() * 2;
+                const duration = Math.random() * 2.5 + 2;
+                const rot = Math.random() * 720 - 360;
+                c.textContent = emoji;
+                c.style.cssText = `position:absolute;left:${left}%;top:-50px;font-size:${size}px;animation:confetti-fall ${duration}s linear ${delay}s forwards;transform:rotate(${rot}deg);`;
+                container.appendChild(c);
+                setTimeout(() => c.remove(), (duration + delay) * 1000 + 500);
+            }
+        }
+
+        // ============================================================
+        // APP POPUP
+        // ============================================================
+        function showAppDownloadPopup(event) {
+            if (event) event.preventDefault();
+            document.getElementById('appDownloadPopup').classList.remove('hidden');
+            if (voiceEnabled) speakHindi('SupriX Wallet ऐप डाउनलोड करें।');
+        }
+        function closeAppDownloadPopup() { document.getElementById('appDownloadPopup').classList.add('hidden'); }
+
+        function downloadApkDirect(event) {
+            if (event) event.preventDefault();
+            const apkUrl = `https://drive.google.com/uc?export=download&id=${APK_DRIVE_ID}`;
+            const apkUrlAlt = `https://drive.usercontent.google.com/download?id=${APK_DRIVE_ID}&export=download&confirm=t`;
+            const link = document.createElement('a');
+            link.href = apkUrl;
+            link.download = 'SupriX_Wallet.apk';
+            link.setAttribute('target', '_blank');
+            link.setAttribute('rel', 'noopener');
+            document.body.appendChild(link);
+            link.click();
+            setTimeout(() => {
+                document.body.removeChild(link);
+                if (!document.hidden) {
+                    window.open(apkUrlAlt, '_blank');
+                }
+            }, 400);
+            showToast('📲 12.98 MB APK डाउनलोड शुरू हो रहा है...', 'success');
+            if (voiceEnabled) speakHindi('बारह पॉइंट नौ आठ मेगाबाइट का ऐप डाउनलोड शुरू हो रहा है।');
+            closeAppDownloadPopup();
+        }
+
+        // ============================================================
+        // CONGRATS POPUP
+        // ============================================================
+        function showCongratsPopup(msg) {
+            document.getElementById('congratsMsg').textContent = msg;
+            document.getElementById('congratsPopup').classList.remove('hidden');
+            setTimeout(() => launchConfettiTo('congratsConfetti', 60), 200);
+        }
+
+        function closeCongratsPopup() {
+            document.getElementById('congratsPopup').classList.add('hidden');
+        }
+
+        // ============================================================
+        // NAVIGATION
+        // ============================================================
+        function showPage(pageId) {
+            if (isAdminMode) return;
+            document.querySelectorAll('.app-page').forEach(p => p.classList.add('hidden'));
+            document.getElementById(pageId).classList.remove('hidden');
+
+            if (currentWallet) {
+                if (pageId === 'walletDashboardPage') updateWalletDashboard();
+                if (pageId === 'walletSendPage') {
+                    document.getElementById('walletSendAvailable').innerHTML = `${parseFloat(currentWallet.balance||0).toFixed(2)} USDT`;
+                }
+                if (pageId === 'walletReceivePage') {
+                    document.getElementById('walletReceiveId').innerText = currentWallet.walletId;
+                    generateWalletReceiveQR();
+                }
+            }
+            if (voiceEnabled) {
+                if (pageId === 'walletRegistrationPage') speakHindi('SupriX Wallet में आपका स्वागत है। कृपया अपना डिटेल्स भरे और रजिस्ट्रेशन करें।');
+                else if (pageId === 'walletLoginPage') speakHindi('कृपया अपना SPX-W ID और पासवर्ड दर्ज करके वॉलेट लॉगिन करें।');
+                else if (pageId === 'walletDashboardPage') speakHindi('वॉलेट डैशबोर्ड पर आपका स्वागत है।');
+                else if (pageId === 'walletSendPage') speakHindi('USDT भेजें पेज पर आपका स्वागत है।');
+                else if (pageId === 'walletReceivePage') speakHindi('USDT प्राप्त करें पेज पर आपका स्वागत है।');
+            }
+        }
+
+        // ============================================================
+        // WALLET REGISTRATION
+        // ============================================================
+        async function handleWalletRegistration(btn) {
+            const name = document.getElementById('walletRegName').value.trim();
+            const email = document.getElementById('walletRegEmail').value.trim();
+            const phone = document.getElementById('walletRegPhone').value.trim();
+            const password = document.getElementById('walletRegPassword').value.trim();
+            const confirmPassword = document.getElementById('walletRegConfirmPassword').value.trim();
+
+            if (!name || !email || !phone || !password) { showToast('सभी आवश्यक फील्ड्स भरें।', 'error'); return; }
+            if (phone.length < 8) { showToast('मोबाइल कम से कम 8 अंक', 'error'); return; }
+            if (password.length < 6) { showToast('पासवर्ड कम से कम 6 अक्षर', 'error'); return; }
+            if (password !== confirmPassword) { showToast('पासवर्ड मेल नहीं खा रहे!', 'error'); return; }
+
+            setButtonLoading(btn, true);
+            document.getElementById('loadingOverlay').classList.add('show');
+
+            try {
+                const existing = await databases.listDocuments(DATABASE_ID, WALLET_COLLECTION_ID, [Query.equal('walletEmail', email)]);
+                if (existing.documents.length > 0) {
+                    showToast('यह ईमेल पहले से वॉलेट में रजिस्टर्ड है! कृपया लॉगिन करें।', 'error');
+                    document.getElementById('loadingOverlay').classList.remove('show');
+                    setButtonLoading(btn, false);
+                    return;
+                }
+
+                const walletId = generateWalletId();
+                const walletData = {
+                    walletId,
+                    walletName: name,
+                    walletEmail: email,
+                    walletPhone: phone,
+                    walletPassword: password,
+                    balance: 0,
+                    totalReceived: 0,
+                    totalSent: 0,
+                    transactions: JSON.stringify([])
+                };
+
+                await databases.createDocument(DATABASE_ID, WALLET_COLLECTION_ID, ID.unique(), walletData);
+
+                document.getElementById('walletSuccessId').innerText = walletId;
+                document.getElementById('walletSuccessEmail').innerText = email;
+                document.getElementById('walletSuccessPassword').innerText = password;
+
+                showPage('walletRegSuccessPage');
+                setTimeout(() => { launchConfettiTo('walletConfettiContainer', 70); }, 300);
+
+                if (voiceEnabled) {
+                    setTimeout(() => {
+                        speakHindi(`बधाई हो ${name}! आपका SupriX Wallet रजिस्ट्रेशन सफलतापूर्वक पूर्ण हुआ। आपकी SPX-W ID है ${walletId}।`);
+                    }, 600);
+                }
+                showToast('🎉 वॉलेट रजिस्ट्रेशन सफल!', 'success');
+
+            } catch (e) {
+                console.error('Wallet registration error:', e);
+                showToast('❌ ' + (e.message || 'त्रुटि'), 'error');
+            } finally {
+                document.getElementById('loadingOverlay').classList.remove('show');
+                setButtonLoading(btn, false);
+            }
+        }
+
+        // ============================================================
+        // WALLET LOGIN
+        // ============================================================
+        async function handleWalletLogin(btn) {
+            const identifier = document.getElementById('walletLoginId').value.trim();
+            const password = document.getElementById('walletLoginPassword').value.trim();
+            if (!identifier || !password) { showToast('SPX-W ID और पासवर्ड दर्ज करें', 'error'); return; }
+
+            setButtonLoading(btn, true);
+            document.getElementById('loadingOverlay').classList.add('show');
+
+            try {
+                let walletDoc = null;
+                try {
+                    const res = await databases.listDocuments(DATABASE_ID, WALLET_COLLECTION_ID, [Query.equal('walletId', identifier)]);
+                    if (res.documents.length > 0) walletDoc = res.documents[0];
+                } catch (e) {}
+                if (!walletDoc) {
+                    try {
+                        const res = await databases.listDocuments(DATABASE_ID, WALLET_COLLECTION_ID, [Query.equal('walletEmail', identifier)]);
+                        if (res.documents.length > 0) walletDoc = res.documents[0];
+                    } catch (e) {}
+                }
+
+                if (!walletDoc) { showToast('❌ SPX-W ID नहीं मिली! कृपया रजिस्टर करें।', 'error'); document.getElementById('loadingOverlay').classList.remove('show'); setButtonLoading(btn, false); return; }
+
+                if (walletDoc.walletPassword !== password) { showToast('❌ गलत पासवर्ड!', 'error'); document.getElementById('loadingOverlay').classList.remove('show'); setButtonLoading(btn, false); return; }
+
+                currentWallet = mapWalletDoc(walletDoc);
+                localStorage.setItem('suprix_wallet_session', currentWallet.walletId);
+                showToast('✅ वॉलेट लॉगिन सफल!', 'success');
+                showPage('walletDashboardPage');
+                updateWalletDashboard();
+
+            } catch (e) {
+                console.error('Wallet login error:', e);
+                showToast('❌ ' + (e.message || 'त्रुटि'), 'error');
+            } finally {
+                document.getElementById('loadingOverlay').classList.remove('show');
+                setButtonLoading(btn, false);
+            }
+        }
+
+        async function handleWalletLogout() {
+            localStorage.removeItem('suprix_wallet_session');
+            currentWallet = null;
+            showToast('वॉलेट लॉगआउट हो गया', 'info');
+            showPage('walletLoginPage');
+        }
+
+        // ============================================================
+        // WALLET DASHBOARD
+        // ============================================================
+        function updateWalletDashboard() {
+            if (!currentWallet) return;
+            document.getElementById('walletBalanceDisplay').innerHTML = `${parseFloat(currentWallet.balance || 0).toFixed(2)} <span style="font-size:16px;">USDT</span>`;
+            document.getElementById('walletDashboardId').innerText = currentWallet.walletId;
+            document.getElementById('walletDashboardName').innerText = currentWallet.walletName;
+            document.getElementById('walletDashboardEmail').innerText = currentWallet.walletEmail;
+            renderWalletTransactions();
+        }
+
+        function renderWalletTransactions() {
+            const list = document.getElementById('walletTransactionList');
+            if (!list || !currentWallet) return;
+            const txns = currentWallet.transactions || [];
+            if (txns.length === 0) { list.innerHTML = '<p class="text-[10px] text-cyan-300/30 text-center py-2">कोई ट्रांजैक्शन नहीं।</p>'; return; }
+            list.innerHTML = txns.slice().reverse().map(tx => `
+                <div class="bg-black/40 p-2.5 rounded-xl border border-cyan-500/15 flex justify-between items-center">
+                    <div>
+                        <div class="font-bold text-xs ${tx.type === 'received' ? 'text-green-400' : 'text-rose-400'}">
+                            ${tx.type === 'received' ? '📥 प्राप्त' : tx.type === 'sent' ? '📤 भेजा' : '💳 ट्रांजैक्शन'}
+                        </div>
+                        <div class="text-[9px] text-cyan-300/40">${tx.dateTime || ''} ${tx.fromId ? '| From: '+tx.fromId : ''} ${tx.toId ? '| To: '+tx.toId : ''}</div>
+                    </div>
+                    <div class="text-right">
+                        <span class="font-bold text-xs ${tx.type === 'received' ? 'text-green-400' : 'text-rose-400'}">
+                            ${tx.type === 'received' ? '+' : '-'}${parseFloat(tx.amount || 0).toFixed(2)} USDT
+                        </span>
+                    </div>
+                </div>
+            `).join('');
+            const totalReceived = txns.filter(t => t.type === 'received').reduce((a, t) => a + parseFloat(t.amount || 0), 0);
+            const totalSent = txns.filter(t => t.type === 'sent').reduce((a, t) => a + parseFloat(t.amount || 0), 0);
+            document.getElementById('walletTotalReceived').innerText = totalReceived.toFixed(2) + ' USDT';
+            document.getElementById('walletTotalSent').innerText = totalSent.toFixed(2) + ' USDT';
+            document.getElementById('walletTxCount').innerText = txns.length;
+        }
+
+        async function refreshWalletTransactions() {
+            if (!currentWallet) return;
+            try {
+                const res = await databases.getDocument(DATABASE_ID, WALLET_COLLECTION_ID, currentWallet.docId);
+                currentWallet = mapWalletDoc(res);
+                updateWalletDashboard();
+                showToast('🔄 ट्रांजैक्शन रिफ्रेश!', 'success');
+            } catch (e) { showToast('त्रुटि', 'error'); }
+        }
+
+        // ============================================================
+        // WALLET SEND
+        // ============================================================
+        function selectRecipientType(type) {
+            recipientType = type;
+            document.getElementById('recipientTypeWallet').classList.toggle('active', type === 'wallet');
+            document.getElementById('recipientTypeSPX').classList.toggle('active', type === 'spx');
+        }
+
+        function setMaxSendAmount() {
+            if (!currentWallet) return;
+            document.getElementById('walletSendAmount').value = parseFloat(currentWallet.balance || 0).toFixed(2);
+        }
+
+        async function handleWalletSend(btn) {
+            if (!currentWallet) { showToast('कृपया वॉलेट लॉगिन करें।', 'error'); return; }
+            const recipient = document.getElementById('walletSendRecipient').value.trim();
+            const amount = parseFloat(document.getElementById('walletSendAmount').value);
+            if (!recipient) { showToast('प्राप्तकर्ता ID दर्ज करें', 'error'); return; }
+            if (!amount || amount <= 0) { showToast('वैध राशि दर्ज करें', 'error'); return; }
+            if (amount > parseFloat(currentWallet.balance || 0)) { showToast('अपर्याप्त बैलेंस!', 'error'); return; }
+
+            setButtonLoading(btn, true);
+            try {
+                if (recipientType === 'wallet') {
+                    const res = await databases.listDocuments(DATABASE_ID, WALLET_COLLECTION_ID, [Query.equal('walletId', recipient)]);
+                    if (res.documents.length === 0) { showToast('❌ SPX-W ID नहीं मिली!', 'error'); setButtonLoading(btn, false); return; }
+                    const targetWallet = mapWalletDoc(res.documents[0]);
+                    if (targetWallet.walletId === currentWallet.walletId) { showToast('❌ खुद को नहीं भेज सकते!', 'error'); setButtonLoading(btn, false); return; }
+
+                    const newSenderBal = parseFloat(currentWallet.balance) - amount;
+                    const newReceiverBal = parseFloat(targetWallet.balance) + amount;
+                    const now = new Date().toLocaleString('hi-IN');
+
+                    const senderTx = { type: 'sent', amount, toId: targetWallet.walletId, dateTime: now };
+                    const receiverTx = { type: 'received', amount, fromId: currentWallet.walletId, dateTime: now };
+                    const senderTxns = [...(currentWallet.transactions || []), senderTx];
+                    const receiverTxns = [...(targetWallet.transactions || []), receiverTx];
+
+                    await databases.updateDocument(DATABASE_ID, WALLET_COLLECTION_ID, currentWallet.docId, {
+                        balance: newSenderBal,
+                        totalSent: parseFloat(currentWallet.totalSent || 0) + amount,
+                        transactions: JSON.stringify(senderTxns)
+                    });
+                    await databases.updateDocument(DATABASE_ID, WALLET_COLLECTION_ID, targetWallet.docId, {
+                        balance: newReceiverBal,
+                        totalReceived: parseFloat(targetWallet.totalReceived || 0) + amount,
+                        transactions: JSON.stringify(receiverTxns)
+                    });
+
+                    // Log to wallet_transactions collection
+                    try {
+                        await databases.createDocument(DATABASE_ID, WALLET_TX_COLLECTION_ID, ID.unique(), {
+                            type: 'wallet_to_wallet',
+                            fromId: currentWallet.walletId,
+                            toId: targetWallet.walletId,
+                            amount: amount,
+                            dateTime: now,
+                            status: 'completed'
+                        });
+                    } catch (e) { console.warn('Tx log failed:', e); }
+
+                    currentWallet.balance = newSenderBal;
+                    currentWallet.totalSent = parseFloat(currentWallet.totalSent || 0) + amount;
+                    currentWallet.transactions = senderTxns;
+
+                    showToast(`✅ ${amount} USDT ${targetWallet.walletId} को भेजे!`, 'success');
+                    updateWalletDashboard();
+                    document.getElementById('walletSendRecipient').value = '';
+                    document.getElementById('walletSendAmount').value = '';
+
+                } else {
+                    const res = await databases.listDocuments(DATABASE_ID, USERS_COLLECTION_ID, [Query.equal('coinxId', recipient)]);
+                    if (res.documents.length === 0) { showToast('❌ SPX ID नहीं मिली!', 'error'); setButtonLoading(btn, false); return; }
+                    const targetUserDoc = res.documents[0];
+                    const targetUserWalletBal = parseFloat(targetUserDoc.walletBalance || 0);
+                    const targetUserWalletTxns = parseJsonSafe(targetUserDoc.walletTransactions, []);
+
+                    const newSenderBal = parseFloat(currentWallet.balance) - amount;
+                    const newReceiverBal = targetUserWalletBal + amount;
+                    const now = new Date().toLocaleString('hi-IN');
+
+                    const senderTx = { type: 'sent', amount, toId: targetUserDoc.coinxId, dateTime: now };
+                    const receiverTx = { type: 'received', amount, fromId: currentWallet.walletId, dateTime: now };
+                    const senderTxns = [...(currentWallet.transactions || []), senderTx];
+                    const receiverTxns = [...targetUserWalletTxns, receiverTx];
+
+                    await databases.updateDocument(DATABASE_ID, WALLET_COLLECTION_ID, currentWallet.docId, {
+                        balance: newSenderBal,
+                        totalSent: parseFloat(currentWallet.totalSent || 0) + amount,
+                        transactions: JSON.stringify(senderTxns)
+                    });
+                    await databases.updateDocument(DATABASE_ID, USERS_COLLECTION_ID, targetUserDoc.$id, {
+                        walletBalance: newReceiverBal,
+                        walletTransactions: JSON.stringify(receiverTxns)
+                    });
+
+                    try {
+                        await databases.createDocument(DATABASE_ID, WALLET_TX_COLLECTION_ID, ID.unique(), {
+                            type: 'wallet_to_spx',
+                            fromId: currentWallet.walletId,
+                            toId: targetUserDoc.coinxId,
+                            amount: amount,
+                            dateTime: now,
+                            status: 'completed'
+                        });
+                    } catch (e) { console.warn('Tx log failed:', e); }
+
+                    currentWallet.balance = newSenderBal;
+                    currentWallet.totalSent = parseFloat(currentWallet.totalSent || 0) + amount;
+                    currentWallet.transactions = senderTxns;
+
+                    showToast(`✅ ${amount} USDT ${targetUserDoc.coinxId} को भेजे!`, 'success');
+                    updateWalletDashboard();
+                    document.getElementById('walletSendRecipient').value = '';
+                    document.getElementById('walletSendAmount').value = '';
+                }
+
+            } catch (e) {
+                console.error('Send error:', e);
+                showToast('त्रुटि: ' + (e.message || ''), 'error');
+            } finally { setButtonLoading(btn, false); }
+        }
+
+        // ============================================================
+        // WALLET RECEIVE
+        // ============================================================
+        function generateWalletReceiveQR() {
+            const container = document.getElementById('walletReceiveQrContainer');
+            if (!container || !currentWallet) return;
+            container.innerHTML = '';
+            if (typeof QRCode !== 'undefined') {
+                try {
+                    new QRCode(container, {
+                        text: currentWallet.walletId,
+                        width: 180,
+                        height: 180,
+                        colorDark: '#00d9ff',
+                        colorLight: '#ffffff'
+                    });
+                } catch (e) { container.innerHTML = `<p class="text-[8px] text-cyan-300/30">QR error</p>`; }
+            }
+        }
+
+        function shareWalletQr() {
+            if (!currentWallet) return;
+            const text = `मेरी SupriX Wallet SPX-W ID: ${currentWallet.walletId}`;
+            if (navigator.share) {
+                navigator.share({ title: 'SupriX Wallet', text }).catch(() => {});
+            } else {
+                legacyCopyFallback(text, '✅ SPX-W ID कॉपी!');
+            }
+        }
+
+        // ============================================================
+        // QR SCANNER
+        // ============================================================
+        function openQrScanner() {
+            const modal = document.getElementById('qrScannerModal');
+            modal.classList.remove('hidden');
+            startQrScanner();
+        }
+
+        function closeQrScanner() {
+            const modal = document.getElementById('qrScannerModal');
+            modal.classList.add('hidden');
+            stopQrScanner();
+        }
+
+        async function startQrScanner() {
+            const container = document.getElementById('qrScannerContainer');
+            const status = document.getElementById('qrScanStatus');
+            if (!container) return;
+            container.innerHTML = '';
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+                qrScannerStream = stream;
+                const video = document.createElement('video');
+                video.srcObject = stream;
+                video.setAttribute('playsinline', 'true');
+                video.play();
+                container.appendChild(video);
+                status.innerText = 'QR कोड स्कैन कर रहे हैं...';
+
+                const canvas = document.createElement('canvas');
+                canvas.style.display = 'none';
+                document.body.appendChild(canvas);
+                const ctx = canvas.getContext('2d');
+
+                function scanFrame() {
+                    if (video.readyState === video.HAVE_ENOUGH_DATA) {
+                        canvas.width = video.videoWidth;
+                        canvas.height = video.videoHeight;
+                        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                        const code = jsQR(imageData.data, imageData.width, imageData.height);
+                        if (code && code.data) {
+                            const scanned = code.data.trim();
+                            if (scanned.startsWith('SPX-W') || scanned.startsWith('SPX')) {
+                                document.getElementById('walletSendRecipient').value = scanned;
+                                showToast('✅ QR स्कैन सफल: ' + scanned, 'success');
+                                closeQrScanner();
+                                return;
+                            }
+                        }
+                    }
+                    qrScannerAnimationId = requestAnimationFrame(scanFrame);
+                }
+                scanFrame();
+            } catch (e) {
+                console.error('QR Scanner error:', e);
+                status.innerText = '❌ कैमरा एक्सेस नहीं मिला। कृपया अनुमति दें।';
+            }
+        }
+
+        function stopQrScanner() {
+            if (qrScannerStream) {
+                qrScannerStream.getTracks().forEach(t => t.stop());
+                qrScannerStream = null;
+            }
+            if (qrScannerAnimationId) {
+                cancelAnimationFrame(qrScannerAnimationId);
+                qrScannerAnimationId = null;
+            }
+        }
+
+        // ============================================================
+        // ADMIN
+        // ============================================================
+        function toggleAdminSearch() {
+            const box = document.getElementById('adminSearchBox');
+            box.classList.toggle('hidden');
+            if (!box.classList.contains('hidden')) document.getElementById('adminSecretInput').focus();
+        }
+
+        function verifyAdminCode() {
+            const code = document.getElementById('adminSecretInput').value.trim();
+            if (code === "") {
+                isAdminMode = true;
+                document.getElementById('walletPanelContainer').classList.add('hidden');
+                document.getElementById('adminPanelContainer').classList.remove('hidden');
+                document.getElementById('headerTitle').innerText = 'SUPRIX WALLET ADMIN';
+                document.getElementById('headerBadge').className = 'admin-badge';
+                document.getElementById('headerBadge').innerHTML = '<i class="fa-solid fa-shield-halved mr-1"></i> ADMIN';
+                document.getElementById('adminSearchBox').classList.add('hidden');
+                loadAllWalletData();
+                showToast('✅ एडमिन मोड सक्रिय!', 'success');
+            } else {
+                showToast('❌ गलत कोड!', 'error');
+            }
+        }
+
+        function logoutAdmin() {
+            isAdminMode = false;
+            document.getElementById('walletPanelContainer').classList.remove('hidden');
+            document.getElementById('adminPanelContainer').classList.add('hidden');
+            document.getElementById('headerTitle').innerText = 'SUPRIX WALLET 💎';
+            document.getElementById('headerBadge').className = 'text-[7px] bg-cyan-500/15 text-cyan-300 border border-cyan-500/30 px-1.5 py-0.5 rounded-full font-bold';
+            document.getElementById('headerBadge').innerHTML = 'Wallet';
+            showToast('एडमिन मोड बंद', 'info');
+        }
+
+        async function submitAdminLogin(btn) {
+            const username = document.getElementById('adminUsernameInput').value.trim();
+            const password = document.getElementById('adminPasswordInput').value.trim();
+            if (!username || !password) { showToast('एडमिन क्रेडेंशियल भरें।', 'error'); return; }
+            setButtonLoading(btn, true);
+            try {
+                try { await account.get(); await account.deleteSession('current'); } catch (e) {}
+                await account.createEmailPasswordSession(username, password);
+                const acc = await account.get();
+                try {
+                    const teamList = await teams.list();
+                    const isAdmin = teamList.teams.some(t => t.$id === ADMIN_TEAM_ID);
+                    if (!isAdmin) { showToast('आप एडमिन नहीं हैं!', 'error'); await account.deleteSession('current'); return; }
+                } catch (e) { showToast('एडमिन वेरिफिकेशन में त्रुटि!', 'error'); await account.deleteSession('current'); return; }
+                isAdminMode = true;
+                document.getElementById('walletPanelContainer').classList.add('hidden');
+                document.getElementById('adminPanelContainer').classList.remove('hidden');
+                document.getElementById('adminLoginPage').classList.add('hidden');
+                document.getElementById('adminDashboardPage').classList.remove('hidden');
+                document.getElementById('headerTitle').innerText = 'SUPRIX WALLET ADMIN';
+                document.getElementById('headerBadge').className = 'admin-badge';
+                document.getElementById('headerBadge').innerHTML = '<i class="fa-solid fa-shield-halved mr-1"></i> ADMIN';
+                await loadAllWalletData();
+                showToast('✅ एडमिन लॉगिन सफल!', 'success');
+            } catch (e) {
+                console.error('Admin login error:', e);
+                let msg = '❌ गलत एडमिन क्रेडेंशियल!';
+                if (e.code === 401) msg = '❌ गलत ईमेल या पासवर्ड';
+                else if (e.message) msg = '❌ ' + e.message;
+                showToast(msg, 'error');
+            } finally { setButtonLoading(btn, false); }
+        }
+
+        async function loadAllWalletData() {
+            if (!isAdminMode) return;
+            try {
+                const res = await databases.listDocuments(DATABASE_ID, WALLET_COLLECTION_ID, [Query.limit(500)]);
+                wallets = res.documents.map(mapWalletDoc);
+                await loadAdminTransactions();
+                updateAdminStats();
+                renderAdminWalletList();
+            } catch (e) { showToast('डेटा लोड नहीं हो सका', 'error'); }
+        }
+
+        async function loadAdminTransactions() {
+            try {
+                const res = await databases.listDocuments(DATABASE_ID, WALLET_TX_COLLECTION_ID, [Query.limit(500), Query.orderDesc('$createdAt')]);
+                walletTransactions = res.documents;
+            } catch (e) { walletTransactions = []; }
+        }
+
+        function updateAdminStats() {
+            if (!isAdminMode) return;
+            document.getElementById('statTotalWallets').innerText = wallets.length;
+            const totalBal = wallets.reduce((a, w) => a + w.balance, 0);
+            document.getElementById('statTotalBalance').innerText = totalBal.toFixed(2) + ' USDT';
+            document.getElementById('statTotalTx').innerText = walletTransactions.length;
+        }
+
+        function switchAdminTab(tab) {
+            if (!isAdminMode) return;
+            currentAdminTab = tab;
+            document.querySelectorAll('.admin-sec').forEach(s => s.classList.add('hidden'));
+            document.getElementById('adminSection-' + tab).classList.remove('hidden');
+            document.querySelectorAll('.admin-tab-btn').forEach(b => b.classList.remove('active'));
+            const btn = document.getElementById('adminTab-' + tab);
+            if (btn) btn.classList.add('active');
+
+            if (tab === 'wallets') renderAdminWalletList();
+            if (tab === 'transactions') renderAdminTransactions();
+        }
+
+        function renderAdminWalletList() {
+            if (!isAdminMode) return;
+            const list = document.getElementById('adminWalletList');
+            const q = (document.getElementById('adminWalletSearch')?.value || '').toLowerCase().trim();
+            const filtered = q ? wallets.filter(w =>
+                (w.walletId || '').toLowerCase().includes(q) ||
+                (w.walletName || '').toLowerCase().includes(q) ||
+                (w.walletEmail || '').toLowerCase().includes(q) ||
+                (w.walletPhone || '').toLowerCase().includes(q)
+            ) : wallets;
+            if (!list) return;
+            if (filtered.length === 0) { list.innerHTML = '<p class="text-cyan-300/30 text-center py-4 text-xs">कोई वॉलेट नहीं मिला।</p>'; return; }
+            list.innerHTML = filtered.map(w => `
+                <div class="item-card space-y-1">
+                    <div class="flex justify-between font-bold text-cyan-300 text-xs"><span>${w.walletName||'N/A'}</span><span>${w.balance.toFixed(2)} USDT</span></div>
+                    <div class="text-[10px] text-cyan-300/50 grid grid-cols-2 gap-1">
+                        <span>SPX-W: ${w.walletId||'N/A'}</span>
+                        <span>Email: ${w.walletEmail||'N/A'}</span>
+                        <span>Phone: ${w.walletPhone||'N/A'}</span>
+                        <span>Tx: ${w.transactions.length}</span>
+                        <span>Received: ${w.totalReceived.toFixed(2)}</span>
+                        <span>Sent: ${w.totalSent.toFixed(2)}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderAdminTransactions() {
+            const list = document.getElementById('adminTransactionList');
+            if (!list) return;
+            if (walletTransactions.length === 0) { list.innerHTML = '<p class="text-cyan-300/30 text-center py-4 text-xs">कोई ट्रांजैक्शन नहीं।</p>'; return; }
+            list.innerHTML = walletTransactions.map(tx => `
+                <div class="item-card space-y-1">
+                    <div class="flex justify-between text-xs">
+                        <span class="font-bold text-cyan-300">${tx.type === 'wallet_to_wallet' ? '💎 Wallet → Wallet' : tx.type === 'wallet_to_spx' ? '💎 Wallet → SPX' : '💳 Transaction'}</span>
+                        <span class="text-green-400">${parseFloat(tx.amount || 0).toFixed(2)} USDT</span>
+                    </div>
+                    <div class="text-[10px] text-cyan-300/50">
+                        From: ${tx.fromId || 'N/A'} → To: ${tx.toId || 'N/A'} | ${tx.dateTime || ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function refreshAdminTransactions(btn) {
+            if (btn) setButtonLoading(btn, true);
+            await loadAdminTransactions();
+            updateAdminStats();
+            renderAdminTransactions();
+            if (btn) setButtonLoading(btn, false);
+            showToast('🔄 रिफ्रेश!', 'success');
+        }
+
+        function saveWalletSettings(btn) {
+            walletSettings.minTransfer = parseFloat(document.getElementById('adminMinTransfer').value) || 0.01;
+            walletSettings.transferFee = parseFloat(document.getElementById('adminTransferFee').value) || 0;
+            walletSettings.enabled = document.getElementById('adminWalletEnabled').value === 'true';
+            localStorage.setItem('suprix_wallet_settings', JSON.stringify(walletSettings));
+            showToast('✅ Settings सेव!', 'success');
+        }
+
+        function loadWalletSettings() {
+            try {
+                const saved = localStorage.getItem('suprix_wallet_settings');
+                if (saved) {
+                    const s = JSON.parse(saved);
+                    walletSettings.minTransfer = s.minTransfer || 0.01;
+                    walletSettings.transferFee = s.transferFee || 0;
+                    walletSettings.enabled = s.enabled !== false;
+                }
+            } catch(e) {}
+            const el = document.getElementById('adminMinTransfer');
+            if (el) el.value = walletSettings.minTransfer;
+            const el2 = document.getElementById('adminTransferFee');
+            if (el2) el2.value = walletSettings.transferFee;
+            const el3 = document.getElementById('adminWalletEnabled');
+            if (el3) el3.value = walletSettings.enabled ? 'true' : 'false';
+        }
+
+        function exportAllWalletData() {
+            if (!isAdminMode || wallets.length === 0) { showToast('कोई डेटा नहीं', 'error'); return; }
+            let csv = "Wallet_ID,Name,Email,Phone,Balance_USDT,TotalReceived,TotalSent,Transactions\n";
+            wallets.forEach(w => {
+                csv += `"${w.walletId||''}","${w.walletName||''}","${w.walletEmail||''}","${w.walletPhone||''}",${w.balance.toFixed(2)},${w.totalReceived.toFixed(2)},${w.totalSent.toFixed(2)},${w.transactions.length}\n`;
+            });
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `suprix_wallets_${Date.now()}.csv`;
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast('✅ डेटा एक्सपोर्ट!', 'success');
+        }
+
+        function closeReceipt() {
+            document.getElementById('receiptModal').classList.add('hidden');
+        }
+
+        // ============================================================
+        // INIT
+        // ============================================================
+        window.onload = async function() {
+            try {
+                if (window.speechSynthesis) {
+                    window.speechSynthesis.getVoices();
+                    window.speechSynthesis.onvoiceschanged = () => {};
+                }
+            } catch(e) {}
+
+            loadWalletSettings();
+
+            // Try to restore wallet session
+            try {
+                const savedWalletId = localStorage.getItem('suprix_wallet_session');
+                if (savedWalletId) {
+                    const res = await databases.listDocuments(DATABASE_ID, WALLET_COLLECTION_ID, [Query.equal('walletId', savedWalletId)]);
+                    if (res.documents.length > 0) {
+                        currentWallet = mapWalletDoc(res.documents[0]);
+                        showPage('walletDashboardPage');
+                        updateWalletDashboard();
+                        return;
+                    }
+                }
+            } catch(e) {}
+
+            showPage('walletRegistrationPage');
+            if (voiceEnabled) {
+                setTimeout(() => { speakHindi('SupriX Wallet में आपका स्वागत है। कृपया अपना डिटेल्स भरे और रजिस्ट्रेशन करें।'); }, 1500);
+            }
+        };
+
+        // ============================================================
+        // GLOBAL EXPORTS
+        // ============================================================
+        window.handleWalletRegistration = handleWalletRegistration;
+        window.handleWalletLogin = handleWalletLogin;
+        window.handleWalletLogout = handleWalletLogout;
+        window.handleWalletSend = handleWalletSend;
+        window.selectRecipientType = selectRecipientType;
+        window.setMaxSendAmount = setMaxSendAmount;
+        window.refreshWalletTransactions = refreshWalletTransactions;
+        window.openQrScanner = openQrScanner;
+        window.closeQrScanner = closeQrScanner;
+        window.shareWalletQr = shareWalletQr;
+        window.showPage = showPage;
+        window.copyToClipboard = copyToClipboard;
+        window.toggleVoice = toggleVoice;
+        window.speakHindi = speakHindi;
+        window.showVoiceToast = showVoiceToast;
+        window.closeVoiceToast = closeVoiceToast;
+        window.launchConfettiTo = launchConfettiTo;
+        window.downloadApkDirect = downloadApkDirect;
+        window.showAppDownloadPopup = showAppDownloadPopup;
+        window.closeAppDownloadPopup = closeAppDownloadPopup;
+        window.showCongratsPopup = showCongratsPopup;
+        window.closeCongratsPopup = closeCongratsPopup;
+        window.toggleAdminSearch = toggleAdminSearch;
+        window.verifyAdminCode = verifyAdminCode;
+        window.logoutAdmin = logoutAdmin;
+        window.submitAdminLogin = submitAdminLogin;
+        window.switchAdminTab = switchAdminTab;
+        window.renderAdminWalletList = renderAdminWalletList;
+        window.refreshAdminTransactions = refreshAdminTransactions;
+        window.saveWalletSettings = saveWalletSettings;
+        window.exportAllWalletData = exportAllWalletData;
+        window.closeReceipt = closeReceipt;
+        window.hideToast = hideToast;
+    </script>
+
+</body>
+</html>
